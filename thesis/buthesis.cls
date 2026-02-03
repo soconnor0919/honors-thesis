@@ -82,9 +82,9 @@
 \vspace{0.1in}
 
 by\\
-\vspace{0.5in}
+\vspace{0.25in}
 \@author\\
-\vspace{0.5in}
+\vspace{0.25in}
 A Thesis\\
 \vspace{0.1in}
 Presented to the Faculty of\\
@@ -104,7 +104,7 @@ in Partial Fulfillment of the Requirements for the Degree of\\
 
 
 \ifthenelse{\boolean{@twoadv}}{
-\vspace{0,5in}
+\vspace{0.25in}
 
 Approved: \hspace{0.2in}\underline{\hspace{2.5in}}\\
 \mbox{\hspace{1.3in}}\advisorname\\
@@ -113,12 +113,12 @@ Approved: \hspace{0.2in}\underline{\hspace{2.5in}}\\
 
 \mbox{\hspace{1.0in}}\underline{\hspace{2.5in}}\\
 \mbox{\hspace{1.3in}}\advisornameb\\
-\mbox{\hspace{1.3in}}Thesis Advisor
+\mbox{\hspace{1.3in}}Second Reader
 \vspace{0.25in}
 
 \mbox{\hspace{1.0in}}\underline{\hspace{2.5in}}\\
 \mbox{\hspace{1.3in}}\chairname\\
-\mbox{\hspace{1.3in}}Chair, Department of \departmentname}
+\mbox{\hspace{1.3in}}Chair of the Department of \departmentname}
 {\vspace{1.0in}
 
 Approved: \hspace{0.2in}\underline{\hspace{2.5in}}\\
@@ -128,7 +128,7 @@ Approved: \hspace{0.2in}\underline{\hspace{2.5in}}\\
 
 \mbox{\hspace{1.0in}}\underline{\hspace{2.5in}}\\
 \mbox{\hspace{1.3in}}\chairname\\
-\mbox{\hspace{1.3in}}Chair, Department of \departmentname}
+\mbox{\hspace{1.3in}}Chair of the Department of \departmentname}
 \vfill
 \end{titlepage}}
 \endinput
