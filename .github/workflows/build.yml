@@ -12,7 +12,7 @@ jobs:
         container: ghcr.io/xu-cheng/texlive-alpine:latest
         steps:
             - name: Install system dependencies
-              run: apk add --no-cache git make bash
+              run: apk add --no-cache git make bash nodejs
 
             - uses: actions/checkout@v4
 
