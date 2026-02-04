@@ -19,3 +19,6 @@ build/
 
 # context directory
 context
+
+# OS files
+.DS_Store

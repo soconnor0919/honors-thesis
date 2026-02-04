@@ -2,21 +2,32 @@ name: Build Proposal and Thesis
 
 on:
     push:
-        branches: ["main"]
+        branches: [main]
     pull_request:
-        branches: ["main"]
+        branches: [main]
 
 jobs:
     build:
         runs-on: ubuntu-latest
-
+        container: ghcr.io/xu-cheng/texlive-alpine:latest
         steps:
-            - uses: actions/checkout@v3
+            - name: Install system dependencies
+              run: apk add --no-cache git make bash
 
-            - name: Install LaTeX
-              run: |
-                  sudo apt-get update
-                  sudo apt-get install -y texlive-latex-base texlive-fonts-recommended texlive-fonts-extra texlive-latex-extra texlive-bibtex-extra latexmk
+            - uses: actions/checkout@v4
+
+            - name: Cache TeX Live
+              uses: actions/cache@v4
+              with:
+                  path: |
+                      /tmp/texlive
+                      ~/.texlive*
+                  key: texlive-${{ runner.os }}-${{ hashFiles('**/*.tex') }}
+                  restore-keys: |
+                      texlive-${{ runner.os }}-
+
+            - name: Create TeX Live directory
+              run: mkdir -p /tmp/texlive
 
             - name: Build Thesis
               run: |
