@@ -48,13 +48,13 @@ jobs:
                   cp build/proposal.pdf output/proposal.pdf
 
             - name: Upload Thesis PDF
-              uses: actions/upload-artifact@v4
+              uses: actions/upload-artifact@v3
               with:
                   name: thesis-pdf
                   path: thesis/out/thesis.pdf
 
             - name: Upload Proposal PDF
-              uses: actions/upload-artifact@v4
+              uses: actions/upload-artifact@v3
               with:
                   name: proposal-pdf
                   path: proposal/output/proposal.pdf
