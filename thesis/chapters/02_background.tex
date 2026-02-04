@@ -4,8 +4,18 @@
 \section{Human-Robot Interaction and Wizard-of-Oz}
 % TODO
 
-\section{Project Context}
-% TODO
+HRI is a multidisciplinary field dedicated to understanding, designing, and evaluating robotic systems for use by or with humans. Unlike industrial robotics, where safety often means physical separation, social robotics envisions a future where robots operate in shared spaces, collaborating with people in roles ranging from healthcare assistants and educational tutors to customer service agents.
+
+For these interactions to be effective, robots must exhibit social intelligence. They must recognize and respond to human social cues--such as speech, gaze, and gesture--in a manner that is natural and intuitive. However, developing the artificial intelligence required for fully autonomous social interaction is an immense technical challenge. Perception systems often struggle in noisy environments, and natural language understanding remains an area of active research.
+
+To bridge the gap between current technical limitations and desired interaction capabilities, researchers employ the WoZ technique. In a WoZ experiment, a human operator (the ``wizard'') remotely controls the robot's behaviors, unaware to the study participant. To the participant, the robot appears to be acting autonomously. This methodology allows researchers to test hypotheses about human responses to robot behaviors without needing to solve the underlying engineering challenges first.
 
 \section{Prior Work}
-% TODO
+
+This thesis represents the culmination of a multi-year research effort to address critical infrastructure gaps in the HRI community. The ideas presented here build upon a foundational trajectory established through two peer-reviewed publications.
+
+We first introduced the concept for HRIStudio as a Late-Breaking Report at the 2024 IEEE International Conference on Robot and Human Interactive Communication (RO-MAN) \cite{OConnor2024}. In that work, we identified the lack of accessible tooling as a primary barrier to entry in HRI and proposed the high-level vision of a web-based, collaborative platform. We established the core requirements for the system: disciplinary accessibility, robot agnosticism, and reproducibility.
+
+Following the initial proposal, we published the detailed system architecture and preliminary prototype as a full paper at RO-MAN 2025 \cite{OConnor2025}. That publication validated the technical feasibility of our web-based approach, detailing the communication protocols and data models necessary to support real-time robot control using standard web technologies.
+
+While those prior publications established the ``what'' and the ``how'' of HRIStudio, this thesis focuses on the realization and validation of the platform. We extend our previous research in two key ways. First, we move beyond prototypes to deliver a complete, production-ready software platform (v1.0), resolving complex engineering challenges related to stability, latency, and deployment. Second, and crucially, we provide the first rigorous user study of the platform. By comparing HRIStudio against industry-standard tools, this work provides empirical evidence to support our claims of improved accessibility and experimental consistency.

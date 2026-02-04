@@ -2,10 +2,23 @@
 \label{ch:intro}
 
 \section{Motivation}
-% TODO
+
+To build the social robots of tomorrow, researchers must find ways to convincingly simulate them today. The process of designing and optimizing interactions between human and robot is essential to the field of Human-Robot Interaction (HRI), a discipline dedicated to ensuring these technologies are safe, effective, and accepted by the public. However, current practices for prototyping these interactions are often hindered by complex technical requirements and inconsistent methodologies.
+
+In a typical social robotics interaction, a robot operates autonomously based on pre-programmed behaviors. Because human interaction is inherently unpredictable, pre-programmed autonomy often fails to respond appropriately to subtle social cues, causing the interaction to degrade. To overcome this, researchers utilize the Wizard-of-Oz (WoZ) technique, where a human operator--the ``wizard''--controls the robot's actions in real-time, creating the illusion of autonomy. This allows for rapid prototyping and testing of interaction designs before the underlying artificial intelligence is fully matured.
+
+Despite its versaility, WoZ research faces two critical challenges. First, a high technical barrier prevents many non-programmers, such as experts in psychology or sociology, from conducting their own studies without engineering support. Second, the hardware landscape is highly fragmented. Researchers frequently build bespoke, ``one-off'' control interfaces for specific robots and specific experiments. These ad-hoc tools are rarely shared, making it difficult for the scientific community to replicate studies or verify findings. This has led to a replication crisis in HRI, where a lack of standardized tooling undermines the reliability of the field's body of knowledge.
 
 \section{HRIStudio Overview}
-% TODO
+
+To address these challenges, this thesis presents HRIStudio, a web-based platform designed to manage the entire lifecycle of a WoZ experiment: from interaction design, through live execution, to final analysis.
+
+HRIStudio is built on three core design principles: disciplinary accessibility, scientific reproducibility, and platform sustainability. To achieve accessibility, the platform replaces complex code with a visual, drag-and-drop interface, allowing domain experts to design interaction flows much like creating a storyboard. To ensure reproducibility, HRIStudio enforces a structured experimental workflow that acts as a ``smart co-pilot'' for the wizard. It guides them through a standardized script to minimize human error while automatically logging synchronized data streams for analysis. Finally, unlike tools tightly coupled to specific hardware, HRIStudio utilizes a robot-agnostic architecture to ensure sustainability. This design ensures that the platform remains a viable tool for the community even as individual robot platforms become obsolete.
 
 \section{Research Objectives}
-% TODO
+
+The primary objective of this work is to demonstrate that a unified, web-based software framework can significantly improve both the accessibility and reproducibility of HRI research. Specifically, this thesis aims to develop a production-ready platform, validate its accessibility for non-programmers, and assess its impact on experimental rigor.
+
+First, this work translates the foundational architecture proposed in prior publications into a stable, full-featured software platform capable of supporting real-world experiments. Second, through a formal user study, we evaluate whether HRIStudio allows participants with no robotics experience to successfully design and execute a robot interaction, comparing their performance against industry-standard software. Finally, we quantify the impact of the platform's guided execution features on the consistency of wizard behavior and the accuracy of data collection.
+
+This work builds upon preliminary concepts reported in two peer-reviewed publications \cite{OConnor2024, OConnor2025}. It extends that research by delivering the complete implementation of the system and a comprehensive empirical evaluation of its efficacy.
