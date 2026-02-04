@@ -6,6 +6,10 @@ on:
     pull_request:
         branches: [main]
 
+permissions:
+    contents: write
+    packages: read
+
 jobs:
     build-github:
         runs-on: ubuntu-latest
@@ -60,6 +64,21 @@ jobs:
                   name: proposal-pdf
                   path: proposal/output/proposal.pdf
 
+            - name: Create Release (GitHub)
+              if: github.event_name == 'push'
+              uses: ncipollo/release-action@v1
+              with:
+                  artifacts: "thesis/out/thesis.pdf,proposal/output/proposal.pdf"
+                  tag: latest
+                  name: Latest PDFs
+                  body: |
+                      Latest compiled thesis and proposal.
+                      Built from commit ${{ github.sha }}
+                  token: ${{ secrets.GITHUB_TOKEN }}
+                  allowUpdates: true
+                  removeArtifacts: true
+                  replacesArtifacts: true
+
     build-gitea:
         runs-on: ubuntu-latest
         container: ghcr.io/xu-cheng/texlive-alpine:latest
@@ -112,3 +131,16 @@ jobs:
               with:
                   name: proposal-pdf
                   path: proposal/output/proposal.pdf
+
+            - name: Create Release (Gitea)
+              if: github.event_name == 'push'
+              uses: akkuman/gitea-release-action@v1
+              with:
+                  token: ${{ secrets.GITHUB_TOKEN }}
+                  files: |
+                      thesis/out/thesis.pdf
+                      proposal/output/proposal.pdf
+                  name: Latest PDFs
+                  tag_name: latest
+                  prerelease: false
+                  draft: false
