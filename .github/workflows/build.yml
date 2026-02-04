@@ -47,13 +47,29 @@ jobs:
                   pdflatex -output-directory=build -interaction=nonstopmode proposal.tex
                   cp build/proposal.pdf output/proposal.pdf
 
-            - name: Upload Thesis PDF
+            - name: Upload Thesis PDF (GitHub)
+              if: github.server_url == 'https://github.com'
+              uses: actions/upload-artifact@v4
+              with:
+                  name: thesis-pdf
+                  path: thesis/out/thesis.pdf
+
+            - name: Upload Thesis PDF (Gitea)
+              if: github.server_url != 'https://github.com'
               uses: actions/upload-artifact@v3
               with:
                   name: thesis-pdf
                   path: thesis/out/thesis.pdf
 
-            - name: Upload Proposal PDF
+            - name: Upload Proposal PDF (GitHub)
+              if: github.server_url == 'https://github.com'
+              uses: actions/upload-artifact@v4
+              with:
+                  name: proposal-pdf
+                  path: proposal/output/proposal.pdf
+
+            - name: Upload Proposal PDF (Gitea)
+              if: github.server_url != 'https://github.com'
               uses: actions/upload-artifact@v3
               with:
                   name: proposal-pdf
