@@ -1,49 +1,49 @@
 name: Build Proposal and Thesis
 
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    push:
+        branches: ["main"]
+    pull_request:
+        branches: ["main"]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+    build:
+        runs-on: ubuntu-latest
 
-    steps:
-    - uses: actions/checkout@v3
+        steps:
+            - uses: actions/checkout@v3
 
-    - name: Install LaTeX
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y texlive-latex-base texlive-fonts-recommended texlive-fonts-extra texlive-latex-extra texlive-bibtex-extra latexmk
+            - name: Install LaTeX
+              run: |
+                  sudo apt-get update
+                  sudo apt-get install -y texlive-latex-base texlive-fonts-recommended texlive-fonts-extra texlive-latex-extra texlive-bibtex-extra latexmk
 
-    - name: Build Thesis
-      run: |
-        make -C thesis
+            - name: Build Thesis
+              run: |
+                  make -C thesis
 
-    - name: Build Proposal
-      working-directory: proposal
-      run: |
-        mkdir -p build
-        mkdir -p output
-        pdflatex -output-directory=build -interaction=nonstopmode proposal.tex
-        # Run bibtex if aux file exists
-        if [ -f build/proposal.aux ]; then
-            bibtex build/proposal || true
-        fi
-        pdflatex -output-directory=build -interaction=nonstopmode proposal.tex
-        pdflatex -output-directory=build -interaction=nonstopmode proposal.tex
-        cp build/proposal.pdf output/proposal.pdf
+            - name: Build Proposal
+              working-directory: proposal
+              run: |
+                  mkdir -p build
+                  mkdir -p output
+                  pdflatex -output-directory=build -interaction=nonstopmode proposal.tex
+                  # Run bibtex if aux file exists
+                  if [ -f build/proposal.aux ]; then
+                      bibtex build/proposal || true
+                  fi
+                  pdflatex -output-directory=build -interaction=nonstopmode proposal.tex
+                  pdflatex -output-directory=build -interaction=nonstopmode proposal.tex
+                  cp build/proposal.pdf output/proposal.pdf
 
-    - name: Upload Thesis PDF
-      uses: actions/upload-artifact@v3
-      with:
-        name: thesis-pdf
-        path: thesis/out/thesis.pdf
+            - name: Upload Thesis PDF
+              uses: actions/upload-artifact@v4
+              with:
+                  name: thesis-pdf
+                  path: thesis/out/thesis.pdf
 
-    - name: Upload Proposal PDF
-      uses: actions/upload-artifact@v3
-      with:
-        name: proposal-pdf
-        path: proposal/output/proposal.pdf
+            - name: Upload Proposal PDF
+              uses: actions/upload-artifact@v4
+              with:
+                  name: proposal-pdf
+                  path: proposal/output/proposal.pdf
