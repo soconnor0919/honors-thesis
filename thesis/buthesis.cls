@@ -10,20 +10,30 @@
 \setboolean{@twoadv}{false}
 \DeclareOption{numbib}{\PassOptionsToPackage{numbers}{natbib}}
 \DeclareOption{twoadv}{\setboolean{@twoadv}{true}}
+
+\renewcommand\frontmatter{%
+    \if@openright\cleardoublepage\else\clearpage\fi
+    \@mainmatterfalse
+    \pagenumbering{roman}
+    \setcounter{page}{4}
+}
 \ProcessOptions\relax
 %
 \RequirePackage{bm}
 \RequirePackage[square]{natbib}
 \RequirePackage[bf,hang,small]{caption}
-\pagestyle{headings}
+\RequirePackage{geometry}
+\geometry{
+    left=1.5in,
+    right=1.0in,
+    top=1.0in,
+    bottom=1.5in
+}
+\RequirePackage{setspace}
+\doublespacing
+\pagestyle{myheadings}
 %\markright{}
 \setlength{\parskip}{0.2in}
-\setlength{\topmargin}{0.0in}
-\setlength{\oddsidemargin}{0.5in}
-\setlength{\evensidemargin}{0.5in}
-\setlength{\textwidth}{6.0in}
-\addtolength{\textheight}{0.4in}
-%\setlength{\footskip}{1.0in}
 \newcommand{\advisor}[1]{\newcommand{\advisorname}{#1}}
 \newcommand{\advisorb}[1]{\newcommand{\advisornameb}{#1}}
 \newcommand{\chair}[1]{\newcommand{\chairname}{#1}}
@@ -31,7 +41,6 @@
 \newcommand{\butitle}[1]{\newcommand{\titletext}{#1}}
 \newcommand{\degree}[1]{\newcommand{\degreename}{#1}}
 \newcommand{\acknowledgments}[1]{\thispagestyle{myheadings}\markright{}
-                                 \setcounter{page}{2}
                                  \mbox{}
                                  \vspace{1.5in}
 
@@ -69,15 +78,18 @@
                     \thispagestyle{myheadings}\markright{}
                     #1
                     \pagestyle{headings}}
-\renewcommand{\maketitle}{\begin{titlepage}
+\renewcommand{\maketitle}{
+\thispagestyle{empty}
 \mbox{}
-\addtolength{\textheight}{1.0in}
+\newpage
+\begin{titlepage}
+\setcounter{page}{3}
+\begin{singlespace}
+\mbox{}
 \begin{center}
-\renewcommand{\baselinestretch}{1.2}
 \large
 {\bf \MakeUppercase{\titletext}}
 
-\renewcommand{\baselinestretch}{1.}
 \normalsize
 \vspace{0.1in}
 
@@ -129,6 +141,7 @@ Approved: \hspace{0.2in}\underline{\hspace{2.5in}}\\
 \mbox{\hspace{1.0in}}\underline{\hspace{2.5in}}\\
 \mbox{\hspace{1.3in}}\chairname\\
 \mbox{\hspace{1.3in}}Chair of the Department of \departmentname}
+\end{singlespace}
 \vfill
 \end{titlepage}}
 \endinput
