@@ -26,12 +26,12 @@ Moreover, few platforms directly address the methodological concerns raised by s
 This thesis represents the culmination of a multi-year research effort to develop infrastructure that addresses the challenges identified in the WoZ platform landscape. Based on the analysis of existing platforms and identified methodological gaps, I derived requirements for a modern WoZ research infrastructure. Through our preliminary work \cite{OConnor2024}, we identified six critical capabilities that a comprehensive platform should provide:
 
 \begin{description}
-\item[R1:] \textbf{Integrated workflow.} All phases of the experimental workflow--design, execution, and analysis--should be integrated within a single unified environment to minimize context switching and tool fragmentation.
-\item[R2:] \textbf{Low technical barrier.} Creating interaction protocols should require minimal to no programming expertise, enabling domain experts from psychology, education, or other fields to work independently \cite{Bartneck2024}.
-\item[R3:] \textbf{Real-time control.} The system must support fine-grained, responsive real-time control during live experiment sessions across a variety of robotic platforms.
-\item[R4:] \textbf{Automated logging.} All actions, timings, and sensor data should be automatically logged with synchronized timestamps to facilitate analysis.
-\item[R5:] \textbf{Platform agnosticism.} The architecture should decouple experimental logic from robot-specific implementations, meaning experiments designed for one robot type can be adapted to others, ensuring the platform remains viable as hardware evolves.
-\item[R6:] \textbf{Collaborative support.} Multiple team members should be able to contribute to experiment design and review execution data, supporting truly interdisciplinary research.
+\item[R1: Integrated workflow.] All phases of the experimental workflow--design, execution, and analysis--should be integrated within a single unified environment to minimize context switching and tool fragmentation.
+\item[R2: Low technical barrier.] Creating interaction protocols should require minimal to no programming expertise, enabling domain experts from psychology, education, or other fields to work independently \cite{Bartneck2024}.
+\item[R3: Real-time control.] The system must support fine-grained, responsive real-time control during live experiment sessions across a variety of robotic platforms.
+\item[R4: Automated logging.] All actions, timings, and sensor data should be automatically logged with synchronized timestamps to facilitate analysis.
+\item[R5: Platform agnosticism.] The architecture should decouple experimental logic from robot-specific implementations, meaning experiments designed for one robot type can be adapted to others, ensuring the platform remains viable as hardware evolves.
+\item[R6: Collaborative support.] Multiple team members should be able to contribute to experiment design and review execution data, supporting truly interdisciplinary research.
 \end{description}
 
 To the best of my knowledge, no existing platform satisfies all six requirements. Most critically, the trade-off between accessibility and flexibility remains unresolved, and few tools embed methodological best practices directly into their design--like training wheels on a bicycle, guiding experimenters to follow sound methodology by default.
