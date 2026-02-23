@@ -1,23 +1,56 @@
-\chapter{System Design: HRIStudio Platform}
+\chapter{System Design}
 \label{ch:design}
 
-\section{Design Goals}
-% TODO
+The previous chapters established the motivation for a web-based WoZ platform and identified six critical requirements for modern HRI research infrastructure. This chapter describes the design of HRIStudio, focusing on how the system architecture and experimental workflow implement these requirements. In this chapter I go over three key design decisions: the hierarchical structure of experiment specifications, the modular interface architecture, and the data flow during experiment execution.
 
-\section{High-Level Architecture}
-% TODO
+\section{Hierarchical Organization of Experiments}
 
-\section{Hierarchical Experimental Model}
-% TODO
+To address the need for self-documenting, executable experiment specifications (R1, R2), HRIStudio introduces a hierarchical organization of elements that allows researchers to express WoZ studies at multiple levels of abstraction. This structure enables experiment designs to be simultaneously intuitive for researchers to create and precise enough for the system to execute.
 
-\section{Visual Experiment Designer}
-% TODO
+At the top level, researchers create a \emph{study} element that defines the overall research context, including metadata about the experiment, collaborators, and experimental conditions. A study comprises multiple \emph{experiment} elements, each representing a single session with one human subject using one robot configuration. This separation of study from experiment allows researchers to manage multiple instantiations of the same protocol while maintaining clear traceability.
 
-\section{Execution Interfaces}
-% TODO
+Each experiment comprises a sequence of \emph{step} elements, which model distinct phases of the interaction. For example, an experiment might have steps such as ``Introduction,'' ``Learning Task,'' and ``Closing.'' Within each step, researchers define one or more \emph{action} elements that are the atomic units of the experimental procedure. Actions can be directed at the wizard (e.g., ``Wait for subject to finish task, then say encouraging phrase'') or at the robot (e.g., ``Move arm to point, play audio greeting, wait for subject response''). 
 
-\section{Robot Integration and Plugins}
-% TODO
+This hierarchical structure serves multiple purposes. First, it permits researchers to design experiments without programming knowledge, using visual or declarative specifications at each level. Second, it naturally maps to the temporal structure of the experimental session, making the protocol easy to follow during execution. Third, it provides a foundation for comprehensive logging: each action executed during a session can be recorded with precise timestamps and outcomes, making the experimental trace reproducible and analyzable.
 
-\section{Data Management}
-% TODO
+\section{Modular Interface Architecture}
+
+To support different roles in an experiment while maintaining coherent data flow (R3, R4, R6), HRIStudio implements three primary user interfaces, each optimized for a specific phase of the research lifecycle.
+
+\subsection{Design Interface}
+
+The \emph{Design} interface enables researchers to construct experiment specifications using drag-and-drop visual programming. Rather than requiring researchers to write code or complex configuration files, the interface presents a canvas where researchers can assemble pre-built action components into sequences. Components represent common tasks such as robot movements, speech synthesis, wizard instructions, and conditional logic. Researchers configure each component's parameters through property panels that provide contextual guidance and examples of best practices.
+
+By treating experiment design as a visual specification task, the interface lowers technical barriers (R2) and ensures that the resulting protocol specification is human-readable and shareable alongside research results. The specification is stored in a structured, machine-readable format that can be both displayed as a flowchart and executed by the platform's runtime.
+
+\subsection{Execute Interface}
+
+During live experiment sessions, the system presents synchronized but distinct views to the wizard and observers. The \emph{wizard's Execute view} displays the current step and available actions, guiding the wizard through the experimental protocol while allowing flexibility for spontaneous, contextual responses. Actions are presented sequentially, but the wizard can manually trigger specific actions based on participant responses, ensuring that the interaction remains natural and responsive rather than rigidly scripted.
+
+The wizard's view includes manual controls for unscripted behaviors such as additional robot movements, speech, or gestures. These unscripted actions are recorded in the experimental log as explicit deviations from the protocol, enabling researchers to later analyze both scripted and improvised interactions. This design balances the need for consistent, monitored behavior (which supports reproducibility) with the flexibility required for realistic human-robot interactions.
+
+The \emph{observer's Execute view} enables additional researchers to monitor the experiment in real-time, take notes, and observe participant behavior without interfering with the wizard's control or the participant's experience. Multiple observers can simultaneously access this view, supporting collaborative oversight and interdisciplinary observation (R6).
+
+\subsection{Analysis Interface}
+
+After a live experiment session, the \emph{Analysis} interface enables researchers to review all recorded data streams in synchronized fashion. This includes video of the human-robot interaction, audio of speech and ambient sounds, logged actions and state changes, and sensor data from the robot. Researchers can scrub through the recording, mark significant events with annotations, and export selected segments or annotations for analysis.
+
+The analysis interface directly supports reproducibility (R4) by making the complete experimental trace accessible and analyzable. Researchers can verify that the protocol was executed as intended, examine deviations from the protocol, and compare execution traces across multiple sessions to verify consistency.
+
+\section{Event-Driven Execution Model}
+
+To achieve real-time responsiveness while maintaining methodological rigor (R3, R5), HRIStudio uses an event-driven execution model rather than a time-driven one. In a time-driven approach, the system would advance through actions on a fixed schedule, leading to rigid, potentially unnatural interaction timing. In contrast, the event-driven model allows the wizard to trigger or advance actions based on the perceived state of the human participant.
+
+This approach has several implications. First, not all sessions of the same experiment will have identical timing or duration; the length of a learning task, for example, depends on the participant's progress. The system records the actual timing of actions, permitting researchers to capture these natural variations in their data. Second, the event-driven model enables the wizard to respond contextually without departing from the protocol; the wizard remains guided by the sequence of available actions while having control over when to advance based on participant cues.
+
+The system enforces protocol consistency by constraining the wizard's choices to the set of actions defined in the protocol specification, while recording all choices made and any deviations. This design directly addresses the reproducibility challenge of inconsistent wizard behavior by making the wizard's degrees of freedom explicit and logged.
+
+\section{Data Flow and Infrastructure Implementation}
+
+The overall data flow through HRIStudio follows the experimental workflow from design through analysis. During the design phase, researchers create experiment specifications that are stored in the system database. During a live experiment session, the system manages bidirectional communication between the wizard's interface and the robot control layer. All actions, sensor data, and events are streamed to a data logging service that stores complete session records. After the experiment, researchers access these records through the Analysis interface for analysis.
+
+This architecture satisfies the infrastructure requirements by design. The integrated workflow (R1) flows naturally through design $\rightarrow$ execution $\rightarrow$ analysis. Low technical barriers (R2) are achieved through the visual Design interface. Real-time control (R3) is supported by responsive event-driven execution. Automated logging (R4) is built-in at the system level. Platform agnosticism (R5) is achieved by decoupling the high-level action specification from robot-specific control commands in the ROS interface. Collaborative support (R6) is enabled through shared views and multi-user access to all system components.
+
+\section{Chapter Summary}
+
+This chapter has described the system design of HRIStudio, with emphasis on how architectural choices directly implement the infrastructure requirements identified in Chapter~\ref{ch:background}. The hierarchical organization of experiment specifications enables intuitive, executable design. The modular interface architecture separates concerns across design, execution, and analysis phases while maintaining data coherence. The event-driven execution model balances protocol consistency with realistic interaction dynamics. The integrated data flow ensures that reproducibility is supported by design rather than by afterthought. The following chapter describes the implementation of these design principles using specific technologies and architectural components.
