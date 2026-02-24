@@ -1,11 +1,216 @@
-\chapter{Implementation Details}
+\chapter{Implementation}
 \label{ch:implementation}
 
-\section{Technology Stack}
-% TODO
+Chapter~\ref{ch:design} described the conceptual design of HRIStudio. This chapter addresses the realization of these design principles, discussing the core technologies used, the system architecture that integrates these technologies, and the current state of the implementation. The implementation demonstrates the feasibility of the approach proposed in earlier chapters while identifying technical challenges that inform the roadmap for future development.
 
-\section{Technical Challenges}
-% TODO
+\section{Core Implementation Decisions}
 
-\section{System Capabilities}
-% TODO
+HRIStudio is implemented as a web application. Researchers access it through a standard web browser without installing specialized software. This design decision directly addresses requirement R2 (low technical barrier) by eliminating installation complexity and ensuring the system works identically on different operating systems. This section describes the key implementation choices and the rationale behind them.
+
+\subsection{Web-Based Architecture}
+
+The choice to build HRIStudio as a web application was driven by three factors. First, web browsers are universally available, so researchers do not need to install custom software or manage dependencies. Second, web applications naturally support collaboration: multiple team members can access the same experiment data and observe live trials simultaneously from different locations. Third, web deployment simplifies updates: when I fix bugs or add features, all users immediately receive the improvements without manual software updates.
+
+I chose to use the same programming language~\cite{TypeScript2024} across the entire system, including the user interface, the server logic, and the data access layer. This consistency reduces a common source of errors: when the structure of experiment data changes, inconsistencies between different parts of the system are detected automatically rather than causing runtime failures during live trials.
+
+\subsection{Data Storage Strategy}
+
+Experiment protocols and trial data are stored in a structured database that supports efficient queries, for example, retrieving all trials for a particular participant or comparing timing data across multiple sessions. However, video recordings and audio files are large and unstructured, so they are stored separately in a file storage system. This separation ensures that the database remains fast for common queries while still preserving complete multimedia records.
+
+\subsection{Robot Communication Layer}
+
+Rather than writing custom code to communicate with each robot's specific control system, HRIStudio uses the Robot Operating System (ROS)~\cite{Quigley2009} as an intermediary. ROS is a widely-adopted standard in robotics research that provides a common communication framework. This design decision means that any robot with ROS support can work with HRIStudio. For robots without native ROS support, researchers can write a small adapter, a much simpler task than integrating directly with HRIStudio's core code.
+
+\subsection{Plugin Architecture for Platform Agnosticism}
+
+A critical design decision was how to support diverse robot platforms without hardcoding knowledge of specific robots into HRIStudio. The robotics landscape is fragmented: researchers use various robots (NAO, Pepper, Fetch, custom platforms) that communicate in different ways.
+
+The solution is a plugin architecture. When designing an experiment, researchers work with abstract actions like ``speak this text'' or ``raise arm.'' The system does not need to know whether it is controlling a NAO robot, a Pepper robot, or a custom research platform. Instead, each robot is described by a plugin, a configuration file that maps abstract actions to the specific commands that robot understands.
+
+This separation has important consequences. First, researchers can create an interaction protocol without knowing which robot will ultimately execute it, enabling protocol reuse across different hardware. Second, when a research lab acquires a new robot, they can add support for it by writing a plugin rather than modifying HRIStudio itself. Third, the visual designer's palette of available actions is automatically populated from the loaded plugins, ensuring the interface reflects the actual capabilities of the current robot.
+
+The plugin architecture also treats control flow (branches, loops, conditional logic) the same way as robot actions. This uniformity allows researchers to mix logical decisions and physical robot behaviors freely when designing experiments.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+    action/.style={rectangle, draw=black, thick, fill=gray!15, minimum width=2.2cm, minimum height=0.6cm, align=center, font=\small},
+    impl/.style={rectangle, draw=black, thick, fill=gray!30, minimum width=2.2cm, minimum height=0.7cm, align=center, font=\small},
+    arrow/.style={-, thick}]
+    
+    % First Y: speak()
+    \node[action] (a1) at (0, 7) {HRIStudio\\speak(text)};
+    \node[impl] (nao1) at (-2, 5) {NAO\\{\small /nao/tts}};
+    \node[impl] (pep1) at (2, 5) {Pepper\\{\small /pepper/say}};
+    \draw[arrow] (a1) -- (nao1);
+    \draw[arrow] (a1) -- (pep1);
+    
+    % Second Y: raise_arm()
+    \node[action] (a2) at (0, 3) {HRIStudio\\raise\_arm()};
+    \node[impl] (nao2) at (-2, 1) {NAO\\{\small /nao/arm}};
+    \node[impl] (pep2) at (2, 1) {Pepper\\{\small /pepper/gesture}};
+    \draw[arrow] (a2) -- (nao2);
+    \draw[arrow] (a2) -- (pep2);
+    
+    % Third Y: move_forward()
+    \node[action] (a3) at (0, -1) {HRIStudio\\move\_forward()};
+    \node[impl] (nao3) at (-2, -3) {NAO\\{\small /nao/move}};
+    \node[impl] (pep3) at (2, -3) {Pepper\\{\small /pepper/cmd\_vel}};
+    \draw[arrow] (a3) -- (nao3);
+    \draw[arrow] (a3) -- (pep3);
+    
+\end{tikzpicture}
+\caption{Plugin architecture: each abstract action branches to platform-specific implementations.}
+\label{fig:plugin-architecture}
+\end{figure}
+
+\subsection{Event-Driven Execution}
+
+During a trial, HRIStudio must balance two competing demands: following the experimental protocol precisely while allowing natural human-robot timing. The execution engine accomplishes this by waiting for specific events at designated points in the protocol. For example, if the protocol specifies ``wait for wizard to click Continue,'' the system pauses until that event occurs, regardless of how long it takes. This preserves the spontaneous, human-paced nature of interaction while ensuring the protocol structure is followed.
+
+Every action during a trial, including robot movements, wizard button clicks, sensor readings, and timing information, is immediately recorded with precise timestamps. This comprehensive logging happens automatically, without requiring researchers to instrument their experiments manually. The complete event record enables two critical capabilities: first, researchers can analyze exactly what happened during a trial without relying on memory or handwritten notes; second, the detailed event log makes trials reproducible by documenting not just what was supposed to happen, but what actually occurred.
+
+\subsection{Local Media Recording}
+
+Video and audio recording during trials must not interfere with the live interaction. To ensure this, recording happens locally in the researcher's web browser rather than streaming data to a remote server in real-time. The browser accumulates the video and audio data, then transfers the complete recordings to the server when the trial concludes. This approach prevents network delays or server processing from causing dropped video frames or degraded audio quality during the critical interaction period.
+
+The timestamps when recording starts and stops are logged alongside other trial events, ensuring that when researchers later review the video, they can see exactly what was happening in the experiment protocol at any given moment in the recording.
+
+\section{System Architecture and Data Flow}
+
+\subsection{Separation of architectural layers}
+
+HRIStudio's architecture separates the system into three distinct layers, each with a specific responsibility:
+
+\begin{enumerate}
+\item \textbf{User interface layer:} The visual interfaces (Design, Execute, Playback) run in the researcher's web browser. This layer handles user interactions, including clicking buttons, dragging experiment components, and viewing live trial status.
+\item \textbf{Application logic layer:} A server process manages experiment data, coordinates trial execution, authenticates users, and orchestrates communication between the interface and the robot.
+\item \textbf{Data and robot control layer:} This layer encompasses two responsibilities: long-term storage of experiment protocols and trial data; and direct communication with robot hardware.
+\end{enumerate}
+
+This separation provides several benefits. Different parts of the system can evolve independently; for example, improving the user interface does not require changes to robot control logic. The separation also clarifies responsibilities: the user interface should never directly command robot hardware; all robot actions flow through the application logic layer, which can enforce safety constraints and maintain consistent logging.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+    layer/.style={rectangle, draw=black, thick, fill, minimum width=6.5cm, minimum height=1cm, align=center, text width=6.2cm},
+    arrow/.style={->, thick, line width=1.5pt}]
+    
+    % Layer 1: UI
+    \node[layer, fill=gray!15] (ui) at (0, 3.5) {
+        \textbf{User Interface}\\[0.1cm]
+        {\small Design, Execute, Playback}
+    };
+    
+    % Layer 2: Logic
+    \node[layer, fill=gray!30] (logic) at (0, 1.8) {
+        \textbf{Application Logic}\\[0.1cm]
+        {\small Execution, Authentication, Logger}
+    };
+    
+    % Layer 3: Data
+    \node[layer, fill=gray!45] (data) at (0, 0.1) {
+        \textbf{Data \& Robot Control}\\[0.1cm]
+        {\small Database, File Storage, ROS}
+    };
+    
+    % Arrows
+    \draw[arrow] (ui.south) -- (logic.north);
+    \draw[arrow] (logic.south) -- (data.north);
+    
+\end{tikzpicture}
+\caption{HRIStudio's three-layer architecture separates user interface, application logic, and data/robot control.}
+\label{fig:three-tier}
+\end{figure}
+
+\subsection{Data Flow During a Trial}
+
+The flow of data during a trial illustrates how the architectural layers coordinate:
+
+\begin{enumerate}
+\item A researcher creates an experiment protocol using the Design interface and initiates a trial.
+\item The application server loads the protocol and begins stepping through it, sending commands to the robot and waiting for events (wizard inputs, sensor readings, timeouts).
+\item Every action, both planned protocol steps and unexpected events, is immediately written to the trial log with precise timing information.
+\item The Execute interface continuously displays the current state, allowing the wizard and observers to monitor progress in real-time.
+\item When the trial concludes, all recorded media (video, audio) is transferred from the browser to the server and associated with the trial record.
+\item Later, the Analysis interface retrieves the stored trial data and reconstructs exactly what happened, synchronized with the video and audio recordings.
+\end{enumerate}
+
+This design ensures comprehensive documentation of every trial, supporting both fine-grained analysis and reproducibility. Researchers can review not just what they planned to happen, but what actually occurred, including timing variations and unexpected events.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+    stage/.style={rectangle, draw, thick, rounded corners, minimum width=3.5cm, minimum height=1cm, align=center, font=\footnotesize},
+    arrow/.style={->, thick, line width=1.3pt}]
+    
+    % Six stages stacked vertically with descriptions inside
+    \node[stage, fill=gray!10] (s1) at (0, 7.5) {1. Design Protocol\\{\scriptsize Researcher creates workflow}};
+    \node[stage, fill=gray!15] (s2) at (0, 6) {2. Load \& Execute\\{\scriptsize System loads and runs trial}};
+    \node[stage, fill=gray!20] (s3) at (0, 4.5) {3. Log Events\\{\scriptsize Actions recorded with timestamps}};
+    \node[stage, fill=gray!25] (s4) at (0, 3) {4. Display Live State\\{\scriptsize Wizard sees real-time progress}};
+    \node[stage, fill=gray!30] (s5) at (0, 1.5) {5. Transfer Media\\{\scriptsize Video/audio saved to server}};
+    \node[stage, fill=gray!35] (s6) at (0, 0) {6. Analyze \& Playback\\{\scriptsize Review data with synchronized media}};
+    
+    % Downward arrows
+    \draw[arrow] (s1.south) -- (s2.north);
+    \draw[arrow] (s2.south) -- (s3.north);
+    \draw[arrow] (s3.south) -- (s4.north);
+    \draw[arrow] (s4.south) -- (s5.north);
+    \draw[arrow] (s5.south) -- (s6.north);
+    
+\end{tikzpicture}
+\caption{Trial data flow: from protocol design through execution and recording, to analysis and playback.}
+\label{fig:trial-dataflow}
+\end{figure}
+
+\section{Implementation Status}
+
+The core architectural components of HRIStudio have been implemented and validated. The framework successfully instantiates the design principles described earlier, demonstrating the feasibility of the approach and highlighting technical challenges to be addressed in future work.
+
+\begin{description}
+\item[User interfaces:] The Design, Execute, and Playback interfaces are operational. The visual design environment supports drag-and-drop construction of experiment workflows.
+\item[Server logic and data management:] The server manages experiment specifications, user authentication, trial session data, and comprehensive event logging.
+\item[Data model:] The hierarchical Study/Experiment/Trial data structures with full event logging infrastructure are implemented and operational.
+\item[Robot communication:] The system successfully communicates with robots through ROS, translating abstract protocol actions into robot-specific commands and receiving sensor data.
+\item[Plugin system:] The plugin architecture for supporting multiple robot platforms is in place, allowing researchers to define new robot capabilities without modifying core system code.
+\end{description}
+
+Components requiring continued development include robust real-time synchronization for complex multi-agent scenarios, comprehensive media playback with full temporal synchronization, and evaluation of the plugin system with diverse robot platforms.
+
+\section{Architectural Challenges and Solutions}
+
+\subsection{Real-Time Responsiveness During Trials}
+
+The Execute interface must maintain responsive communication between the wizard and the robot. Wireless networks and web-based systems can introduce delays that, if not carefully managed, degrade interaction quality or compromise safety. The implementation addresses this in three ways: maintaining persistent connections that avoid the overhead of repeatedly establishing communication; deploying the server on the same local network as the robot to minimize network delays; and anticipating likely next actions to prepare the robot in advance when possible.
+
+\subsection{Synchronizing Multiple Data Sources}
+
+During playback, researchers need to see video, hear audio, and review event logs in perfect synchronization. However, these data sources have different characteristics: video captures 30 frames per second, audio samples thousands of times per second, and event logs record discrete actions at irregular intervals. The implementation uses a common time reference and records precise timestamps for all data, allowing the playback system to align everything accurately regardless of differences in how the data was originally captured.
+
+\subsection{Extensibility Without Fragmentation}
+
+The plugin architecture allows researchers to add support for new robot platforms without modifying HRIStudio's core code. This design separates the evolution of the platform itself from the evolution of robot support: I can improve HRIStudio's core functionality without affecting plugins, and researchers can add new robots without waiting for core platform changes.
+
+However, this separation creates a design challenge: the plugin interface must be flexible enough to accommodate diverse robots, but not so flexible that every robot requires completely custom code. Finding this balance requires validating the plugin design with multiple real robots to ensure the abstraction is appropriate.
+
+\section{Mapping Architecture to Requirements}
+
+The implementation choices described in this chapter directly support the six requirements established earlier:
+
+\begin{description}
+\item[R1 (Integrated workflow):] The unified Design/Execute/Analysis pipeline with shared data models ensures coherent workflows without switching between separate tools.
+\item[R2 (Low technical barrier):] Web-based deployment and drag-and-drop interface design eliminate installation complexity and reduce the learning curve.
+\item[R3 (Real-time control):] Event-driven execution with persistent connections enables responsive, natural human-robot interaction.
+\item[R4 (Automated logging):] Comprehensive event logging captures the complete trial trace automatically, without requiring researchers to add logging code to their experiments.
+\item[R5 (Platform agnosticism):] The plugin architecture allows integration with diverse robot platforms without modifying core system code.
+\item[R6 (Collaborative support):] Multiple team members can simultaneously observe trial execution through shared, synchronized views.
+\end{description}
+
+\section{Chapter Summary}
+
+This chapter has described the key implementation decisions that realize HRIStudio's design principles. Building the system as a web application addresses accessibility by eliminating installation complexity and enabling natural collaboration. Using a consistent programming approach throughout the system reduces a common source of errors where different parts of an application become inconsistent.
+
+The separation between user interface, application logic, and data storage clarifies responsibilities and allows independent evolution of different system components. The plugin architecture directly addresses platform agnosticism (R5), enabling researchers to add robot support without modifying core code. Event-driven execution preserves natural interaction timing while comprehensive automatic logging satisfies requirement R4 and supports reproducibility. Local media recording ensures high-quality video and audio capture without interfering with live trials.
+
+While core architectural components are operational, continued work remains on optimizing real-time responsiveness for complex scenarios, refining multi-modal playback synchronization, and validating the plugin design with diverse robot platforms.

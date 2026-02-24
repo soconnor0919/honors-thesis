@@ -11,6 +11,35 @@ At the top level, researchers create a \emph{study} element that defines the ove
 
 Each experiment protocol comprises a sequence of \emph{step} elements, which model distinct phases of the interaction design. For example, an experiment protocol might define steps such as ``Introduction,'' ``Learning Task,'' and ``Closing.'' Within each step, researchers define one or more \emph{action} elements that are the atomic units of the experimental procedure. Actions can be directed at the wizard (e.g., ``Wait for subject to finish task, then say encouraging phrase'') or at the robot (e.g., ``Move arm to point, play audio greeting, wait for subject response''). 
 
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+	nodebox/.style={rectangle, draw=black, thick, fill=gray!15, minimum width=2.8cm, minimum height=0.8cm, align=center, font=\small},
+	nodeboxdark/.style={rectangle, draw=black, thick, fill=gray!30, minimum width=2.8cm, minimum height=0.8cm, align=center, font=\small},
+	arrow/.style={->, thick}]
+
+	\node[nodebox] (study) at (0, 3.4) {Study};
+	\node[nodebox] (experiment) at (0, 2.1) {Experiment};
+
+	\node[nodebox] (step1) at (-3.0, 0.7) {Step};
+	\node[nodebox] (step2) at (0, 0.7) {Step};
+	\node[nodebox] (step3) at (3.0, 0.7) {Step};
+
+	\node[nodeboxdark] (action1) at (-4.5, -0.7) {Action};
+	\node[nodeboxdark] (action2) at (-1.5, -0.7) {Action};
+
+	\draw[arrow] (study.south) -- (experiment.north);
+	\draw[arrow] (experiment.south) -- (step1.north);
+	\draw[arrow] (experiment.south) -- (step2.north);
+	\draw[arrow] (experiment.south) -- (step3.north);
+	\draw[arrow] (step1.south) -- (action1.north);
+	\draw[arrow] (step1.south) -- (action2.north);
+
+\end{tikzpicture}
+\caption{Hierarchy of experiment specifications from study-level context to atomic actions.}
+\label{fig:experiment-hierarchy}
+\end{figure}
+
 This hierarchical structure serves multiple purposes. First, it permits researchers to design experiment protocols without programming knowledge, using visual or declarative specifications at each level. Second, it naturally maps to the temporal structure of a trial session, making the protocol easy to follow during live execution. Third, it provides a foundation for comprehensive logging: each action executed during a trial can be recorded with precise timestamps and outcomes, making the experimental trace reproducible and analyzable. Fourth, the separation of experiment (protocol) from trial (execution) enables researchers to run the same protocol with different participants, facilitating direct comparison across trials while maintaining clear record-keeping of which participant ran which protocol.
 
 \section{Modular Interface Architecture}
