@@ -6,7 +6,11 @@
 %\usepackage{amsthm}              %Add other packages as necessary
 \usepackage{tikz}                 %For programmatic diagrams
 \usetikzlibrary{shapes,arrows,positioning,fit,backgrounds}
-\usepackage[colorlinks=false, pdfborder={0 0 0}]{hyperref}  %Enable hyperlinks and PDF bookmarks
+\usepackage[
+    hidelinks,
+    linktoc=all,
+    pdfpagemode=UseOutlines
+]{hyperref}  %Enable hyperlinks and PDF bookmarks
 \begin{document}
 \butitle{A Web-Based Wizard-of-Oz Platform for Collaborative and Reproducible Human-Robot Interaction Research}
 \author{Sean O'Connor}
