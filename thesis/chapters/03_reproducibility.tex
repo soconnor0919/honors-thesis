@@ -1,4 +1,4 @@
-\chapter{Reproducibility Challenges in WoZ-based HRI Research}
+\chapter{Reproducibility Challenges}
 \label{ch:reproducibility}
 
 Having established the landscape of existing WoZ platforms and their limitations, I now examine the factors that make WoZ experiments difficult to reproduce and how software infrastructure can address them. This chapter analyzes the sources of variability in WoZ studies and examines how current practices in infrastructure and reporting contribute to reproducibility problems. Understanding these challenges is essential for designing a system that supports experimentation at scale while remaining scientifically rigorous.
@@ -31,7 +31,7 @@ Based on this analysis, I identify specific ways that software infrastructure ca
 
 \section{Connecting Reproducibility Challenges to Infrastructure Requirements}
 
-The reproducibility challenges identified above directly motivate the infrastructure requirements established in Chapter~\ref{ch:background}. Inconsistent wizard behavior creates the need for enforced experimental protocols (R1, R2) that guide wizards systematically. The lack of comprehensive data undermines analysis, motivating automatic logging requirements (R4). Technical fragmentation violates platform agnosticism (R5). Each lab builds custom software tied to specific hardware, and these custom systems become obsolete when hardware evolves. Incomplete documentation reflects the need for self-documenting protocol specifications (R1, R2) that are simultaneously executable and shareable. As Chapter~\ref{ch:background} demonstrated, no existing platform simultaneously satisfies all six requirements. Addressing this gap requires rethinking how WoZ infrastructure is designed, prioritizing reproducibility and methodological rigor as first-class design goals rather than afterthoughts.
+The reproducibility challenges identified above directly motivate the infrastructure requirements (R1-R6) established in Chapter~\ref{ch:background}. Inconsistent wizard behavior creates the need for enforced experimental protocols (R1, R2) that guide wizards systematically. The lack of comprehensive data undermines analysis, motivating automatic logging requirements (R4). Technical fragmentation violates platform agnosticism (R5). Each lab builds custom software tied to specific hardware, and these custom systems become obsolete when hardware evolves. Incomplete documentation reflects the need for self-documenting protocol specifications (R1, R2) that are simultaneously executable and shareable. As Chapter~\ref{ch:background} demonstrated, no existing platform simultaneously satisfies all six requirements. Addressing this gap requires rethinking how WoZ infrastructure is designed, prioritizing reproducibility and methodological rigor as first-class design goals rather than afterthoughts.
 
 \section{Chapter Summary}
 
