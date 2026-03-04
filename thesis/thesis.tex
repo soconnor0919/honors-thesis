@@ -4,6 +4,8 @@
 %\usepackage{graphics}            %Select graphics package
 \usepackage{graphicx}             %
 %\usepackage{amsthm}              %Add other packages as necessary
+\usepackage{array}                %Extended column types and \arraybackslash
+\usepackage{tabularx}             %Auto-width table columns
 \usepackage{tikz}                 %For programmatic diagrams
 \usetikzlibrary{shapes,arrows,positioning,fit,backgrounds}
 \usepackage[
@@ -65,6 +67,7 @@
 %J.~Good Phys., {\bf 2}, 294 (2004).
 %\end{thebibliography}
 
+\makeatletter\@mainmattertrue\makeatother
 \appendix
 \include{chapters/app_materials}
 \include{chapters/app_tech_docs}

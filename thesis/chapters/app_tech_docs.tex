@@ -1,8 +1,49 @@
 \chapter{Technical Documentation}
 \label{app:tech_docs}
 
+This appendix documents the specific technologies and libraries used to build HRIStudio, organized by the three architectural layers described in Chapter~\ref{ch:design}. The goal here is reference, not justification; Chapter~\ref{ch:implementation} explains the reasoning behind the major architectural choices.
+
+\section{Technology Stack}
+
+\subsection{User Interface Layer}
+
+The frontend is built on Next.js (App Router) using React and TypeScript. TypeScript is used throughout the entire codebase, including the server and data access layers, so that type inconsistencies between layers are caught at compile time rather than at runtime. Styling is handled with Tailwind CSS and the shadcn/ui component library. The drag-and-drop canvas in the Design interface uses the \texttt{@dnd-kit} library (\texttt{@dnd-kit/core} and \texttt{@dnd-kit/sortable}) to manage nested drag operations for arranging steps and action blocks.
+
+\subsection{Application Logic Layer}
+
+The server runs as a Next.js Node.js process. API routes use tRPC over HTTP for typed request/response calls; real-time communication during live trials uses a persistent WebSocket connection via the \texttt{ws} package. Authentication and session management are handled by NextAuth.js (v5 beta) with the \texttt{@auth/drizzle-adapter} and bcryptjs for password hashing. Currently, credential-based (username and password) authentication is supported.
+
+\subsection{Data and Robot Control Layer}
+
+Experiment protocols, trial records, and user data are stored in PostgreSQL. The schema and all database queries are managed through Drizzle ORM, which provides compile-time type safety for database interactions. Action configuration parameters and plugin-specific fields are stored as JSONB columns, which allows the same schema to accommodate any robot's action types.
+
+Video and audio recordings captured during trials are stored in a self-hosted MinIO instance, an S3-compatible object storage service. Recordings are captured in the browser using the native MediaRecorder API (assisted by \texttt{react-webcam}) and uploaded to MinIO as a chunked transfer when the trial concludes.
+
+Robot communication is handled through a ROS Bridge (\texttt{rosbridge\_suite} or \texttt{ros2-web-bridge}) running on the robot's local network. The server connects to the bridge over a WebSocket and exchanges JSON-encoded ROS messages; it does not run as a ROS node itself. The bridge address is configured per robot in the plugin file (for example, \texttt{"rosbridgeUrl": "ws://localhost:9090"} in the NAO6 plugin).
+
 \section{Deployment}
-% TODO
+
+The full stack is orchestrated using Docker Compose. The \texttt{docker-compose.yml} file defines three services: the PostgreSQL database (\texttt{postgres:15}), the MinIO storage instance, and the Next.js application server. Starting the entire system on any machine with Docker installed is a single \texttt{docker compose up} command. This configuration is intended for on-premises deployment, which is important for studies involving participant data that cannot leave the institution's network.
 
 \section{Plugin Specification}
-% TODO
+
+Robot capabilities are defined in JSON plugin files. Each file describes a robot platform and the actions it supports. The structure of a plugin file is as follows:
+
+\begin{itemize}
+  \item \textbf{Metadata}: name, version, and a human-readable description of the platform.
+  \item \textbf{ROS configuration} (\texttt{ros2Config}): the bridge URL and any global connection parameters.
+  \item \textbf{Actions}: an array of action definitions. Each action specifies:
+    \begin{itemize}
+      \item A unique action type identifier (e.g., \texttt{speak}, \texttt{raise\_arm})
+      \item A human-readable label shown in the Design interface
+      \item A parameter schema defining the input fields the researcher configures
+      \item The target ROS topic and message type
+      \item A mapping from parameter names to message fields
+    \end{itemize}
+\end{itemize}
+
+When the server dispatches a robot command, it loads the active plugin, locates the matching action definition, constructs the ROS message by applying the parameter mapping, and sends it to the bridge. Adding a new robot means writing a new plugin file; no server code changes are required.
+
+\section{Role-Based Access Control}
+
+HRIStudio uses a two-layer role system. System roles (\texttt{systemRoleEnum}) govern what a user can do across the platform: \emph{administrator}, \emph{researcher}, \emph{wizard}, and \emph{observer}. Study roles (\texttt{studyMemberRoleEnum}) govern what a user can see and do within a specific study: \emph{owner}, \emph{researcher}, \emph{wizard}, and \emph{observer}. A user's system role and study role are checked independently, so a user who is a wizard on one study can be an observer on another without any additional configuration.

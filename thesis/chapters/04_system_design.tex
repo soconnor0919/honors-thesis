@@ -1,7 +1,7 @@
 \chapter{System Design}
 \label{ch:design}
 
-Chapter~\ref{ch:background} established six requirements for modern WoZ infrastructure. This chapter presents the design decisions that address them: the hierarchical organization of experiment specifications, the event-driven execution model, the modular interface architecture, and the integrated data flow.
+Chapter~\ref{ch:background} established six requirements for modern WoZ infrastructure, labeled R1 through R6. This chapter presents the design decisions that address them: the hierarchical organization of experiment specifications, the event-driven execution model, the modular interface architecture, and the integrated data flow.
 
 \section{Hierarchical Organization of Experiments}
 
@@ -128,7 +128,7 @@ Together, these two figures motivate why the hierarchy is useful in practice. Th
 
 \section{Event-Driven Execution Model}
 
-To achieve real-time responsiveness while maintaining methodological rigor (R3, R5), the system uses an event-driven execution model rather than a time-driven one. In a time-driven approach, the system advances through actions on a fixed schedule regardless of what the participant is doing, so the robot might speak over a participant who is still talking, or move on before a response has been given. The event-driven model avoids this by letting the wizard trigger each action when the interaction is ready for it.
+To achieve real-time responsiveness while maintaining methodological rigor (R3, R5), the system uses an event-driven execution model rather than a time-driven one. In a time-driven approach, the system advances through actions on a fixed schedule regardless of what the participant is doing, so the robot might speak over a participant who is still talking, or move on before a response has been given. The event-driven model avoids this by letting the wizard trigger each action when the interaction is ready for it. Figure~\ref{fig:event-driven-timeline} contrasts the two approaches across two trials of the same experiment.
 
 \begin{figure}[htbp]
 \centering
