@@ -1,11 +1,290 @@
 \chapter{Study Materials}
 \label{app:materials}
 
-\section{Protocols}
-% TODO
+This appendix contains the study materials used in the evaluation described in Chapter~\ref{ch:evaluation}, in the order they were presented to participants.
 
-\section{IRB Materials}
-% TODO
+\section{Recruitment Materials}
 
-\section{Questionnaires}
-% TODO
+\subsection*{Email Invitation (Wizard Participants)}
+
+\textit{Subject: Invitation to evaluate Human-Robot Interaction software (International Snacks provided!)}
+
+Dear [Professor Name],
+
+I am conducting an honors thesis study to evaluate ``HRIStudio'', a new platform for designing human-robot interactions. I am seeking Computer Science faculty to act as expert reviewers by participating in a 75-minute Wizard-of-Oz design session.
+
+You will be asked to spend 30 minutes programming a simple behavior on the NAO robot using either HRIStudio or Choregraphe, and then run it live with a student volunteer. No prior experience with the NAO robot is required.
+
+International snacks and refreshments will be provided during the session. If you are willing to participate, please reply to schedule a time.
+
+\hfill Sean O'Connor (\texttt{sso005@bucknell.edu})
+
+\subsection*{Campus Flyer (Test Subject Participants)}
+
+\begin{center}
+\textbf{\large VOLUNTEERS NEEDED: INTERACT WITH A ROBOT!}
+
+\vspace{0.4cm}
+Participate in a short 15-minute session with a NAO humanoid robot.
+
+\vspace{0.4cm}
+\textbf{Snacks from around the world will be provided!}
+
+\vspace{0.2cm}
+Contact: \texttt{sso005@bucknell.edu}
+\end{center}
+
+\section{Informed Consent Forms}
+
+\subsection*{Wizard Participant Consent Form}
+
+\textbf{HRIStudio User Study --- Informed Consent (Faculty/Wizard Participant)}
+
+\textbf{Introduction:} You are invited to participate in a research study evaluating a new software platform for the NAO robot. This study is conducted by Sean O'Connor (Student PI) and Dr.~L.~Felipe Perrone (Advisor) in the Department of Computer Science at Bucknell University.
+
+\textbf{Purpose:} The purpose of this study is to compare the usability and reproducibility of a new visual programming tool (HRIStudio) against the standard software (Choregraphe).
+
+\textbf{Procedures:} If you agree to participate, you will complete the following in a single 75-minute session:
+\begin{enumerate}
+    \item \textbf{Training (15 min):} A brief tutorial on your assigned software interface covering speech, gesture, and branching.
+    \item \textbf{Design Challenge (30 min):} You will receive a written storyboard and program it on the NAO robot using your assigned tool.
+    \item \textbf{Live Trial (15 min):} A student volunteer will enter the room and you will run your program to deliver the story to them.
+    \item \textbf{Debrief (15 min):} You will complete a short usability survey.
+\end{enumerate}
+
+\textbf{Data Collection:} Your workflow will be screen-recorded during the design phase. The live trial will be video recorded to verify robot behavior. All data will be stored on encrypted drives and your identity replaced with a numerical code (e.g., W-01).
+
+\textbf{Risks and Benefits:} There are no known risks beyond those of normal computer use. You will receive international snacks and refreshments during the session. Your participation contributes to research on accessible tools for HRI.
+
+\textbf{Voluntary Participation:} Participation is entirely voluntary and unrelated to any departmental obligations. You may withdraw at any time without penalty.
+
+\textbf{Questions:} Contact Sean O'Connor (\texttt{sso005@bucknell.edu}) or the Bucknell IRB (\texttt{irb@bucknell.edu}).
+
+\vspace{0.8cm}
+\noindent\rule{0.55\textwidth}{0.4pt}\\
+Signature of Participant \hspace{4cm} Date
+
+\vspace{1.2cm}
+
+\subsection*{Test Subject Consent Form}
+
+\textbf{HRIStudio User Study --- Informed Consent (Student/Test Subject)}
+
+\textbf{Introduction:} You are invited to participate in a 15-minute robot interaction session as part of a research study conducted in the Bucknell Computer Science Department.
+
+\textbf{Procedure:} You will enter a lab room and listen to a short story told by a NAO humanoid robot. The robot will then ask you a comprehension question. The interaction takes approximately 5--10 minutes.
+
+\textbf{Data Collection:} The session will be video recorded to analyze the robot's timing and behavior. Your responses are not being graded; we are evaluating the robot's performance, not yours.
+
+\textbf{Risks and Benefits:} Minimal risk. You will receive international snacks and refreshments for your time.
+
+\textbf{Voluntary Participation:} You may stop the interaction and leave at any time without penalty.
+
+\vspace{0.8cm}
+\noindent\rule{0.55\textwidth}{0.4pt}\\
+Signature of Participant \hspace{4cm} Date
+
+\section{Paper Specification: The Interactive Storyteller}
+
+\textit{This document was given to each wizard participant at the start of the Design Phase.}
+
+\textbf{Goal:} Program the robot to tell a short interactive story to a participant. The robot must introduce the story, deliver the narrative with appropriate gestures, ask a comprehension question, and respond to the participant's answer.
+
+\textbf{Script and Logic Flow:}
+
+\begin{enumerate}
+    \item \textbf{Start State}
+    \begin{itemize}
+        \item Robot is standing and looking at the participant.
+    \end{itemize}
+
+    \item \textbf{Step 1 --- The Hook}
+    \begin{itemize}
+        \item \textbf{Speech:} ``Hello. I want to tell you about someone named Dara ---
+               an astronaut who made a decision that changed what we thought we knew about Mars.
+               Are you ready?''
+        \item \textbf{Gesture:} Perform a slow open-hand gesture toward the participant, then lower both arms and stand still before continuing.
+    \end{itemize}
+
+    \item \textbf{Step 2 --- The Narrative}
+    \begin{itemize}
+        \item \textbf{Speech:} ``It was 2147. Dara's crew had been on the Martian surface for six days.
+               Mission protocol said to collect samples, document the terrain, and stay on schedule.
+               But on the sixth morning, while the rest of the crew ran diagnostics,
+               Dara wandered off course.
+               About forty meters from camp, she stopped.
+               Half-buried in the dust was a rock she almost stepped on ---
+               smooth, the size of a fist, and glowing a deep, steady red.
+               Not reflecting sunlight. Glowing.
+               She knelt down, picked it up, and said nothing to anyone.''
+        \item \textbf{Gesture 1:} As the robot says ``stayed on schedule,'' make a precise, dismissive hand wave.
+        \item \textbf{Gesture 2:} As the robot says ``she stopped,'' pause all motion for one full second.
+        \item \textbf{Gesture 3:} As the robot says ``glowing a deep, steady red,'' look slowly downward.
+        \item \textbf{Gesture 4:} As the robot says ``said nothing to anyone,'' lean slightly forward and lower the voice.
+    \end{itemize}
+
+    \item \textbf{Step 3 --- Comprehension Check (Branching)}
+    \begin{itemize}
+        \item \textbf{Speech:} ``She brought it home.
+               The mission report listed it as an anomalous geological sample.
+               NASA has been running tests on it ever since.
+               No one has published anything yet.''
+        \item \textbf{Gesture:} Stand upright, look directly at the participant, and pause for one full second.
+        \item \textbf{Question:} ``What color was the rock Dara found?''
+        \item \textbf{Branch A (Correct answer: ``Red'' or ``red''):}
+        \begin{itemize}
+            \item \textbf{Speech:} ``Red. And it was still glowing when she landed.''
+            \item \textbf{Gesture:} Robot nods once, slowly.
+        \end{itemize}
+        \item \textbf{Branch B (Any other answer):}
+        \begin{itemize}
+            \item \textbf{Speech:} ``Actually, red. Not reflecting light --- emitting it.''
+            \item \textbf{Gesture:} Robot shakes head once.
+        \end{itemize}
+    \end{itemize}
+
+    \item \textbf{Step 4 --- Conclusion}
+    \begin{itemize}
+        \item \textbf{Speech:} ``That was six years ago.
+               The rock is in a lab in Houston.
+               Dara still hasn't told anyone exactly where she found it.
+               That's the end of the story.''
+        \item \textbf{Gesture:} Stand still, lower arms to sides, and bow.
+    \end{itemize}
+\end{enumerate}
+
+\section{Post-Study Questionnaire (System Usability Scale)}
+
+\textit{Completed by wizard participants after the live trial. Circle the number that best reflects your agreement with each statement.}
+
+\vspace{0.4cm}
+\noindent
+\renewcommand{\arraystretch}{2.2}
+\begin{tabularx}{\linewidth}{X *{5}{>{{\centering\arraybackslash}}p{0.85cm}}}
+\textbf{Statement} & \textbf{1} & \textbf{2} & \textbf{3} & \textbf{4} & \textbf{5} \\
+\textit{\footnotesize (Circle one per row)}
+  & \textit{\footnotesize SD} & & & & \textit{\footnotesize SA} \\
+\hline
+1.\enspace I think that I would like to use this system frequently.
+  & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ \\
+2.\enspace I found the system unnecessarily complex.
+  & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ \\
+3.\enspace I thought the system was easy to use.
+  & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ \\
+4.\enspace I think that I would need the support of a technical person to be able to use this system.
+  & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ \\
+5.\enspace I found the various functions in this system were well integrated.
+  & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ \\
+6.\enspace I thought there was too much inconsistency in this system.
+  & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ \\
+7.\enspace I would imagine that most people would learn to use this system very quickly.
+  & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ \\
+8.\enspace I found the system very cumbersome to use.
+  & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ \\
+9.\enspace I felt very confident using the system.
+  & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ \\
+10.\enspace I needed to learn a lot of things before I could get going with this system.
+  & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ & $\bigcirc$ \\
+\hline
+\end{tabularx}
+\renewcommand{\arraystretch}{1}
+
+\vspace{0.4cm}
+\noindent\textit{\footnotesize SD = Strongly Disagree \quad SA = Strongly Agree}
+
+\section{Design Fidelity Score Rubric}
+
+\textit{To be completed by the researcher after analyzing the exported project file.}
+
+\vspace{0.3cm}
+\noindent\textbf{Participant ID:} \underline{\hspace{3cm}} \hspace{1cm} \textbf{Condition:} \underline{\hspace{3cm}}
+\vspace{0.4cm}
+
+\renewcommand{\arraystretch}{1.6}
+\begin{tabularx}{\linewidth}{X >{\centering\arraybackslash}p{1.4cm} >{\centering\arraybackslash}p{1.4cm} >{\centering\arraybackslash}p{1.4cm}}
+\hline
+\textbf{Component} & \textbf{Present} & \textbf{Correct} & \textbf{Points} \\
+\hline
+\multicolumn{4}{l}{\textbf{Speech Actions (40 points total)}} \\
+\hline
+1.\enspace Introduction speech (``Hello. I want to tell you about someone named Dara\ldots'') & Y~~/~~N & Y~~/~~N & ~~~~~/10 \\
+2.\enspace Narrative speech (``It was 2147. Dara's crew\ldots'') & Y~~/~~N & Y~~/~~N & ~~~~~/10 \\
+3.\enspace Question speech (``What color was the rock Dara found?'') & Y~~/~~N & Y~~/~~N & ~~~~~/10 \\
+4.\enspace Response speeches (correct and incorrect branches) & Y~~/~~N & Y~~/~~N & ~~~~~/10 \\
+\hline
+\multicolumn{4}{l}{\textbf{Gestures and Actions (30 points total)}} \\
+\hline
+5.\enspace Open-hand gesture during introduction & Y~~/~~N & Y~~/~~N & ~~~~~/10 \\
+6.\enspace At least two narrative gestures (pause, lean, gaze) & Y~~/~~N & Y~~/~~N & ~~~~~/10 \\
+7.\enspace Nod (correct branch) or head shake (incorrect branch) & Y~~/~~N & Y~~/~~N & ~~~~~/10 \\
+\hline
+\multicolumn{4}{l}{\textbf{Control Flow and Logic (30 points total)}} \\
+\hline
+8.\enspace Conditional branch triggers on participant's answer & Y~~/~~N & Y~~/~~N & ~~~~~/15 \\
+9.\enspace Correct sequencing of all four steps & Y~~/~~N & Y~~/~~N & ~~~~~/15 \\
+\hline
+\end{tabularx}
+\renewcommand{\arraystretch}{1}
+
+\vspace{0.4cm}
+\noindent\textbf{Scoring:} Award full points if both Present \emph{and} Correct; 50\% if Present but not Correct; 0 if not Present.
+
+\vspace{0.2cm}
+\noindent\textbf{Total:} \underline{\hspace{2cm}} / 100 \hspace{1.5cm} \textbf{Design Fidelity Score:} \underline{\hspace{2cm}}\%
+
+\vspace{0.3cm}
+\noindent\textbf{Notes:}
+
+\vspace{2.5cm}
+
+\section{Execution Reliability Score Rubric}
+
+\textit{To be completed by the researcher after reviewing the video recording of the live trial.}
+
+\vspace{0.3cm}
+\noindent\textbf{Participant ID:} \underline{\hspace{3cm}} \hspace{0.5cm} \textbf{Condition:} \underline{\hspace{3cm}}
+
+\vspace{0.2cm}
+\noindent\textbf{Video File:} \underline{\hspace{6cm}}
+\vspace{0.4cm}
+
+\renewcommand{\arraystretch}{1.6}
+\begin{tabularx}{\linewidth}{X >{\centering\arraybackslash}p{1.4cm} >{\centering\arraybackslash}p{1.6cm} >{\centering\arraybackslash}p{1.4cm}}
+\hline
+\textbf{Behavior} & \textbf{Executed?} & \textbf{Correctly?} & \textbf{Points} \\
+\hline
+\multicolumn{4}{l}{\textbf{Speech Execution (40 points total)}} \\
+\hline
+1.\enspace Introduction speech delivered without errors & Y~~/~~N & Y~~/~~N & ~~~~~/10 \\
+2.\enspace Narrative speech delivered without errors & Y~~/~~N & Y~~/~~N & ~~~~~/10 \\
+3.\enspace Comprehension question delivered correctly & Y~~/~~N & Y~~/~~N & ~~~~~/10 \\
+4.\enspace Appropriate branch response given & Y~~/~~N & Y~~/~~N & ~~~~~/10 \\
+\hline
+\multicolumn{4}{l}{\textbf{Gesture and Movement Execution (30 points total)}} \\
+\hline
+5.\enspace Introduction gesture executed completely & Y~~/~~N & Y~~/~~N & ~~~~~/10 \\
+6.\enspace At least two narrative gestures executed & Y~~/~~N & Y~~/~~N & ~~~~~/10 \\
+7.\enspace Nod or head shake executed correctly & Y~~/~~N & Y~~/~~N & ~~~~~/10 \\
+\hline
+\multicolumn{4}{l}{\textbf{Timing and Synchronization (20 points total)}} \\
+\hline
+8.\enspace Speech and gestures synchronized & Y~~/~~N & Y~~/~~N & ~~~~~/10 \\
+9.\enspace Pause held before comprehension question & Y~~/~~N & Y~~/~~N & ~~~~~/10 \\
+\hline
+\multicolumn{4}{l}{\textbf{System Reliability (10 points --- deduct if problems occur)}} \\
+\hline
+10.\enspace No disconnections, crashes, or hangs occurred & Y~~/~~N & N/A & ~~~~~/10 \\
+\hline
+\end{tabularx}
+\renewcommand{\arraystretch}{1}
+
+\vspace{0.4cm}
+\noindent\textbf{Scoring:} Award full points if both Executed \emph{and} Correct; 50\% if Executed but not Correct; 0 if not Executed. For item 10, award full points only if no errors occurred.
+
+\vspace{0.2cm}
+\noindent\textbf{Total:} \underline{\hspace{2cm}} / 100 \hspace{1.5cm} \textbf{Execution Reliability Score:} \underline{\hspace{2cm}}\%
+
+\vspace{0.3cm}
+\noindent\textbf{Notes:}
+
+\vspace{2.5cm}
