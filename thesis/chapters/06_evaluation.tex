@@ -1,7 +1,7 @@
-\chapter{Evaluation Study}
+\chapter{Pilot Validation Study}
 \label{ch:evaluation}
 
-Chapters~\ref{ch:design} and~\ref{ch:implementation} described a platform designed to address two specific problems in WoZ-based HRI research: the high technical barrier that limits who can design robot interactions, and the methodological inconsistency that limits how reproducible those interactions are once designed. This chapter describes a user study conducted to test whether HRIStudio actually improves on both dimensions compared to the current standard tool. The study design, participant selection, task, procedure, and measures are documented here.
+Chapters~\ref{ch:design} and~\ref{ch:implementation} described a platform designed to address two specific problems in WoZ-based HRI research: the high technical barrier that limits who can design robot interactions, and the methodological inconsistency that limits how reproducible those interactions are once designed. HRIStudio is a reference implementation of those design concepts; the underlying contribution is not the tool itself but the principles that govern it. A study comparing HRIStudio against existing practice therefore tests whether those design concepts produce measurably better outcomes in the hands of real researchers. This chapter describes that study: participant selection, task, procedure, and measures.
 
 \section{Research Questions}
 
@@ -13,31 +13,31 @@ I hypothesized that wizards using HRIStudio would more completely and correctly 
 
 \section{Study Design}
 
-The study used a between-subjects design~\cite{Bartneck2024}. Each wizard participant was randomly assigned to one of two conditions: HRIStudio or Choregraphe. Both groups received the same task, the same time allocation, and the same training structure. Measuring each participant in only one condition prevents carryover effects that would arise from using the same tool twice in sequence.
+I used a between-subjects design~\cite{Bartneck2024}. I randomly assigned each wizard participant to one of two conditions: HRIStudio or Choregraphe. Both groups received the same task, the same time allocation, and the same training structure. Measuring each participant in only one condition prevents carryover effects that would arise from using the same tool twice in sequence.
 
-Two types of participants took part with distinct roles. Wizards were CS faculty who designed and ran the robot interaction. Test subjects were undergraduate students who interacted with the robot during the live trial. This separation ensures that the evaluation captures both the design experience and the quality of the resulting interaction.
+Two types of participants took part with distinct roles. Wizards were faculty members drawn from across departments who designed and ran the robot interaction. Test subjects were undergraduate students who interacted with the robot during the live trial. This separation ensures that the evaluation captures both the design experience and the quality of the resulting interaction.
 
 \section{Participants}
 
 \subsection{Wizards}
 
-Eight Bucknell University faculty members drawn from across departments were recruited to serve as wizards. Participants were deliberately drawn from both ends of the programming experience spectrum: four had substantial programming backgrounds, and four described themselves as non-programmers or having minimal coding experience. This cross-departmental recruitment was intentional. A primary claim of HRIStudio is that it lowers the technical barrier for domain experts who are not programmers; drawing wizards from outside computer science allows the data to speak to whether that claim holds for the intended user population.
+I recruited eight Bucknell University faculty members drawn from across departments to serve as wizards. I deliberately recruited from both ends of the programming experience spectrum: four had substantial programming backgrounds, and four described themselves as non-programmers or having minimal coding experience. This cross-departmental recruitment was intentional. A primary claim of HRIStudio is that it lowers the technical barrier for domain experts who are not programmers; drawing wizards from outside computer science allows the data to speak to whether that claim holds for the intended user population.
 
-The key inclusion criterion for all wizards was no prior experience with either the NAO robot or Choregraphe software specifically. This controls for tool familiarity so that performance differences reflect the tools themselves rather than prior exposure. Wizards were recruited through direct email. Participation was framed as a voluntary software evaluation unrelated to any professional obligations.
+The key inclusion criterion for all wizards was no prior experience with either the NAO robot or Choregraphe software specifically. This controls for tool familiarity so that performance differences reflect the tools themselves rather than prior exposure. I recruited wizards through direct email. Participation was framed as a voluntary software evaluation unrelated to any professional obligations.
 
 \subsection{Test Subjects}
 
-Eight undergraduate students from Bucknell University were recruited to serve as test subjects. Their role was to interact with the robot during the live trial portion of each wizard's session. Participants were screened to ensure that no test subject was enrolled in a course taught by the wizard they were paired with, to eliminate any risk of coercion. Test subjects were recruited through campus flyers inviting volunteers to interact with a robot for approximately 15 minutes. All participants received international snacks and refreshments upon arrival, regardless of whether they completed the full session.
+I recruited eight undergraduate students from Bucknell University to serve as test subjects. Their role was to interact with the robot during the live trial portion of each wizard's session. I screened participants to ensure that no test subject was enrolled in a course taught by the wizard they were paired with, to eliminate any risk of coercion. I recruited test subjects through campus flyers inviting volunteers to interact with a robot for approximately 15 minutes. I provided all participants with international snacks and refreshments upon arrival, regardless of whether they completed the full session.
 
 \subsection{Sample Size Rationale}
 
-With $N = 16$ total participants, this study is small by the standards of a mature research program. That is intentional and appropriate given three constraints. First, this is an honors thesis project conducted over two academic semesters by a single undergraduate researcher with no funded research assistant support. The total person-hours available for participant recruitment, scheduling, session facilitation, and data processing are genuinely bounded. Second, the scope of the study is validation rather than definitive evaluation: the goal is to determine whether HRIStudio produces measurably different outcomes from Choregraphe and to identify failure modes, not to establish effect sizes for a broad population. Third, recruiting faculty from outside computer science for a 75-minute technology evaluation at a small liberal arts university is practically difficult. The target population --- domain experts with no prior robotics tool exposure --- is limited in size and has high competing time demands. Eight participants spans the available pool without resorting to participants who do not meet the inclusion criteria.
+With $N = 16$ total participants, this study is small by the standards of a mature research program. That is intentional and appropriate given three constraints. First, this is an honors thesis project conducted over two academic semesters by a single undergraduate researcher with no funded research assistant support. The total person-hours available for participant recruitment, scheduling, session facilitation, and data processing are genuinely bounded. Second, the scope of the study is validation rather than definitive evaluation: the goal is to determine whether HRIStudio produces measurably different outcomes from Choregraphe and to identify failure modes, not to establish effect sizes for a broad population. Third, recruiting faculty from outside computer science for a 75-minute technology evaluation at a small liberal arts university is practically difficult. The target population --- domain experts with no prior robotics tool exposure --- is limited in size and has high competing time demands. Eight participants span the available pool without relaxing the inclusion criteria.
 
 This scale is consistent with pilot and feasibility studies in HRI, where small $N$ designs are common in early-stage tool validation~\cite{Steinfeld2009}. Findings should be interpreted as preliminary evidence and directional indicators rather than as conclusive proof.
 
 \section{Task}
 
-Both wizard groups were given the same written task specification: the \emph{Interactive Storyteller} scenario. The specification described a robot that introduces an astronaut named Dara, narrates her discovery of an anomalous glowing rock on Mars, asks the participant a comprehension question about the story, and delivers one of two responses depending on whether the answer is correct. The full specification, including exact robot speech, required gestures, and branching logic, is reproduced in Appendix~\ref{app:materials}.
+Both wizard groups received the same written task specification: the \emph{Interactive Storyteller} scenario. The specification described a robot that introduces an astronaut named Dara, narrates her discovery of an anomalous glowing rock on Mars, asks the participant a comprehension question about the story, and delivers one of two responses depending on whether the answer is correct. The full specification, including exact robot speech, required gestures, and branching logic, is reproduced in Appendix~\ref{app:materials}.
 
 The task was chosen because it requires several distinct capabilities: speech actions, gesture coordination, conditional branching based on participant input, and a defined conclusion. This exercises the core features of both tools and produces an artifact that can be evaluated against a clear specification.
 
@@ -55,15 +55,15 @@ Each wizard completed a single 75-minute session structured in four phases. Test
 
 \subsection{Phase 1: Training (15 minutes)}
 
-The session opened with a standardized tutorial tailored to the wizard's assigned tool. The tutorial covered how to create speech actions, specify gestures, define conditional branches, and save the completed design. Training was intentionally brief to simulate a domain expert encountering a new tool without dedicated onboarding. The researcher answered clarification questions but did not offer hints about the design challenge.
+I opened each session with a standardized tutorial tailored to the wizard's assigned tool. The tutorial covered how to create speech actions, specify gestures, define conditional branches, and save the completed design. Training was intentionally brief to simulate a domain expert encountering a new tool without dedicated onboarding. I answered clarification questions but did not offer hints about the design challenge.
 
 \subsection{Phase 2: Design Challenge (30 minutes)}
 
-The wizard received the paper specification and had 30 minutes to implement it using their assigned tool. The researcher observed silently and recorded a screen capture of the wizard's workflow throughout. The researcher noted time to completion, help requests, and any observable errors or misconceptions. If the wizard declared completion before the 30-minute limit, the remaining time was used to review and refine the design.
+The wizard received the paper specification and had 30 minutes to implement it using their assigned tool. I observed silently and recorded a screen capture of the wizard's workflow throughout. I noted time to completion, help requests, and any observable errors or misconceptions. If the wizard declared completion before the 30-minute limit, the remaining time was used to review and refine the design.
 
 \subsection{Phase 3: Live Trial (15 minutes)}
 
-After the design phase, a test subject entered the room and the wizard ran their completed program to control the robot during an actual interaction. The researcher video-recorded the full trial to capture robot behavior and timing. The test subject was told they were helping evaluate the robot's performance, not being evaluated themselves.
+After the design phase, a test subject entered the room and the wizard ran their completed program to control the robot during an actual interaction. I video-recorded the full trial to capture robot behavior and timing. I told the test subject they were helping evaluate the robot's performance, not being evaluated themselves.
 
 \subsection{Phase 4: Debrief (15 minutes)}
 
@@ -72,19 +72,19 @@ Following the live trial, the wizard exported their completed project file and c
 \section{Measures}
 \label{sec:measures}
 
-Four measures were collected, two primary and two supplementary.
+The study collected four measures, two primary and two supplementary.
 
 \subsection{Design Fidelity Score}
 
-The Design Fidelity Score measures how completely and correctly the wizard implemented the paper specification. The exported project file was evaluated against five criteria: whether all four interaction steps were present, whether robot speech matched the specification word-for-word, whether gestures were assigned to the correct steps, whether the conditional branch triggered on the correct condition, and whether both response branches were complete and correctly ordered. Each criterion was scored as met or not met, and the score is the proportion of criteria satisfied.
+The Design Fidelity Score measures how completely and correctly the wizard implemented the paper specification. I evaluated the exported project file against five criteria: whether all four interaction steps were present, whether robot speech matched the specification word-for-word, whether gestures were assigned to the correct steps, whether the conditional branch triggered on the correct condition, and whether both response branches were complete and correctly ordered. I scored each criterion as met or not met; the DFS is the proportion of criteria satisfied.
 
-This measure is motivated by a gap identified by Riek~\cite{Riek2012}, whose systematic review of 54 published WoZ studies found that only 11\% constrained what the wizard could recognize and fewer than 6\% described wizard training procedures --- meaning the vast majority of WoZ studies never verified whether the wizard's design matched any formal specification. Porfirio et al.~\cite{Porfirio2023} similarly argued that formal, verifiable behavior specifications are a prerequisite for reproducible HRI, and the preliminary design of HRIStudio identified specification adherence as a primary evaluation target~\cite{OConnor2024}. The DFS operationalizes these recommendations as a weighted rubric applied to the exported project file. The complete rubric is reproduced in Appendix~\ref{app:materials}. This measure addresses accessibility: did the tool allow a non-expert to produce a correct design?
+This measure is motivated by a gap identified by Riek~\cite{Riek2012}, whose systematic review of 54 published WoZ studies found that only 11\% constrained what the wizard could recognize and fewer than 6\% described wizard training procedures, meaning the vast majority of WoZ studies never verified whether the wizard's design matched any formal specification. Porfirio et al.~\cite{Porfirio2023} similarly argued that formal, verifiable behavior specifications are a prerequisite for reproducible HRI, and the preliminary design of HRIStudio identified specification adherence as a primary evaluation target~\cite{OConnor2024}. The DFS applies these recommendations as a weighted rubric scored against the exported project file. The complete rubric is reproduced in Appendix~\ref{app:materials}. This measure addresses accessibility: did the tool allow a non-expert to produce a correct design?
 
 \subsection{Execution Reliability Score}
 
-The Execution Reliability Score measures whether the designed interaction executed as intended during the live trial. The video recording was reviewed against the specification and the wizard's design. Evaluation criteria included whether the robot delivered the correct speech at each step, whether gestures executed and were synchronized with speech, whether the conditional branch resolved correctly based on the test subject's answer, and whether any errors, disconnections, or hangs occurred. The score is the proportion of the interaction that executed without error.
+The Execution Reliability Score measures whether the designed interaction executed as intended during the live trial. I reviewed the video recording against the specification and the wizard's design. Evaluation criteria included whether the robot delivered the correct speech at each step, whether gestures executed and synchronized with speech, whether the conditional branch resolved correctly based on the test subject's answer, and whether any errors, disconnections, or hangs occurred. The score is the proportion of the interaction that executed without error.
 
-This measure responds directly to Riek's~\cite{Riek2012} finding that only 3.7\% of published WoZ studies reported any measure of wizard error, making it nearly impossible to determine whether execution matched design intent. Without an execution-level metric, a study could report a technically correct design that nonetheless failed during the live trial due to timing errors, disconnections, or mishandled branches --- precisely the class of problem HRIStudio was designed to detect and log~\cite{OConnor2024, OConnor2025}. The ERS captures those deviations quantitatively. The complete rubric is reproduced in Appendix~\ref{app:materials}. This measure addresses reproducibility: did the design translate reliably into execution?
+This measure responds directly to Riek's~\cite{Riek2012} finding that only 3.7\% of published WoZ studies reported any measure of wizard error, making it nearly impossible to determine whether execution matched design intent. Without an execution-level metric, a study could report a technically correct design that nonetheless failed during the live trial due to timing errors, disconnections, or mishandled branches, exactly the kind of problem HRIStudio was designed to detect and log~\cite{OConnor2024, OConnor2025}. The ERS captures those deviations quantitatively. The complete rubric is reproduced in Appendix~\ref{app:materials}. This measure addresses reproducibility: did the design translate reliably into execution?
 
 \subsection{System Usability Scale}
 
@@ -114,10 +114,10 @@ System Usability Scale & Wizard's perceived usability of the assigned tool & Deb
 Time-to-Completion \& Help Requests & Task duration and support requests during design & Throughout design phase & Supplementary \\
 \hline
 \end{tabular}
-\caption{Measurement instruments used in the evaluation study.}
+\caption{Measurement instruments used in the pilot validation study.}
 \label{tbl:measurement_instruments}
 \end{table}
 
 \section{Chapter Summary}
 
-This chapter described a between-subjects study comparing HRIStudio and Choregraphe across eight wizard participants --- four with programming backgrounds and four without --- each of whom designed and ran the Interactive Storyteller task on a NAO robot. Performance was measured through design fidelity against the written specification, execution reliability during the live trial, perceived usability via the SUS, and supplementary timing and help data. Chapter~\ref{ch:results} presents the results.
+This chapter described a pilot between-subjects study I designed to test whether the design principles formalized in Chapters~\ref{ch:design} and~\ref{ch:implementation} produce measurably different outcomes from existing practice. Eight wizard participants (four with programming backgrounds and four without) each designed and ran the Interactive Storyteller task on a NAO robot using either HRIStudio or Choregraphe. I measured design fidelity against the written specification, execution reliability during the live trial, perceived usability via the SUS, and supplementary timing and help data. Chapter~\ref{ch:results} presents the results.

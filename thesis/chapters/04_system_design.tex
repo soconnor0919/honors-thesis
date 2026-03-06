@@ -1,7 +1,7 @@
-\chapter{System Design}
+\chapter{Architectural Design}
 \label{ch:design}
 
-Chapter~\ref{ch:background} established six requirements for modern WoZ infrastructure, labeled R1 through R6. This chapter presents the design decisions that address them: the hierarchical organization of experiment specifications, the event-driven execution model, the modular interface architecture, and the integrated data flow.
+Chapter~\ref{ch:background} established six requirements for modern WoZ infrastructure, labeled R1 through R6, and Chapter~\ref{ch:reproducibility} showed the reproducibility problems that motivate them. This chapter presents the architectural contribution of this thesis: a hierarchical specification model, an event-driven execution model, a modular interface architecture, and an integrated data flow that together address all six requirements. These are design principles, not implementation details; they apply to any system built with the same goals.
 
 \section{Hierarchical Organization of Experiments}
 
@@ -9,66 +9,76 @@ WoZ studies involve multiple reusable conditions, shared protocol phases, and pl
 
 The terms in this hierarchy are used in a strict way. A \emph{study} is the top-level research container that groups related protocol conditions. An \emph{experiment} is one reusable condition within that study (for example, a control versus experimental condition). A \emph{step} is one phase of the protocol timeline (for example, an introduction, telling a story, or testing recall). An \emph{action} is the smallest executable unit inside a step (for example, trigger a gesture, play audio, or speak a prompt).
 
-Figure~\ref{fig:experiment-hierarchy} shows the generic schema. Reading top-down, one study contains many experiments, each experiment contains many steps, and each step contains many actions. The dashed trial nodes indicate execution instances of a protocol, not new protocols. This protocol-versus-instance separation is central for reproducibility because researchers can repeat the same designed experiment across participants while preserving traceability of what was specified versus what was executed.
+Figure~\ref{fig:experiment-hierarchy} shows the generic schema as a linear chain. Reading top-down, one study contains one or more experiments, each experiment contains one or more steps, and each step contains one or more actions. Figure~\ref{fig:trial-instantiation} shows the protocol-versus-instance separation in isolation. The left column holds the protocol designed once before the study begins; the right column shows the separate trial records produced each time a participant runs it. A dashed line marks the protocol/trial boundary: everything to its left was authored by the researcher before any participant arrived; everything to its right was generated during a live session. The \textit{instantiates} arrows from the experiment node fan out to each trial record, making the relationship explicit. This separation is central to reproducibility: the same experiment specification generates a distinct, timestamped record per participant, so researchers can compare across participants without conflating what was designed with what was executed.
 
-To illustrate the same schema with a concrete case, consider an interactive storytelling study with the research question: \emph{Does robot interaction modality influence participant recall performance?} The two conditions differ in how the robot looks and behaves: NAO6 has a human-like form and uses expressive gestures, while TurtleBot is visibly machine-like with no social movement cues. This keeps the narrative task the same across both conditions while changing only how the robot delivers it.
+To illustrate how the schema can be used with a concrete example, consider an interactive storytelling study with the research question: \emph{Does robot interaction modality influence participant recall performance?} The two conditions differ in how the robot looks and behaves: NAO6 has a human-like form and uses expressive gestures, while TurtleBot is visibly machine-like with no social movement cues. This keeps the narrative task the same across both conditions while changing only how the robot delivers it.
 
-Figure~\ref{fig:example-hierarchy} maps that study onto the same hierarchy. The study branches into two experiments (TurtleBot with only voice, NAO6 with added gestures), each experiment uses the same ordered steps (Intro, Story Telling, Recall Test), and each step contains actions. The figure expands only the Story Telling step to keep the diagram readable, but Intro and Recall Test follow the same structure. Together, Figure~\ref{fig:experiment-hierarchy} and Figure~\ref{fig:example-hierarchy} move from abstract schema to concrete instantiation.
+Figure~\ref{fig:example-hierarchy} maps that study onto the same hierarchy. The study branches into two experiments (TurtleBot with only voice, NAO6 with added gestures), each experiment uses the same ordered steps (Intro, Story Telling, Recall Test), and each step contains actions. The figure expands only the Story Telling step to keep the diagram readable, but Intro and Recall Test follow the same structure. Figures~\ref{fig:experiment-hierarchy}, \ref{fig:trial-instantiation}, and~\ref{fig:example-hierarchy} together progress from abstract schema, to protocol-versus-instance separation, to a concrete instantiation.
 
 \begin{figure}[htbp]
 \centering
 \begin{tikzpicture}[
-	nodebox/.style={rectangle, draw=black, thick, fill=gray!15, align=center, font=\small, inner sep=4pt},
-	nodeboxdark/.style={rectangle, draw=black, thick, fill=gray!30, align=center, font=\small, inner sep=4pt},
-	nodeboxlight/.style={rectangle, draw=black, thick, dashed, fill=gray!8, align=center, font=\small, inner sep=4pt},
+	nodebox/.style={rectangle, draw=black, thick, fill=gray!15, align=center,
+		text width=3.2cm, minimum height=1.0cm, font=\small, inner sep=4pt},
+	nodeboxdark/.style={rectangle, draw=black, thick, fill=gray!35, align=center,
+		text width=3.2cm, minimum height=1.0cm, font=\small, inner sep=4pt},
 	arrow/.style={->, thick},
-	instof/.style={->, thick, dashed},
-	cardinality/.style={font=\small, fill=white, inner sep=2pt}]
+	label/.style={font=\small\itshape, fill=white, inner sep=2pt}]
 
-	% Top level: Study
-	\node[nodebox] (study) at (0, 5.5) {Study};
+	\node[nodebox]     (study)  at (0,  6.0) {Study};
+	\node[nodebox]     (exp)    at (0,  4.0) {Experiment};
+	\node[nodebox]     (step)   at (0,  2.0) {Step};
+	\node[nodeboxdark] (action) at (0,  0.0) {Action};
 
-	% Second level: Multiple Experiments
-	\node[nodebox] (exp1) at (-4.5, 3.5) {Experiment 1};
-	\node[nodebox] (exp2) at (0, 3.5) {Experiment 2};
-	\node[nodebox] (exp3) at (4.5, 3.5) {Experiment 3};
-
-	\draw[arrow] (study.south) -- (exp1.north);
-	\draw[arrow] (study.south) -- (exp2.north);
-	\draw[arrow] (study.south) -- (exp3.north);
-	\node[cardinality] at (0, 4.5) {has many};
-
-	% Third level: Steps (showing detail for Experiment 2)
-	\node[nodebox] (step1) at (-3, 1.8) {Step 1};
-	\node[nodebox] (step2) at (0, 1.8) {Step 2};
-	\node[nodebox] (step3) at (3, 1.8) {Step 3};
-
-	\draw[arrow] (exp2.south) -- (step1.north);
-	\draw[arrow] (exp2.south) -- (step2.north);
-	\draw[arrow] (exp2.south) -- (step3.north);
-	\node[cardinality] at (0, 2.65) {has many};
-
-	% Fourth level: Actions (showing detail for Step 2)
-	\node[nodeboxdark] (action1) at (-4.5, -0.2) {Action 1};
-	\node[nodeboxdark] (action2) at (-2.2, -0.2) {Action 2};
-	\node[nodeboxdark] (action3) at (0.1, -0.2) {Action 3};
-
-	\draw[arrow] (step2.south) -- (action1.north);
-	\draw[arrow] (step2.south) -- (action2.north);
-	\draw[arrow] (step2.south) -- (action3.north);
-	\node[cardinality] at (0, 0.8) {has many};
-
-	% Trials as instances of Experiment 3 (positioned separately)
-	\node[nodeboxlight] (trial1) at (8.5, 4.2) {Trial (P01)};
-	\node[nodeboxlight] (trial2) at (8.5, 2.8) {Trial (P02)};
-	
-	\draw[instof] (exp3.east) -- (trial1.west);
-	\draw[instof] (exp3.east) -- (trial2.west);
-	\node[cardinality] at (6.5, 4.8) {instantiates};
+	\draw[arrow] (study.south)  -- node[label, right=6pt] {has one or more} (exp.north);
+	\draw[arrow] (exp.south)    -- node[label, right=6pt] {has one or more} (step.north);
+	\draw[arrow] (step.south)   -- node[label, right=6pt] {has one or more} (action.north);
 
 \end{tikzpicture}
-\caption{Hierarchical organization showing cardinality: a study has many experiments, an experiment has many steps, and a step has many actions. Trials represent specific execution instances of an experiment protocol.}
+\caption{The four-level experiment specification hierarchy.}
 \label{fig:experiment-hierarchy}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+	spec/.style={rectangle, draw=black, thick, fill=gray!15, align=center,
+		text width=3.2cm, minimum height=1.0cm, font=\small, inner sep=4pt},
+	trial/.style={rectangle, draw=black, thick, dashed, fill=gray!5, align=center,
+		text width=3.2cm, minimum height=1.0cm, font=\small, inner sep=4pt},
+	arrow/.style={->, thick},
+	darrow/.style={->, thick, dashed}]
+
+	%% ---- Column headers ----
+	\node[font=\small\bfseries] at (1.9,  7.0) {Protocol (designed once)};
+	\node[font=\small\bfseries] at (7.9,  7.0) {Trials (run per participant)};
+
+	%% ---- Protocol column ----
+	\node[spec] (study) at (1.9, 5.8) {Study};
+	\node[spec] (exp)   at (1.9, 4.2) {Experiment};
+	\node[spec] (step)  at (1.9, 2.6) {Step};
+
+	\draw[arrow] (study.south) -- (exp.north);
+	\draw[arrow] (exp.south)   -- (step.north);
+
+	%% ---- Trial column ----
+	\node[trial] (t1) at (7.9, 5.5) {Trial --- P01\\{\footnotesize timestamped log}};
+	\node[trial] (t2) at (7.9, 4.2) {Trial --- P02\\{\footnotesize timestamped log}};
+	\node[trial] (t3) at (7.9, 2.9) {Trial --- P03\\{\footnotesize timestamped log}};
+
+	%% ---- Separator ----
+	\draw[gray!60, thick, dashed] (4.85, 1.8) -- (4.85, 6.6);
+	\node[font=\footnotesize\itshape, gray!80] at (4.85, 1.4) {protocol\,/\,trial boundary};
+
+	%% ---- Instantiation arrows + label ----
+	\node[font=\small\itshape] at (6.35, 6.3) {instantiates};
+	\draw[darrow] (exp.east) -- (t1.west);
+	\draw[darrow] (exp.east) -- (t2.west);
+	\draw[darrow] (exp.east) -- (t3.west);
+
+\end{tikzpicture}
+\caption{One experiment protocol instantiated as a separate trial record per participant.}
+\label{fig:trial-instantiation}
 \end{figure}
 
 \begin{figure}[htbp]
@@ -120,15 +130,15 @@ Figure~\ref{fig:example-hierarchy} maps that study onto the same hierarchy. The 
 	\draw[arrow] (tb_s2.south) -- (tb_a3.north);
 
 \end{tikzpicture}
-\caption{Example hierarchy in the same structure as Figure~\ref{fig:experiment-hierarchy}: labels are embedded in each box, each experiment has independent steps, and Story Telling expands to multiple concrete actions.}
+\caption{A recall study with two conditions mapped onto the four-level hierarchy.}
 \label{fig:example-hierarchy}
 \end{figure}
 
-Together, these two figures motivate why the hierarchy is useful in practice. The layered structure lets researchers define protocols at whatever level they care about without writing code, which keeps the tool accessible to non-programmers. The step and action levels also align naturally with live trial flow, so the wizard stays guided by the protocol while retaining control over timing, which supports the real-time control requirement. Action-level execution provides a natural unit for timestamped logging and post-hoc analysis, satisfying the automated logging requirement. Finally, keeping experiment definitions separate from trial instances means the same protocol can be reproduced across participants and conditions, supporting both the integrated workflow and collaborative support requirements.
+Together, these three figures motivate why the hierarchy is useful in practice. The layered structure lets researchers define protocols at whatever level they care about without writing code, which keeps the tool accessible to non-programmers. The step and action levels also align naturally with live trial flow, so the wizard stays guided by the protocol while retaining control over timing, which supports the real-time control requirement. Action-level execution provides a natural unit for timestamped logging and post-trial analysis, satisfying the automated logging requirement. Finally, keeping experiment definitions separate from trial instances means the same protocol can be reproduced across participants and conditions, supporting both the integrated workflow and collaborative support requirements.
 
 \section{Event-Driven Execution Model}
 
-To achieve real-time responsiveness while maintaining methodological rigor (R3, R5), the system uses an event-driven execution model rather than a time-driven one. In a time-driven approach, the system advances through actions on a fixed schedule regardless of what the participant is doing, so the robot might speak over a participant who is still talking, or move on before a response has been given. The event-driven model avoids this by letting the wizard trigger each action when the interaction is ready for it. Figure~\ref{fig:event-driven-timeline} contrasts the two approaches across two trials of the same experiment.
+To achieve real-time responsiveness while maintaining methodological rigor (R3, R5), the system uses an event-driven execution model rather than a time-driven one. In a time-driven approach, the system advances through actions on a fixed schedule regardless of what the participant is doing, so the robot might speak over a participant who is still talking, or move on before a response has been given. The event-driven model avoids this by letting the wizard trigger each action when the interaction is ready for it. Figure~\ref{fig:event-driven-timeline} contrasts the two approaches using the same four-action sequence: Greet (G), Begin Story (BS), Ask Question (AQ), and End (E). In the time-driven row, fixed intervals $t_0$ through $t_2$ define when each event fires, and dashed vertical lines show where those moments fall relative to the event-driven rows below. In both event-driven rows, the wizard fires the same four labeled events at different real-time positions --- T1 (a faster participant) finishes well before T2 (a slower one) --- while both preserve the same action order.
 
 \begin{figure}[htbp]
 \centering
@@ -161,6 +171,14 @@ To achieve real-time responsiveness while maintaining methodological rigor (R3, 
 	\node[font=\scriptsize, above=3pt] at (7.0,  3.5) {Ask Question};
 	\node[font=\scriptsize, above=3pt] at (10.5, 3.5) {End};
 
+	%% ---- Time interval braces below time-driven row ----
+	\draw[decorate, decoration={brace, amplitude=4pt, mirror}]
+		(1.0, 3.2) -- (3.5, 3.2) node[midway, below=6pt, font=\scriptsize] {$t_0$};
+	\draw[decorate, decoration={brace, amplitude=4pt, mirror}]
+		(3.5, 3.2) -- (7.0, 3.2) node[midway, below=6pt, font=\scriptsize] {$t_1$};
+	\draw[decorate, decoration={brace, amplitude=4pt, mirror}]
+		(7.0, 3.2) -- (10.5, 3.2) node[midway, below=6pt, font=\scriptsize] {$t_2$};
+
 	% Dashed vertical alignment lines
 	\draw[dashed, gray!70] (1.0,  3.35) -- (1.0,  0.35);
 	\draw[dashed, gray!70] (3.5,  3.35) -- (3.5,  0.35);
@@ -173,31 +191,43 @@ To achieve real-time responsiveness while maintaining methodological rigor (R3, 
 	\node[dot] at (5.5, 2.0) {};
 	\node[dot] at (7.8, 2.0) {};
 
+	% Event-driven S1 labels
+	\node[font=\scriptsize, below=3pt] at (1.0, 2.0) {G};
+	\node[font=\scriptsize, below=3pt] at (2.5, 2.0) {BS};
+	\node[font=\scriptsize, below=3pt] at (5.5, 2.0) {AQ};
+	\node[font=\scriptsize, below=3pt] at (7.8, 2.0) {E};
+
 	% Event-driven S2 (slower participant)
 	\node[dot] at (1.0,  0.5) {};
 	\node[dot] at (4.3,  0.5) {};
 	\node[dot] at (8.5,  0.5) {};
 	\node[dot] at (10.8, 0.5) {};
 
+	% Event-driven S2 labels
+	\node[font=\scriptsize, below=3pt] at (1.0,  0.5) {G};
+	\node[font=\scriptsize, below=3pt] at (4.3,  0.5) {BS};
+	\node[font=\scriptsize, below=3pt] at (8.5,  0.5) {AQ};
+	\node[font=\scriptsize, below=3pt] at (10.8, 0.5) {E};
+
 	% Time axis label
 	\node[font=\small\itshape] at (5.75, -0.25) {time};
 
 \end{tikzpicture}
-\caption{The same four-action protocol executed under time-driven (top) and event-driven (bottom, two trials) models. Dashed lines mark the fixed schedule. Under the event-driven model, the wizard advances each action when the participant is ready, so trials differ in duration while preserving action order.}
+\caption{Time-driven (top) versus event-driven (bottom, two trials) execution of the same four-action protocol.}
 \label{fig:event-driven-timeline}
 \end{figure}
 
 This approach has several implications. First, not all trials of the same experiment will have identical timing or duration; the length of a learning task, for example, depends on the participant's progress. The system records the actual timing of actions, permitting researchers to capture these natural variations in their data. Second, the event-driven model enables the wizard to respond contextually without departing from the protocol; the wizard remains guided by the sequence of available actions while having control over when to advance based on participant cues.
 
-The system guides the wizard through the protocol step by step, ensuring the intended sequence is followed. Every action is logged with a timestamp whether it was scripted or not, and anything outside the protocol is flagged as a deviation. This means inconsistent wizard behavior shows up in the data rather than disappearing into it.
+The system guides the wizard through the protocol step-by-step, ensuring the intended sequence is followed. Every action is logged with a timestamp whether it was scripted or not, and anything outside the protocol is flagged as a deviation. This means inconsistent wizard behavior shows up in the data rather than disappearing into it.
 
 \section{Modular Interface Architecture}
 
-Researchers interact with the system through three interfaces, one per phase of a study: designing a protocol, running a live trial, and reviewing the results.
+Researchers interact with the system through three interfaces, each one encapsulating a specific phase of an experimental study: designing a protocol, running a live trial, and reviewing the results.
 
 \subsection{Design Interface}
 
-The \emph{Design} interface gives researchers a drag-and-drop canvas for building experiment protocols. Researchers drag pre-built action components, including robot movements, speech, wizard instructions, and conditional logic, onto the canvas and drop them into sequence. Clicking a component opens a side panel where its parameters can be set, such as the text for a speech action or the gesture name for a movement.
+The \emph{Design} interface gives researchers a drag-and-drop canvas for building experiment protocols, creating a visual programming environment. Researchers drag pre-built action components, including robot movements, speech, wizard instructions, and conditional logic, onto the canvas and drop them into sequence. Clicking a component opens a side panel where its parameters can be set, such as the text for a speech action or the gesture name for a movement.
 
 By treating experiment design as a visual specification task, the interface lowers technical barriers (R2) and ensures that the resulting protocol specification is human-readable and shareable alongside research results. The specification is stored in a structured format that can be both displayed as a timeline for analysis and executed by the platform's runtime.
 
@@ -215,13 +245,13 @@ After a trial concludes, the \emph{Analysis} interface lets researchers review e
 
 \section{Data Flow and Infrastructure Implementation}
 
-To ensure that data from every experimental phase remains traceable and accessible, the system organizes its internals into three architectural layers and defines a clear data pathway from protocol design through post-trial analysis, covering how experiment specifications, control commands, and recorded data move through the system.
+To ensure that data from every experimental phase remains traceable, the system organizes its internals into three architectural layers and defines a clear data pathway from protocol design through post-trial analysis, covering how experiment specifications, control commands, and recorded data move through the system.
 
 \subsection{Architectural Layers}
 
-The architecture separates the system into three distinct layers, each with a specific responsibility. The \emph{user interface layer} runs in researchers' web browsers and handles all visual interfaces (Design, Execution, Analysis), managing user interactions such as clicking buttons, dragging experiment components, and viewing live trial status. The \emph{application logic layer} operates as a server process that manages experiment data, coordinates trial execution, authenticates users, and orchestrates communication between the interface and the robot. The \emph{data and robot control layer} encompasses long-term storage of experiment protocols and trial data, as well as direct communication with robot hardware.
+The system is structured as a three-layer architecture, each with a specific responsibility. The \emph{user interface layer} runs in researchers' web browsers and handles all visual interfaces (Design, Execution, Analysis), managing user interactions such as clicking buttons, dragging experiment components, and viewing live trial status. The \emph{application logic layer} operates as a server process that manages experiment data, coordinates trial execution, authenticates users, and orchestrates communication between the interface and the robot. The \emph{data and robot control layer} encompasses long-term storage of experiment protocols and trial data, as well as direct communication with robot hardware.
 
-This separation provides several benefits. Different parts of the system can evolve independently; for example, improving the user interface does not require changes to robot control logic. The separation also clarifies responsibilities: the user interface never directly commands robot hardware; all robot actions flow through the application logic layer, which can enforce safety constraints and maintain consistent logging. Figure~\ref{fig:three-tier} illustrates this layered architecture.
+This separation of concerns provides two concrete benefits. First, each layer can evolve independently: improving the user interface requires no changes to robot control logic, and swapping in a different storage backend requires no changes to the execution engine. Second, the separation enforces clear responsibilities: the user interface never directly commands robot hardware; all robot actions flow through the application logic layer, which maintains consistent logging. Figure~\ref{fig:three-tier} illustrates this layered architecture.
 
 \begin{figure}[htbp]
 \centering
@@ -258,11 +288,11 @@ This separation provides several benefits. Different parts of the system can evo
 
 \subsection{Data Flow Through Experimental Phases}
 
-During the design phase, researchers create experiment specifications that are stored in the system database. During a live experiment session, the system manages bidirectional communication between the wizard's interface and the robot control layer. All actions, sensor data, and events are streamed to a data logging service that stores complete session records. After the experiment, researchers access these records through the Analysis interface.
+During the design phase, researchers create experiment specifications that are stored in the system database. During a live experiment session, the system manages bidirectional communication between the wizard's interface and the robot control layer. All actions, sensor data, and events are streamed to a data logging service that stores complete session records. After the experiment, researchers can inspect these records through the Analysis interface.
 
 The flow of data during a trial proceeds through six distinct phases, as shown in Figure~\ref{fig:trial-dataflow}. First, a researcher creates an experiment protocol using the Design interface. Second, when a trial begins, the application server loads the protocol and begins stepping through it, sending commands to the robot and waiting for events such as wizard inputs, sensor readings, or timeouts. Third, every action, both planned protocol steps and unexpected events, is immediately written to the trial log with precise timing information. Fourth, the Execution interface continuously displays the current state, allowing the wizard and observers to monitor progress in real-time. Fifth, when the trial concludes, all recorded media (video and audio) is transferred from the browser to the server and associated with the trial record. Sixth, the Analysis interface retrieves the stored trial data and reconstructs exactly what happened, synchronized with the video and audio recordings.
 
-This design ensures comprehensive documentation of every trial, supporting both fine-grained analysis and reproducibility. Researchers can review not just what they planned to happen, but what actually occurred, including timing variations and unexpected events.
+This design ensures comprehensive documentation of every trial, supporting both fine-grained analysis and reproducibility. Researchers can review not just what they intended to happen, but what actually occurred, including timing variations and unexpected events.
 
 \begin{figure}[htbp]
 \centering
@@ -292,8 +322,8 @@ This design ensures comprehensive documentation of every trial, supporting both 
 
 \subsection{Requirements Satisfaction}
 
-The design choices described in this chapter map directly onto the requirements from Chapter~\ref{ch:background}. Having the researcher work through a single platform from protocol creation to post-trial review satisfies R1 (integrated workflow) without extra tooling. The visual drag-and-drop Design interface removes the need for programming knowledge, satisfying R2 (low technical barriers) by keeping the system accessible to researchers without a software background. Event-driven execution satisfies R3 (real-time control) by giving the wizard control over pacing while keeping the trial on protocol. All actions are logged automatically at the system level, satisfying R4 (automated logging) without requiring researchers to instrument their studies manually. The three-layer architecture decouples action specifications from robot-specific commands, satisfying R5 (platform agnosticism) by letting the same protocol run on different hardware without modification. Finally, shared live views and multi-user access let interdisciplinary teams observe and annotate the same trial simultaneously, satisfying R6 (collaborative support).
+The design choices described in this chapter map directly onto the requirements from Chapter~\ref{ch:background}. Having the researcher work through a single platform from protocol creation to post-trial review satisfies R1 (integrated workflow) without extra tooling. The visual drag-and-drop Design interface removes the need for programming knowledge, satisfying R2 (low technical barriers) by keeping the system accessible to researchers without a software background. Event-driven execution satisfies R3 (real-time control) by giving the wizard control over pacing while keeping the trial on protocol. All actions are logged automatically at the system level, satisfying R4 (automated logging) without requiring researchers to add logging by hand. The three-layer architecture decouples action specifications from robot-specific commands, satisfying R5 (platform agnosticism) by letting the same protocol run on different hardware without modification. Finally, shared live views and multi-user access let interdisciplinary teams observe and annotate the same trial simultaneously, satisfying R6 (collaborative support).
 
 \section{Chapter Summary}
 
-This chapter described a system design with emphasis on how architectural choices directly implement the infrastructure requirements identified in Chapter~\ref{ch:background}. The hierarchical organization of experiment specifications enables intuitive, executable design. The event-driven execution model balances protocol consistency with realistic interaction dynamics. The modular interface architecture separates concerns across design, execution, and analysis phases while maintaining data coherence. The integrated data flow ensures that reproducibility is supported by design rather than by afterthought. The following chapter presents HRIStudio as a reference implementation of these design principles, discussing specific technologies and architectural components.
+This chapter described the architectural design with emphasis on how each design choice directly implements the infrastructure requirements identified in Chapter~\ref{ch:background}. The hierarchical organization of experiment specifications enables intuitive, executable design. The event-driven execution model balances protocol consistency with realistic interaction dynamics. The modular interface architecture separates concerns across design, execution, and analysis phases while maintaining data coherence. The integrated data flow ensures that reproducibility is supported by design rather than by afterthought. The following chapter presents HRIStudio as a reference implementation of these design principles, discussing specific technologies and architectural components.
