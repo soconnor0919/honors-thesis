@@ -1,7 +1,7 @@
 \chapter{Pilot Validation Study}
 \label{ch:evaluation}
 
-Chapters~\ref{ch:design} and~\ref{ch:implementation} described a platform designed to address two specific problems in WoZ-based HRI research: the high technical barrier that limits who can design robot interactions, and the methodological inconsistency that limits how reproducible those interactions are once designed. HRIStudio is a reference implementation of those design concepts; the underlying contribution is not the tool itself but the principles that govern it. A study comparing HRIStudio against existing practice therefore tests whether those design concepts produce measurably better outcomes in the hands of real researchers. This chapter describes that study: participant selection, task, procedure, and measures.
+This chapter presents the pilot validation study used to evaluate whether HRIStudio improves accessibility and reproducibility in WoZ-based HRI research. It defines the research questions, study design, participant roles, task, apparatus, procedure, and measurement instruments.
 
 \section{Research Questions}
 
@@ -9,41 +9,52 @@ The evaluation targets the two problems established in Chapter~\ref{ch:backgroun
 
 These problems give rise to two research questions. The first asks whether HRIStudio enables domain experts without prior robotics experience to successfully implement a robot interaction from a written specification. The second asks whether HRIStudio produces more reliable execution of that interaction compared to standard practice.
 
-I hypothesized that wizards using HRIStudio would more completely and correctly implement the written specification, and that their designs would execute more reliably during the live trial, compared to wizards using Choregraphe.
+I hypothesized that wizards using HRIStudio would more completely and correctly implement the written specification, and that their designs would execute more reliably during the trial, compared to wizards using ad hoc programs created for specific social robotics experiments, with Choregraphe as the baseline tool in this study.
 
 \section{Study Design}
 
-I used a between-subjects design~\cite{Bartneck2024}. I randomly assigned each wizard participant to one of two conditions: HRIStudio or Choregraphe. Both groups received the same task, the same time allocation, and the same training structure. Measuring each participant in only one condition prevents carryover effects that would arise from using the same tool twice in sequence.
+I used what Bartneck et al.~\cite{Bartneck2024} call a between-subjects design, in which each participant is assigned to only one condition. I randomly assigned each wizard participant to one of two conditions: HRIStudio or Choregraphe. Both groups received the same task, the same time allocation, and the same training structure. Measuring each participant in only one condition prevents carryover effects, meaning performance changes caused by prior exposure to another condition rather than by the assigned condition itself.
 
-Two types of participants took part with distinct roles. Wizards were faculty members drawn from across departments who designed and ran the robot interaction. Test subjects were undergraduate students who interacted with the robot during the live trial. This separation ensures that the evaluation captures both the design experience and the quality of the resulting interaction.
+In this study, I defined two types of participants with distinct roles. Wizards were faculty members drawn from across departments who designed and ran the robot interaction. Test subjects were undergraduate students who interacted with the robot during the trial. This separation ensures that the evaluation captures both the design experience and the quality of the resulting interaction. The next section details recruitment, inclusion criteria, and sample rationale for both groups.
 
 \section{Participants}
 
-\subsection{Wizards}
-
-I recruited eight Bucknell University faculty members drawn from across departments to serve as wizards. I deliberately recruited from both ends of the programming experience spectrum: four had substantial programming backgrounds, and four described themselves as non-programmers or having minimal coding experience. This cross-departmental recruitment was intentional. A primary claim of HRIStudio is that it lowers the technical barrier for domain experts who are not programmers; drawing wizards from outside computer science allows the data to speak to whether that claim holds for the intended user population.
+\textbf{Wizards.} I recruited eight Bucknell University faculty members drawn from across departments to serve as wizards. I deliberately recruited from both ends of the programming experience spectrum: four had substantial programming backgrounds, and four described themselves as non-programmers or having minimal coding experience. This cross-departmental recruitment was intentional. A primary claim of HRIStudio is that it lowers the technical barrier for domain experts who are not programmers; drawing wizards from outside computer science allows the data to speak to whether that claim holds for the intended user population.
 
 The key inclusion criterion for all wizards was no prior experience with either the NAO robot or Choregraphe software specifically. This controls for tool familiarity so that performance differences reflect the tools themselves rather than prior exposure. I recruited wizards through direct email. Participation was framed as a voluntary software evaluation unrelated to any professional obligations.
 
-\subsection{Test Subjects}
+\textbf{Test subjects.} I recruited eight undergraduate students from Bucknell University to serve as test subjects. Their role was to serve as the subjects for the experimental protocol coded by each wizard. To eliminate any risk of coercion, I screened participants to ensure that no test subject was enrolled in a course taught by the wizard they were paired with. Recruitment used campus flyers inviting volunteers to interact with a robot for approximately 15 minutes, and all participants received international snacks and refreshments upon arrival regardless of whether they completed the full session.
 
-I recruited eight undergraduate students from Bucknell University to serve as test subjects. Their role was to interact with the robot during the live trial portion of each wizard's session. I screened participants to ensure that no test subject was enrolled in a course taught by the wizard they were paired with, to eliminate any risk of coercion. I recruited test subjects through campus flyers inviting volunteers to interact with a robot for approximately 15 minutes. I provided all participants with international snacks and refreshments upon arrival, regardless of whether they completed the full session.
-
-\subsection{Sample Size Rationale}
-
-With $N = 16$ total participants, this study is small by the standards of a mature research program. That is intentional and appropriate given three constraints. First, this is an honors thesis project conducted over two academic semesters by a single undergraduate researcher with no funded research assistant support. The total person-hours available for participant recruitment, scheduling, session facilitation, and data processing are genuinely bounded. Second, the scope of the study is validation rather than definitive evaluation: the goal is to determine whether HRIStudio produces measurably different outcomes from Choregraphe and to identify failure modes, not to establish effect sizes for a broad population. Third, recruiting faculty from outside computer science for a 75-minute technology evaluation at a small liberal arts university is practically difficult. The target population --- domain experts with no prior robotics tool exposure --- is limited in size and has high competing time demands. Eight participants span the available pool without relaxing the inclusion criteria.
+\textbf{Sample size rationale.} With $N = 16$ total participants, this sample size is appropriate for a pilot validation study whose goal is directional evidence and failure-mode identification rather than effect-size estimation for a broad population. The size matches the scope and constraints of this honors thesis: two academic semesters, one undergraduate researcher, and no funded research assistant support. It also reflects the target population and recruitment context. Faculty domain experts outside computer science with no prior NAO or Choregraphe experience are a limited pool at a small liberal arts university and have high competing time demands; eight wizard participants represent the available pool without relaxing inclusion criteria.
 
 This scale is consistent with pilot and feasibility studies in HRI, where small $N$ designs are common in early-stage tool validation~\cite{Steinfeld2009}. Findings should be interpreted as preliminary evidence and directional indicators rather than as conclusive proof.
 
 \section{Task}
 
-Both wizard groups received the same written task specification: the \emph{Interactive Storyteller} scenario. The specification described a robot that introduces an astronaut named Dara, narrates her discovery of an anomalous glowing rock on Mars, asks the participant a comprehension question about the story, and delivers one of two responses depending on whether the answer is correct. The full specification, including exact robot speech, required gestures, and branching logic, is reproduced in Appendix~\ref{app:materials}.
+Both wizard groups received the same written task specification: the \emph{Interactive Storyteller} scenario. The specification described a robot that introduces an astronaut named Dara, narrates her discovery of an anomalous glowing rock on Mars, asks the human subject a comprehension question about the story, and delivers one of two responses depending on whether the answer is correct. The full specification, including exact robot speech, required gestures, and branching logic, is reproduced in Appendix~\ref{app:materials}.
 
-The task was chosen because it requires several distinct capabilities: speech actions, gesture coordination, conditional branching based on participant input, and a defined conclusion. This exercises the core features of both tools and produces an artifact that can be evaluated against a clear specification.
+The task was chosen because it requires several distinct capabilities: speech actions, gesture coordination, conditional branching based on human-subject input, and a defined conclusion. In both conditions, wizards had to translate the same written protocol into an executable interaction script, including action ordering, branching logic, and timing decisions. In Choregraphe, that meant assembling and connecting behavior nodes in a finite state machine. In HRIStudio, it meant building a sequential action timeline with conditional branches. This makes the task a direct comparison of how each tool supports coding the robot behavior required by the same protocol.
 
-\section{Apparatus}
+\section{Robot Platform and Software Apparatus}
 
 Both conditions used the same NAO humanoid robot, a platform approximately 0.58 meters tall capable of speech synthesis, animated gestures, and head movement. Using the same hardware ensured that any differences in execution quality were attributable to the software, not the robot.
+
+Figure~\ref{fig:platform-photo-placeholders} reserves space for final platform images. Replace these placeholders with the final NAO6 and TurtleBot photos when available.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+	\draw[thick] (0,0) rectangle (6,4);
+	\node at (3,2.5) {\textbf{NAO6 Image Placeholder}};
+	\node at (3,1.7) {Humanoid platform photo};
+
+	\draw[thick] (7,0) rectangle (13,4);
+	\node at (10,2.5) {\textbf{TurtleBot Image Placeholder}};
+	\node at (10,1.7) {Mobile base platform photo};
+\end{tikzpicture}
+\caption{Placeholder image slots for NAO6 and TurtleBot platforms.}
+\label{fig:platform-photo-placeholders}
+\end{figure}
 
 The control condition used Choregraphe \cite{Pot2009}, a proprietary visual programming tool developed by Aldebaran Robotics and the standard software for NAO programming. Choregraphe organizes behavior as a finite state machine: nodes represent states and edges represent transitions triggered by conditions or timers.
 
@@ -51,7 +62,7 @@ The experimental condition used HRIStudio, described in Chapter~\ref{ch:implemen
 
 \section{Procedure}
 
-Each wizard completed a single 75-minute session structured in four phases. Test subjects participated in the live trial phase only, for approximately 15 minutes.
+Each wizard completed a single 75-minute session structured in four phases. Each session was run by one wizard and included one test subject during the trial phase, which lasted approximately 15 minutes.
 
 \subsection{Phase 1: Training (15 minutes)}
 
@@ -61,13 +72,13 @@ I opened each session with a standardized tutorial tailored to the wizard's assi
 
 The wizard received the paper specification and had 30 minutes to implement it using their assigned tool. I observed silently and recorded a screen capture of the wizard's workflow throughout. I noted time to completion, help requests, and any observable errors or misconceptions. If the wizard declared completion before the 30-minute limit, the remaining time was used to review and refine the design.
 
-\subsection{Phase 3: Live Trial (15 minutes)}
+\subsection{Phase 3: Trial (15 minutes)}
 
 After the design phase, a test subject entered the room and the wizard ran their completed program to control the robot during an actual interaction. I video-recorded the full trial to capture robot behavior and timing. I told the test subject they were helping evaluate the robot's performance, not being evaluated themselves.
 
 \subsection{Phase 4: Debrief (15 minutes)}
 
-Following the live trial, the wizard exported their completed project file and completed the System Usability Scale survey. The exported file and video recording served as the primary artifacts for scoring.
+Following the trial, the wizard exported their completed project file and completed the System Usability Scale survey. The exported file and video recording served as the primary artifacts for scoring.
 
 \section{Measures}
 \label{sec:measures}
@@ -82,9 +93,9 @@ This measure is motivated by a gap identified by Riek~\cite{Riek2012}, whose sys
 
 \subsection{Execution Reliability Score}
 
-The Execution Reliability Score measures whether the designed interaction executed as intended during the live trial. I reviewed the video recording against the specification and the wizard's design. Evaluation criteria included whether the robot delivered the correct speech at each step, whether gestures executed and synchronized with speech, whether the conditional branch resolved correctly based on the test subject's answer, and whether any errors, disconnections, or hangs occurred. The score is the proportion of the interaction that executed without error.
+The Execution Reliability Score measures whether the designed interaction executed as intended during the trial. I reviewed the video recording against the specification and the wizard's design. Evaluation criteria included whether the robot delivered the correct speech at each step, whether gestures executed and synchronized with speech, whether the conditional branch resolved correctly based on the test subject's answer, and whether any errors, disconnections, or hangs occurred. The score is the proportion of the interaction that executed without error.
 
-This measure responds directly to Riek's~\cite{Riek2012} finding that only 3.7\% of published WoZ studies reported any measure of wizard error, making it nearly impossible to determine whether execution matched design intent. Without an execution-level metric, a study could report a technically correct design that nonetheless failed during the live trial due to timing errors, disconnections, or mishandled branches, exactly the kind of problem HRIStudio was designed to detect and log~\cite{OConnor2024, OConnor2025}. The ERS captures those deviations quantitatively. The complete rubric is reproduced in Appendix~\ref{app:materials}. This measure addresses reproducibility: did the design translate reliably into execution?
+This measure responds directly to Riek's~\cite{Riek2012} finding that only 3.7\% of published WoZ studies reported any measure of wizard error, making it nearly impossible to determine whether execution matched design intent. Without an execution-level metric, a study could report a technically correct design that nonetheless failed during the trial due to timing errors, disconnections, or mishandled branches, exactly the kind of problem HRIStudio was designed to detect and log~\cite{OConnor2024, OConnor2025}. The ERS captures those deviations quantitatively. The complete rubric is reproduced in Appendix~\ref{app:materials}. This measure addresses reproducibility: did the design translate reliably into execution?
 
 \subsection{System Usability Scale}
 
@@ -107,7 +118,7 @@ Table~\ref{tbl:measurement_instruments} summarizes the four instruments, when th
 \hline
 Design Fidelity Score & Completeness and correctness of the wizard's implementation against the written specification & End of design phase & Accessibility \\
 \hline
-Execution Reliability Score & Whether the interaction executed as designed during the live trial & Post-trial video review & Reproducibility \\
+Execution Reliability Score & Whether the interaction executed as designed during the trial & Post-trial video review & Reproducibility \\
 \hline
 System Usability Scale & Wizard's perceived usability of the assigned tool & Debrief phase & User experience \\
 \hline
@@ -120,4 +131,4 @@ Time-to-Completion \& Help Requests & Task duration and support requests during 
 
 \section{Chapter Summary}
 
-This chapter described a pilot between-subjects study I designed to test whether the design principles formalized in Chapters~\ref{ch:design} and~\ref{ch:implementation} produce measurably different outcomes from existing practice. Eight wizard participants (four with programming backgrounds and four without) each designed and ran the Interactive Storyteller task on a NAO robot using either HRIStudio or Choregraphe. I measured design fidelity against the written specification, execution reliability during the live trial, perceived usability via the SUS, and supplementary timing and help data. Chapter~\ref{ch:results} presents the results.
+This chapter described a pilot between-subjects study I designed to test whether the design principles formalized in Chapters~\ref{ch:design} and~\ref{ch:implementation} produce measurably different outcomes from existing practice. Eight wizard participants (four with programming backgrounds and four without) each designed and ran the Interactive Storyteller task on a NAO robot using either HRIStudio or Choregraphe. I measured design fidelity against the written specification, execution reliability during the trial, perceived usability via the SUS, and supplementary timing and help data. Chapter~\ref{ch:results} presents the results.
