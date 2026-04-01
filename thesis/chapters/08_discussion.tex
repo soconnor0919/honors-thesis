@@ -1,11 +1,66 @@
 \chapter{Discussion}
 \label{ch:discussion}
 
+This chapter interprets the results presented in Chapter~\ref{ch:results} against the two research questions established in Chapter~\ref{ch:evaluation}, situates the findings within the broader literature on WoZ methodology, and identifies the limitations of this study. Where the pilot data derives from an initial subset of sessions, I treat those observations as preliminary evidence and establish the analytical framework that governs interpretation of the full dataset.
+
 \section{Interpretation of Findings}
-% TODO
+
+\subsection{Research Question 1: Accessibility}
+
+The first research question asked whether HRIStudio enables domain experts without prior robotics experience to successfully implement a robot interaction from a written specification. The Choregraphe condition provides the baseline against which this question is evaluated.
+
+W-01's session offers preliminary evidence consistent with the accessibility problem described in Chapter~\ref{ch:background}. W-01 was a Digital Humanities faculty member with no programming background --- precisely the intended user population for tools like Choregraphe. Despite this framing, W-01 required significantly more time than allocated and generated a high volume of help requests, the majority of which concerned the tool's interface rather than the task itself. This distinction matters: W-01 understood what the specification required but could not efficiently translate that understanding into Choregraphe's behavior model. The finite state machine paradigm --- boxes, signals, and explicit connection routing --- imposed cognitive overhead on a domain expert who had no prior exposure to this abstraction.
+
+W-01's SUS score of 60, below the average benchmark of 68~\cite{Brooke1996}, corroborates this observation. Post-session comments indicated that the wizard would not use Choregraphe for future HRI work without technical support, despite completing the design challenge. Together these observations establish a concrete baseline: a tool nominally designed for non-programmers nonetheless required substantial researcher support, produced a high volume of interface-level help requests, and was rated below average in usability by a domain expert with no programming background.
+
+The HRIStudio sessions are evaluated against this baseline. The central comparison is whether wizards using HRIStudio produce higher DFS scores with fewer tool-operation interventions and higher SUS ratings. If HRIStudio's timeline-based interaction model reduces the interface friction observed with Choregraphe, those differences should appear across all three measures simultaneously; a pattern limited to one measure would call for a more qualified interpretation.
+
+% TODO: Replace the forward-looking framing above with the actual condition-level comparison once HRIStudio sessions are complete.
+% TODO: Report mean DFS, SUS, and T-type intervention counts per condition. Discuss what any gap implies for the accessibility claim.
+
+\subsection{Research Question 2: Reproducibility}
+
+The second research question asked whether HRIStudio produces more reliable execution of a designed interaction compared to Choregraphe. The most instructive finding from W-01's session is not a score but an incident: without any technical failure, the wizard substituted a different rock color in the robot's speech and comprehension question, departing from the ``red'' specified in the written protocol. This deviation was not caught during the design phase, was not flagged by the tool, and was only discovered during the live trial.
+
+This is precisely the failure mode the reproducibility problem predicts. Riek's~\cite{Riek2012} review found that fewer than 4\% of published WoZ studies reported any measure of wizard error, meaning most studies have no mechanism to detect whether execution matched design intent. W-01's session demonstrates that such deviations occur even in controlled conditions with a single, simple specification and an engaged wizard. The deviation was not negligence; it was creative drift made possible by a tool that places no structural constraint on what the wizard types into a speech action.
+
+HRIStudio's protocol enforcement model is designed to prevent this class of deviation. By locking speech content at design time and presenting it to the wizard during execution rather than requiring re-entry, HRIStudio eliminates the structural opportunity for this substitution. Whether enforcement translates into measurably higher ERS scores is the empirical question the full dataset addresses. Complementing the ERS, the intervention log records whether any branch during the trial was resolved through programmed conditional logic or by manual re-routing, providing a parallel measure of execution reliability that is independent of the test subject's responses.
+
+% TODO: Replace the forward-looking framing above with actual ERS condition means once HRIStudio sessions are complete.
+% TODO: Report whether any HRIStudio sessions produced specification deviations or required trial-phase T interventions.
+
+\subsection{Session Timing and Downstream Effects}
+
+W-01's design phase extended to 35 minutes, overrunning the 30-minute allocation by five minutes and compressing the trial window to approximately five minutes, well short of the intended ten. This timing pattern is itself evidence for the accessibility claim. If a tool reliably causes design phases to overrun their allocation, the downstream quality of the trial is compromised: a shorter trial produces a less complete ERS and a less representative interaction for the test subject. The difficulty of a tool does not only affect the design experience; it degrades the quality of the data that follow from it. Phase-by-phase timing data collected across all sessions will reveal whether design phase overruns are characteristic of one condition rather than the other, constituting a supplementary indicator of tool accessibility independent of the DFS score.
+
+% TODO: Report mean design phase duration per condition and note whether overruns cluster in the Choregraphe condition.
 
 \section{Comparison to Prior Work}
-% TODO
+
+The findings from W-01's session are broadly consistent with prior characterizations of Choregraphe's usability profile. Pot et al.~\cite{Pot2009} introduced Choregraphe as a tool for enabling non-programmers to create NAO behaviors, but subsequent HRI research has treated it primarily as a programmer's tool in practice. The help request pattern observed --- conceptual understanding blocked by interface friction --- aligns with Riek's~\cite{Riek2012} observation that WoZ tools tend to require substantial technical investment even when the underlying experiment is conceptually simple.
+
+The specification deviation observed in W-01's session connects directly to Porfirio et al.'s~\cite{Porfirio2023} argument that formal, verifiable behavior specifications are a prerequisite for reproducible HRI. Porfirio et al. propose specification languages as the solution; HRIStudio takes a complementary approach by embedding the specification into the execution environment itself, making deviation structurally harder rather than formally detectable after the fact. The practical consequence of this design choice --- whether it reduces deviations in practice --- is what the ERS comparison will reveal.
+
+The SUS score of 60 for Choregraphe falls below scores reported for general-purpose visual programming tools in other HCI studies, though direct comparison is complicated by task and population differences. It is consistent with the finding that domain-specific visual programming environments carry learning curves that programming experience alone does not fully resolve~\cite{Bartneck2024}.
+
+% TODO: Add HRIStudio condition SUS mean to this section and compare to the Choregraphe baseline once sessions are complete.
 
 \section{Limitations}
-% TODO
+
+This study has several limitations that must be considered when interpreting the findings.
+
+\textbf{Sample size.} With six wizard participants ($N = 6$), the study is too small for inferential statistics. The reported scores are descriptive. Patterns in the data can suggest directions for future work but cannot establish causal claims about the effect of the tool on design fidelity or execution reliability.
+
+\textbf{Researcher as test subject.} In W-01's session, the researcher served as the test subject due to participant unavailability. The researcher had foreknowledge of the specification and the study design, which may have introduced familiarity bias into the interaction. Because the DFS and ERS are scored against recordings and exported files rather than the test subject's behavior, this limitation primarily affects the qualitative character of the trial rather than the quantitative scores.
+
+\textbf{Compressed trial window.} W-01's trial lasted approximately five minutes rather than the intended ten. This limits the completeness of the ERS for that session, since several interaction steps were abbreviated under time pressure. Future sessions should enforce the transition to the trial phase at the 30-minute design mark regardless of completion status, consistent with the observer's role defined in the study protocol.
+
+\textbf{Single task.} Both conditions used the same Interactive Storyteller specification. While this controls for task difficulty, it limits generalizability. The task is simple relative to real HRI experiments; the gap between conditions may be larger or smaller with a more complex protocol involving multiple branches or longer interaction sequences.
+
+\textbf{Condition imbalance.} Because participants were randomly assigned, the final sample may distribute programmers unevenly across conditions, confounding the comparison. With a small $N$, random assignment does not guarantee balance across programming background.
+
+\textbf{Platform version.} HRIStudio is under active development. The version used in this study represents the system at a specific point in time; future iterations may behave differently.
+
+\section{Chapter Summary}
+
+This chapter interpreted the results of the pilot study in the context of the two research questions and connected the findings to prior work. The W-01 session provides preliminary evidence for both the accessibility problem and the reproducibility problem: Choregraphe produced significant interface friction for a Digital Humanities faculty member with no programming background, and permitted a specification deviation that was undetected until the live trial. These observations are consistent with the motivating analysis in Chapter~\ref{ch:background} and anchor the comparisons that the full dataset will resolve. The limitations of this pilot study --- sample size, researcher as test subject, compressed trial window, and single task --- are acknowledged and inform the future directions described in Chapter~\ref{ch:conclusion}.

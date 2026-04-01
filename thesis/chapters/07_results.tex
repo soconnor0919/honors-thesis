@@ -1,8 +1,109 @@
 \chapter{Results}
 \label{ch:results}
 
-\section{Quantitative Results}
-% TODO
+This chapter presents the results of the pilot validation study described in Chapter~\ref{ch:evaluation}. Because this is a small pilot, I report descriptive statistics and qualitative observations rather than inferential tests. The goal is directional evidence: do the patterns in the data suggest that HRIStudio changes what wizards can produce and how reliably they can produce it?
+
+\section{Participant Overview}
+
+% TODO: Update session counts when all sessions are complete.
+Table~\ref{tbl:sessions} summarizes the participants and their assigned conditions. Wizards are identified by code to protect confidentiality. Demographic information (programming background: programmer or non-programmer) was collected during recruitment.
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+\begin{tabular}{|l|l|l|l|l|l|l|}
+\hline
+\textbf{ID} & \textbf{Condition} & \textbf{Background} & \textbf{DFS} & \textbf{ERS} & \textbf{SUS} & \textbf{Design Time} \\
+\hline
+W-01 & Choregraphe & Programmer & 70 & 65 & 60 & 35 min \\
+\hline
+W-02 & \textit{[PLACEHOLDER]} & \textit{[PLACEHOLDER]} & --- & --- & --- & --- \\
+\hline
+W-03 & \textit{[PLACEHOLDER]} & \textit{[PLACEHOLDER]} & --- & --- & --- & --- \\
+\hline
+W-04 & \textit{[PLACEHOLDER]} & \textit{[PLACEHOLDER]} & --- & --- & --- & --- \\
+\hline
+\end{tabular}
+\caption{Summary of wizard participants, conditions, and scores. Rows marked PLACEHOLDER are pending completion.}
+\label{tbl:sessions}
+\end{table}
+
+\section{Primary Measures}
+
+\subsection{Design Fidelity Score}
+
+The Design Fidelity Score measures how completely and correctly each wizard implemented the written specification. Scores range from 0 to 100, with full points awarded only when a component is both present and correct.
+
+W-01 (Choregraphe) received a DFS of 70. Analysis of the exported project file indicated that all four interaction steps were present and correctly sequenced, and the conditional branch was implemented and functional. However, W-01 deviated from the specification by modifying the color of the rock from red to a different value, causing the narrative speech and comprehension question to no longer match the written protocol. This reduced the ``Correct'' scores for speech items 2 and 3. The open-hand introduction gesture was present and correctly executed; at least one narrative gesture was included; and both branch responses were implemented, though the correct-branch response speech was also modified to reflect the changed rock color.
+
+% TODO: Add DFS scores for remaining participants and compute condition means when data collection is complete.
+% TODO: Add a bar chart or table comparing DFS by condition.
+\textit{[PLACEHOLDER: DFS results for W-02 through W-0X will be reported here. Condition means and ranges will be summarized in a table.]}
+
+\subsection{Execution Reliability Score}
+
+The Execution Reliability Score measures how faithfully the designed interaction executed during the live trial. W-01 received an ERS of 65. The trial ran for approximately five minutes, which was shorter than anticipated due to the design phase overrunning the scheduled window. The introduction speech and gesture executed correctly. The narrative speech executed but deviated from the specification due to the modified rock color, as described above. The comprehension question was delivered, the branching logic resolved correctly based on the test subject's response, and the appropriate branch response was given. Gesture synchronization was partial: the pause gesture executed, but coordination between speech and movement was inconsistent at several points. No system disconnections or crashes occurred.
+
+% TODO: Add ERS scores for remaining participants and compute condition means.
+% TODO: Note any systematic patterns in execution failures across conditions.
+\textit{[PLACEHOLDER: ERS results for W-02 through W-0X will be reported here.]}
+
+\subsection{System Usability Scale}
+
+W-01 rated Choregraphe with a SUS score of 60. The standard benchmark for SUS scores places 68 as the average; scores below 68 are generally considered below average usability~\cite{Brooke1996}. A score of 60 suggests that W-01 found Choregraphe marginal in usability despite having a programming background, which is consistent with the large number of help requests observed during the design phase.
+
+% TODO: Add SUS scores for remaining participants. Report condition means.
+\textit{[PLACEHOLDER: SUS scores for W-02 through W-0X will be reported here.]}
+
+\section{Supplementary Measures}
+
+\subsection{Session Timing}
+
+Table~\ref{tbl:timing} summarizes the time spent in each phase per session.
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+\begin{tabular}{|l|l|l|l|l|l|}
+\hline
+\textbf{ID} & \textbf{Training} & \textbf{Design} & \textbf{Trial} & \textbf{Debrief} & \textbf{Total} \\
+\hline
+W-01 & 15 min & 35 min & 5 min & 5 min & 60 min \\
+\hline
+W-02 & --- & --- & --- & --- & --- \\
+\hline
+W-03 & --- & --- & --- & --- & --- \\
+\hline
+W-04 & --- & --- & --- & --- & --- \\
+\hline
+\end{tabular}
+\caption{Time spent in each session phase per wizard participant.}
+\label{tbl:timing}
+\end{table}
+
+W-01's design phase extended to 35 minutes, nearly double the 20-minute allocation, compressing the trial and debrief to 5 minutes each. Despite this, W-01 declared the design complete rather than abandoning it, and the robot did execute a recognizable version of the specification during the trial.
+
+\subsection{Help Requests}
+
+% TODO: Report help request counts and types for all sessions.
+W-01 generated a substantial number of help requests during the design phase, primarily concerning Choregraphe's interface rather than the specification itself. The wizard demonstrated understanding of the task but encountered repeated friction with the tool's connection model, behavior box configuration, and branch routing. This pattern --- understanding the goal but struggling with the mechanism --- is characteristic of the accessibility problem described in Chapter~\ref{ch:background}.
+
+\textit{[PLACEHOLDER: Help request counts and categories for all sessions will be reported here.]}
 
 \section{Qualitative Findings}
-% TODO
+
+\subsection{Observed Specification Deviation}
+
+A notable qualitative finding from W-01's session was an unprompted deviation from the written specification: the wizard substituted a different rock color in the robot's speech and comprehension question, departing from the ``red'' specified in the paper protocol. This was not a tool failure; the wizard made a deliberate creative choice that the tool did not prevent or flag. The deviation was undetected until the live trial, when the researcher --- serving as test subject --- did not correctly identify the rock color and triggered the incorrect-answer branch. This incident illustrates the reproducibility problem concretely: without automated protocol enforcement, wizard behavior can drift from the specification in ways that are invisible until execution, affecting the validity of the resulting interaction data.
+
+\subsection{Wizard Experience}
+
+% TODO: Add qualitative observations from remaining sessions.
+W-01 expressed that the training was comprehensible and that the underlying logic of the task was clear. The primary source of frustration was Choregraphe's interface for handling conditional branches and managing the timing of parallel behaviors. Post-session comments suggested that the wizard would not use Choregraphe independently for future HRI work without technical support.
+
+\textit{[PLACEHOLDER: Qualitative observations from remaining sessions will be reported here.]}
+
+\section{Chapter Summary}
+
+% TODO: Update summary when all sessions are complete.
+This chapter presented the results from the pilot validation study. To date, one Choregraphe condition session has been completed (W-01), yielding a DFS of 70, ERS of 65, and SUS of 60. Qualitative observations from this session provide preliminary evidence for both the accessibility problem (substantial help requests and design phase overrun) and the reproducibility problem (unprompted specification deviation undetected until the live trial). Remaining sessions will add data for both conditions; Chapter~\ref{ch:discussion} interprets the available findings in the context of the research questions.
