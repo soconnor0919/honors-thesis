@@ -62,9 +62,9 @@ Figure~\ref{fig:example-hierarchy} maps that study onto the same hierarchy. The 
 	\draw[arrow] (exp.south)   -- (step.north);
 
 	%% ---- Trial column ----
-	\node[trial] (t1) at (7.9, 5.5) {Trial --- P01\\{\footnotesize timestamped log}};
-	\node[trial] (t2) at (7.9, 4.2) {Trial --- P02\\{\footnotesize timestamped log}};
-	\node[trial] (t3) at (7.9, 2.9) {Trial --- P03\\{\footnotesize timestamped log}};
+	\node[trial] (t1) at (7.9, 5.5) {Trial: P01\\{\footnotesize timestamped log}};
+	\node[trial] (t2) at (7.9, 4.2) {Trial: P02\\{\footnotesize timestamped log}};
+	\node[trial] (t3) at (7.9, 2.9) {Trial: P03\\{\footnotesize timestamped log}};
 
 	%% ---- Separator ----
 	\draw[gray!60, thick, dashed] (4.85, 1.8) -- (4.85, 6.6);
@@ -138,7 +138,7 @@ Together, these three figures motivate why the hierarchy is useful in practice. 
 
 \section{Event-Driven Execution Model}
 
-To achieve real-time responsiveness while maintaining methodological rigor (R3, R5), the system uses an event-driven execution model rather than a time-driven one. In a time-driven approach, the system advances through actions on a fixed schedule regardless of what the participant is doing, so the robot might speak over a participant who is still talking, or move on before a response has been given. The event-driven model avoids this by letting the wizard trigger each action when the interaction is ready for it. Figure~\ref{fig:event-driven-timeline} contrasts the two approaches using the same four-action sequence: Greet (G), Begin Story (BS), Ask Question (AQ), and End (E). In the time-driven row, fixed intervals $t_0$ through $t_2$ define when each event fires, and dashed vertical lines show where those moments fall relative to the event-driven rows below. In both event-driven rows, the wizard fires the same four labeled events at different real-time positions --- T1 (a faster participant) finishes well before T2 (a slower one) --- while both preserve the same action order.
+To achieve real-time responsiveness while maintaining methodological rigor (R3, R5), the system uses an event-driven execution model rather than a time-driven one. In a time-driven approach, the system advances through actions on a fixed schedule regardless of what the participant is doing, so the robot might speak over a participant who is still talking, or move on before a response has been given. The event-driven model avoids this by letting the wizard trigger each action when the interaction is ready for it. Figure~\ref{fig:event-driven-timeline} contrasts the two approaches using the same four-action sequence: Greet (G), Begin Story (BS), Ask Question (AQ), and End (E). In the time-driven row, fixed intervals $t_0$ through $t_2$ define when each event fires, and dashed vertical lines show where those moments fall relative to the event-driven rows below. In both event-driven rows, the wizard fires the same four labeled events at different real-time positions (T1, a faster participant, finishes well before T2, a slower one), while both preserve the same action order.
 
 \begin{figure}[htbp]
 \centering
@@ -332,4 +332,4 @@ The design choices described in this chapter were made to meet the requirements 
 
 \section{Chapter Summary}
 
-This chapter described the architectural design with emphasis on how each design choice directly implements the infrastructure requirements identified in Chapter~\ref{ch:background}. The hierarchical organization of experiment specifications enables intuitive, executable design. The event-driven execution model balances protocol consistency with realistic interaction dynamics. The modular interface architecture separates concerns across design, execution, and analysis phases while maintaining data coherence. The integrated data flow ensures that reproducibility is supported by design rather than by afterthought. The following chapter presents HRIStudio as a reference implementation of these design principles, discussing specific technologies and architectural components.
+This chapter described the architectural design with emphasis on how each design choice directly implements the infrastructure requirements identified in Chapter~\ref{ch:background}. The hierarchical organization of experiment specifications enables intuitive, executable design. The event-driven execution model balances protocol consistency with realistic interaction dynamics. The modular interface architecture separates concerns across design, execution, and analysis phases while maintaining data coherence. The integrated data flow ensures that reproducibility is supported by design rather than by afterthought. The following chapter presents HRIStudio, the platform built on these design principles, describing the specific technologies and architectural components that bring them to life.

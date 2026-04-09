@@ -1,7 +1,7 @@
 \chapter{Pilot Validation Study}
 \label{ch:evaluation}
 
-This chapter presents the pilot validation study used to evaluate whether HRIStudio improves accessibility and reproducibility in WoZ-based HRI research. It defines the research questions, study design, participant roles, task, apparatus, procedure, and measurement instruments.
+This chapter presents the pilot validation study used to evaluate whether HRIStudio improves accessibility and reproducibility in WoZ-based HRI research. It defines the research questions, study design, task, apparatus, procedure, and measurement instruments.
 
 \section{Research Questions}
 
@@ -9,13 +9,11 @@ The evaluation targets the two problems established in Chapter~\ref{ch:backgroun
 
 These problems give rise to two research questions. The first asks whether HRIStudio enables domain experts without prior robotics experience to successfully implement a robot interaction from a written specification. The second asks whether HRIStudio produces more reliable execution of that interaction compared to standard practice.
 
-I hypothesized that wizards using HRIStudio would more completely and correctly implement the written specification, and that their designs would execute more reliably during the trial, compared to wizards using ad hoc programs created for specific social robotics experiments, with Choregraphe as the baseline tool in this study.
+I hypothesized that wizards using HRIStudio would more completely and correctly implement the written specification, and that their designs would execute more reliably during the trial, compared to wizards using ad-hoc programs created for specific social robotics experiments, with Choregraphe as the baseline tool in this study.
 
 \section{Study Design}
 
 I used what Bartneck et al.~\cite{Bartneck2024} call a between-subjects design, in which each participant is assigned to only one condition. I randomly assigned each wizard participant to one of two conditions: HRIStudio or Choregraphe. Both groups received the same task, the same time allocation, and the same training structure. Measuring each participant in only one condition prevents carryover effects, meaning performance changes caused by prior exposure to another condition rather than by the assigned condition itself.
-
-In this study, I defined two types of participants with distinct roles. Wizards were faculty members drawn from across departments who designed and ran the robot interaction. Test subjects were undergraduate students who interacted with the robot during the trial. This separation ensures that the evaluation captures both the design experience and the quality of the resulting interaction. The next section details recruitment, inclusion criteria, and sample rationale for both groups.
 
 \section{Participants}
 
@@ -23,15 +21,13 @@ In this study, I defined two types of participants with distinct roles. Wizards 
 
 The key inclusion criterion for all wizards was no prior experience with either the NAO robot or Choregraphe software specifically. This controls for tool familiarity so that performance differences reflect the tools themselves rather than prior exposure. I recruited wizards through direct email. Participation was framed as a voluntary software evaluation unrelated to any professional obligations.
 
-\textbf{Test subjects.} I recruited one undergraduate student per wizard session to serve as a test subject, for a total matching the wizard sample. Their role was to serve as the subjects for the experimental protocol coded by each wizard. To eliminate any risk of coercion, I screened participants to ensure that no test subject was enrolled in a course taught by the wizard they were paired with. Recruitment used campus flyers inviting volunteers to interact with a robot for approximately 15 minutes. There was no compensation for participation.
-
-\textbf{Sample size rationale.} With six wizard participants ($N = 6$) and a matched number of test subjects, this sample size is appropriate for a pilot validation study whose goal is directional evidence and failure-mode identification rather than effect-size estimation for a broad population. The size matches the scope and constraints of this honors thesis: two academic semesters, one undergraduate researcher, and no funded research assistant support. It also reflects the target population and recruitment context. Faculty domain experts outside computer science with no prior NAO or Choregraphe experience are a limited pool at a small liberal arts university and have high competing time demands. This scale is consistent with pilot and feasibility studies in HRI, where small $N$ designs are common in early-stage tool validation~\cite{Steinfeld2009}. Findings should be interpreted as preliminary evidence and directional indicators rather than as conclusive proof.
+\textbf{Sample size rationale.} With six wizard participants ($N = 6$), this sample size is appropriate for a pilot validation study whose goal is directional evidence and failure-mode identification rather than effect-size estimation for a broad population. The size matches the scope and constraints of this honors thesis: two academic semesters, one undergraduate researcher, and no funded research assistant support. It also reflects the target population and recruitment context. Faculty domain experts outside computer science with no prior NAO or Choregraphe experience are a limited pool at a small liberal arts university and have high competing time demands. This scale is consistent with pilot and feasibility studies in HRI, where small $N$ designs are common in early-stage tool validation~\cite{HoffmanZhao2021}. Findings should be interpreted as preliminary evidence and directional indicators rather than as conclusive proof.
 
 \section{Task}
 
-Both wizard groups received the same written task specification: the \emph{Interactive Storyteller} scenario. The specification described a robot that introduces an astronaut named Kai, narrates her discovery of a glowing rock on Mars, asks the human subject a comprehension question about the story, and delivers one of two responses depending on whether the answer is correct. The full specification, including exact robot speech, required gestures, and branching logic, is reproduced in Appendix~\ref{app:materials}.
+Both wizard groups received the same written task specification: the \emph{Interactive Storyteller} scenario. The specification described a robot that introduces an astronaut named Kai, narrates her discovery of a glowing rock on Mars, asks a comprehension question, and delivers a response according to the answer given. The full specification, including exact robot speech, required gestures, and branching logic, is reproduced in Appendix~\ref{app:blank_templates}.
 
-The task was chosen because it requires several distinct capabilities: speech actions, gesture coordination, conditional branching based on human-subject input, and a defined conclusion. In both conditions, wizards had to translate the same written protocol into an executable interaction script, including action ordering, branching logic, and timing decisions. In Choregraphe, that meant assembling and connecting behavior nodes in a finite state machine. In HRIStudio, it meant building a sequential action timeline with conditional branches. This makes the task a direct comparison of how each tool supports coding the robot behavior required by the same protocol.
+The task was chosen because it requires several distinct capabilities: speech actions, gesture coordination, conditional branching, and a defined conclusion. In both conditions, wizards had to translate the same written protocol into an executable interaction script, including action ordering, branching logic, and timing decisions. In Choregraphe, that meant assembling and connecting behavior nodes in a finite state machine. In HRIStudio, it meant building a sequential action timeline with conditional branches. This makes the task a direct comparison of how each tool supports coding the robot behavior required by the same protocol.
 
 \section{Robot Platform and Software Apparatus}
 
@@ -41,7 +37,7 @@ Both conditions used the same NAO humanoid robot (Figure~\ref{fig:nao6-photo}), 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.45\textwidth]{images/nao6.jpg}
-\caption{The NAO V6 humanoid robot used in both conditions of the pilot study.}
+\caption{The NAO6 humanoid robot used in both conditions of the pilot study.}
 \label{fig:nao6-photo}
 \end{figure}
 
@@ -52,7 +48,7 @@ The experimental condition used HRIStudio, described in Chapter~\ref{ch:implemen
 
 \section{Procedure}
 
-Each wizard completed a single 60-minute session structured in four phases. Each session was run by one wizard and included one test subject during the trial phase.
+Each wizard completed a single 60-minute session structured in four phases.
 
 \subsection{Phase 1: Training (15 minutes)}
 
@@ -60,15 +56,15 @@ I opened each session with a standardized tutorial tailored to the wizard's assi
 
 \subsection{Phase 2: Design Challenge (30 minutes)}
 
-The wizard received the paper specification and had 30 minutes to implement it using their assigned tool. I observed and recorded a screen capture of the wizard's workflow throughout. Using a structured observer data sheet, I logged every instance in which I provided assistance to the wizard, categorizing each by type: \emph{tool-operation} (T), \emph{task clarification} (C), \emph{hardware or technical} (H), or \emph{general} (G). For each tool-operation intervention, I also recorded which rubric item it pertained to. If the wizard declared completion before the time limit, the remaining time was used to review and refine the design.
+The wizard received the paper specification and had 30 minutes to implement it using their assigned tool. Using a structured observer data sheet, I logged every instance in which I provided assistance to the wizard, categorizing each by type: \emph{tool-operation} (T), \emph{task clarification} (C), \emph{hardware or technical} (H), or \emph{general} (G). For each tool-operation intervention, I also recorded which rubric item it pertained to. If the wizard declared completion before the time limit, the remaining time was used to review and refine the design.
 
 \subsection{Phase 3: Live Trial (10 minutes)}
 
-After the design phase, a test subject entered the room and the wizard ran their completed program to control the robot during an actual interaction. I video-recorded the full trial to capture robot behavior and timing. I told the test subject they were helping evaluate the robot's performance, not being evaluated themselves. I continued logging any researcher interventions during the trial using the same type categories, noting the relevant ERS rubric item for any tool-operation intervention.
+After the design phase, the wizard ran their completed program to execute the designed interaction on the robot. I continued logging any researcher interventions during the trial using the same type categories, noting the relevant ERS rubric item for any tool-operation intervention.
 
 \subsection{Phase 4: Debrief (5 minutes)}
 
-Following the trial, the wizard completed the System Usability Scale survey. The screen recording and video recording served as the primary artifacts for post-session scoring.
+Following the trial, the wizard completed the System Usability Scale survey. The DFS and ERS were scored during and immediately after the session using live observation and the Observer Data Sheet.
 
 \section{Measures}
 \label{sec:measures}
@@ -79,27 +75,38 @@ The study collected four measures, two primary and two supplementary.
 
 The Design Fidelity Score (DFS) measures how completely and correctly the wizard implemented the paper specification. I evaluated the exported project file against nine weighted criteria grouped into three categories: speech actions, gestures and actions, and control flow and logic. Each criterion is scored as present, correct, and independently achieved.
 
-The DFS rubric includes an \emph{Assisted} column. For each rubric item, the researcher marks T if a tool-operation intervention was given specifically for that item during the design phase --- for example, if the researcher explained how to add a gesture node or how to wire a conditional branch. T marks are recorded and reported separately alongside the DFS score; they do not affect the Points total. This preserves the DFS as a clean measure of design fidelity while providing a parallel record of where tool-specific assistance was needed. General interventions --- task clarification, hardware issues, or momentary forgetfulness --- are not marked T, because those categories of difficulty are independent of the tool under evaluation.
+The DFS rubric includes an \emph{Assisted} column. For each rubric item, the researcher marks T if a tool-operation intervention was given specifically for that item during the design phase (for example, if the researcher explained how to add a gesture node or how to wire a conditional branch). T marks are recorded and reported separately alongside the DFS score; they do not affect the Points total. This preserves the DFS as a clean measure of design fidelity while providing a parallel record of where tool-specific assistance was needed. General interventions (task clarification, hardware issues, or momentary forgetfulness) are not marked T, because those categories of difficulty are independent of the tool under evaluation.
 
-This measure is motivated by a gap identified by Riek~\cite{Riek2012}, whose systematic review of 54 published WoZ studies found that only 11\% constrained wizard behavior and fewer than 6\% described wizard training procedures. Porfirio et al.~\cite{Porfirio2023} similarly argued that formal, verifiable behavior specifications are a prerequisite for reproducible HRI. The DFS applies these recommendations as a weighted rubric scored against the exported project file. The complete rubric is reproduced in Appendix~\ref{app:materials}. This measure addresses accessibility: did the tool allow a wizard to independently produce a correct design?
+This measure is motivated by a gap identified by Riek~\cite{Riek2012}, whose systematic review of 54 published WoZ studies found that only 11\% constrained wizard behavior and fewer than 6\% described wizard training procedures. Porfirio et al.~\cite{Porfirio2023} similarly argued that formal, verifiable behavior specifications are a prerequisite for reproducible HRI. The DFS applies these recommendations as a weighted rubric scored against the exported project file. The complete rubric is reproduced in Appendix~\ref{app:blank_templates}. This measure addresses accessibility: did the tool allow a wizard to independently produce a correct design?
 
 \subsection{Execution Reliability Score}
 
-The Execution Reliability Score (ERS) measures whether the designed interaction executed as intended during the live trial. I reviewed the video recording against the specification and the wizard's design. Evaluation criteria included whether the robot delivered the correct speech at each step, whether gestures executed and synchronized with speech, whether the conditional branch resolved correctly based on the test subject's answer, and whether any errors, disconnections, or hangs occurred.
+The Execution Reliability Score (ERS) measures whether the designed interaction executed as intended during the live trial. I scored the ERS live and immediately after the session, using the Observer Data Sheet and the wizard's exported project file. Evaluation criteria included whether the robot delivered the correct speech at each step, whether gestures executed and synchronized with speech, whether the conditional branch was present in the design and executed during the trial, and whether any errors, disconnections, or hangs occurred.
 
-The ERS rubric applies the same \emph{Assisted} modifier as the DFS, extended to the trial phase. Any tool-operation intervention I provided during the trial --- for example, explaining to the wizard how to launch or advance their program --- caps the affected ERS item at half points. This is scored separately from design-phase interventions: a wizard who needed help only during design can still achieve a full ERS score if the trial runs without assistance, and vice versa. The rubric also records whether the trial reached its conclusion step and whether the test subject was a recruited participant or the researcher, since foreknowledge of the specification on the part of the test subject represents a qualitatively different trial condition. I additionally note whether any branch resolved through programmed conditional logic or through manual intervention by the wizard during execution.
+The ERS rubric applies the same \emph{Assisted} modifier as the DFS, extended to the trial phase. Any tool-operation intervention I provided during the trial (for example, explaining to the wizard how to launch or advance their program) caps the affected ERS item at half points. This is scored separately from design-phase interventions: a wizard who needed help only during design can still achieve a full ERS score if the trial runs without assistance, and vice versa. The rubric records whether the trial reached its conclusion step. I additionally note whether any branch resolved through programmed conditional logic or through manual intervention by the wizard during execution.
 
-This measure responds directly to Riek's~\cite{Riek2012} finding that only 3.7\% of published WoZ studies reported any measure of wizard error, making it nearly impossible to determine whether execution matched design intent~\cite{OConnor2024, OConnor2025}. The complete rubric is reproduced in Appendix~\ref{app:materials}. This measure addresses reproducibility: did the design translate reliably into execution without researcher support?
+This measure responds directly to Riek's~\cite{Riek2012} finding that only 3.7\% of published WoZ studies reported any measure of wizard error, making it nearly impossible to determine whether execution matched design intent~\cite{OConnor2024, OConnor2025}. The complete rubric is reproduced in Appendix~\ref{app:blank_templates}. This measure addresses reproducibility: did the design translate reliably into execution without researcher support?
 
 \subsection{System Usability Scale}
 
-The System Usability Scale (SUS) is a validated 10-item questionnaire measuring perceived usability \cite{Brooke1996}. Wizards completed the SUS after the debrief phase. Scores range from 0 to 100, with higher scores indicating better perceived usability. The full questionnaire is reproduced in Appendix~\ref{app:materials}.
+The System Usability Scale (SUS) is a validated 10-item questionnaire measuring perceived usability \cite{Brooke1996}. Wizards completed the SUS after the debrief phase. Scores range from 0 to 100, with higher scores indicating better perceived usability. The full questionnaire is reproduced in Appendix~\ref{app:blank_templates}.
 
 \subsection{Intervention Log and Session Timing}
 
-During each session, I maintained a structured intervention log on the observer data sheet, recording the timestamp, type code, affected rubric item number, and a brief description for every instance in which I assisted the wizard. Intervention type codes are: T (tool-operation), C (task or specification clarification), H (hardware or technical issue), and G (general or forgetfulness. Only T-type interventions affect rubric scoring; the others are recorded to provide context for interpreting session flow and wizard experience. I also recorded the actual duration of each session phase and the time at which the wizard completed or abandoned the design, providing supplementary evidence about tool accessibility beyond the DFS score itself.
+During each session, I maintained a structured intervention log on the observer data sheet, recording the timestamp, type code, affected rubric item number, and a brief description for every instance in which I assisted the wizard. The four intervention type codes are:
+
+\begin{description}
+    \item[T (tool-operation).] The researcher explained how to operate a specific feature of the assigned software tool.
+    \item[C (task clarification).] The researcher clarified the written specification or an aspect of the task design.
+    \item[H (hardware or technical).] The researcher addressed a robot connection issue or other technical problem outside the wizard's control.
+    \item[G (general).] Brief assistance not attributable to the tool or the task, such as momentary forgetfulness.
+\end{description}
+
+Only T-type interventions affect rubric scoring; the others are recorded to provide context for interpreting session flow and wizard experience. I also recorded the actual duration of each session phase and the time at which the wizard completed or abandoned the design, providing supplementary evidence about tool accessibility beyond the DFS score itself.
 
 \section{Measurement Instruments}
+
+The four primary and supplementary measures are designed to work together. The DFS and ERS address separate phases of the session: DFS captures what was designed, and ERS captures whether that design translated faithfully into execution. Taken together, they make it possible to distinguish a wizard who implemented the specification correctly but whose design failed during the trial from one whose design was incomplete but executed without researcher assistance. The SUS grounds both scores in the wizard's subjective experience of the tool. The intervention log and session timing are supplementary: they do not directly answer the research questions but provide context for interpreting the primary scores, particularly for understanding whether help requests concerned the tool itself or the task.
 
 Table~\ref{tbl:measurement_instruments} summarizes the five instruments, when they were collected, and which research question each addresses.
 
@@ -112,7 +119,7 @@ Table~\ref{tbl:measurement_instruments} summarizes the five instruments, when th
 \hline
 Design Fidelity Score (DFS) & Completeness and correctness of the wizard's implementation; caps items where tool-operation assistance was given & Post-session file review & Accessibility \\
 \hline
-Execution Reliability Score (ERS) & Whether the interaction executed as designed during the trial; caps items where trial-phase tool assistance occurred & Post-trial video review & Reproducibility \\
+Execution Reliability Score (ERS) & Whether the interaction executed as designed during the trial; caps items where trial-phase tool assistance occurred & Live and post-trial (ODS) & Reproducibility \\
 \hline
 System Usability Scale (SUS) & Wizard's perceived usability of the assigned tool & Debrief phase & User experience \\
 \hline

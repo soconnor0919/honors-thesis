@@ -3,8 +3,10 @@
 %\documentclass[twoadv}{buthesis} %Allows entry of second advisor
 %\usepackage{graphics}            %Select graphics package
 \usepackage{graphicx}             %
+\usepackage{pdfpages}             %For including PDF pages in appendices
 %\usepackage{amsthm}              %Add other packages as necessary
 \usepackage{array}                %Extended column types and \arraybackslash
+\usepackage{makecell}             %Multi-line table header cells
 \usepackage{tabularx}             %Auto-width table columns
 \usepackage{tikz}                 %For programmatic diagrams
 \usetikzlibrary{shapes,arrows,positioning,fit,backgrounds,decorations.pathreplacing}
@@ -70,6 +72,7 @@
 
 \makeatletter\@mainmattertrue\makeatother
 \appendix
+\include{chapters/app_blank_templates}
 \include{chapters/app_materials}
 \include{chapters/app_tech_docs}
 
