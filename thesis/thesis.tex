@@ -26,6 +26,8 @@
 \chair{Alan Marchiori}
 \maketitle
 
+\frontmatter
+
 \acknowledgments{
     (Draft Acknowledgments)
 }
@@ -37,7 +39,7 @@
 \listoffigures
 
 \abstract{
-    [Abstract goes here]
+    The Wizard-of-Oz (WoZ) technique is widely used in Human-Robot Interaction (HRI) research to prototype and evaluate robot interaction designs before autonomous capabilities are fully developed. However, two persistent problems limit the technique's effectiveness. First, existing WoZ tools impose high technical barriers that prevent domain experts outside engineering from conducting independent studies (the Accessibility Problem). Second, the fragmented landscape of custom, robot-specific tools makes it difficult to verify or replicate experimental results across labs (the Reproducibility Problem). This thesis formalizes a set of design principles for WoZ infrastructure that address both problems simultaneously: a hierarchical specification model that organizes experiments as studies, experiments, steps, and actions; an event-driven execution model that separates protocol design from live trial control; and a plugin architecture that decouples experiment logic from robot-specific implementations. These principles are realized in HRIStudio, an open-source, web-based platform that provides a visual experiment designer, a guided wizard execution interface, automated timestamped logging with explicit deviation tracking, and role-based access control for research teams. A pilot between-subjects study compared HRIStudio against Choregraphe, a representative baseline tool, using six faculty participants who each designed and executed an interactive storytelling task on a NAO robot. Across all six sessions, HRIStudio participants achieved higher design fidelity (mean 100 vs. 56.7), higher execution reliability (mean 96.7 vs. 66.7), and higher perceived usability (mean SUS 76.7 vs. 59.2) than Choregraphe participants. The only unprompted specification deviation in the dataset occurred in the Choregraphe condition, illustrating the reproducibility failure mode HRIStudio's enforcement model is designed to prevent. While the pilot scale precludes inferential claims, the directional evidence across all measures suggests that the right software architecture can make WoZ experiments more accessible to non-programmers and more reproducible across executions.
 }
 
 \mainmatter

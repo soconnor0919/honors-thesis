@@ -1,49 +1,258 @@
 \chapter{Technical Documentation}
 \label{app:tech_docs}
 
-This appendix documents the specific technologies and libraries used to build HRIStudio, organized by the three architectural layers described in Chapter~\ref{ch:design}. The goal here is reference, not justification; Chapter~\ref{ch:implementation} explains the reasoning behind the major architectural choices.
+This appendix documents the specific technologies, infrastructure, and integration mechanisms used to build HRIStudio, organized by the three architectural layers described in Chapter~\ref{ch:design}. The goal here is reference, not justification; Chapter~\ref{ch:implementation} explains the reasoning behind the major architectural choices.
 
 \section{Technology Stack}
 
+Table~\ref{tbl:tech-stack} lists the principal dependencies and their roles. The entire codebase is written in TypeScript, so type inconsistencies between layers are caught at compile time rather than appearing as runtime failures during a trial.
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Component} & \textbf{Version} & \textbf{Role} \\
+\hline
+Next.js (App Router) & 16.2 & Full-stack React framework \\
+\hline
+React & 19.2 & User interface rendering \\
+\hline
+TypeScript & --- & Static typing across the full stack \\
+\hline
+tRPC & 11.10 & Type-safe API between client and server \\
+\hline
+Better Auth & 1.5 & Authentication and session management \\
+\hline
+Drizzle ORM & 0.41 & Type-safe database access and migrations \\
+\hline
+PostgreSQL & 15 & Primary relational database \\
+\hline
+MinIO & latest & S3-compatible object storage (video/audio) \\
+\hline
+Bun & runtime & WebSocket server for real-time trial communication \\
+\hline
+Tailwind CSS + shadcn/ui & 4.1 / 0.0.4 & Styling and UI component library \\
+\hline
+\texttt{@dnd-kit} & --- & Drag-and-drop for experiment designer \\
+\hline
+ROS~2 Humble & --- & Robot middleware (NAO6 integration stack) \\
+\hline
+Docker Compose & --- & Multi-container orchestration \\
+\hline
+\end{tabular}
+\caption{Principal dependencies in the HRIStudio technology stack.}
+\label{tbl:tech-stack}
+\end{table}
+
 \subsection{User Interface Layer}
 
-The frontend is built on Next.js (App Router) using React and TypeScript. TypeScript is used throughout the entire codebase, including the server and data access layers, so that type inconsistencies between layers are caught at compile time rather than at runtime. Styling is handled with Tailwind CSS and the shadcn/ui component library. The drag-and-drop canvas in the Design interface uses the \texttt{@dnd-kit} library (\texttt{@dnd-kit/core} and \texttt{@dnd-kit/sortable}) to manage nested drag operations for arranging steps and action blocks.
+The frontend is built on Next.js using React and TypeScript. Styling is handled with Tailwind CSS and the shadcn/ui component library, which provides accessible, pre-built UI primitives built on Radix UI. The drag-and-drop canvas in the Design interface uses the \texttt{@dnd-kit} library (\texttt{@dnd-kit/core} and \texttt{@dnd-kit/sortable}) to manage nested drag operations for arranging steps and action blocks.
 
 \subsection{Application Logic Layer}
 
-The server runs as a Next.js Node.js process. API routes use tRPC over HTTP for typed request/response calls; real-time communication during live trials uses a persistent WebSocket connection via the \texttt{ws} package. Authentication and session management are handled by NextAuth.js (v5 beta) with the \texttt{@auth/drizzle-adapter} and bcryptjs for password hashing. Currently, credential-based (username and password) authentication is supported.
+The server runs as a Next.js process. API routes use tRPC over HTTP for typed request/response calls; real-time communication during live trials uses a separate WebSocket server running on the Bun runtime (described in Section~\ref{sec:ws-arch}). Authentication and session management are handled by Better Auth with the Drizzle adapter for database-backed sessions. Passwords are hashed with bcrypt (cost factor~12). Currently, credential-based (username and password) authentication is supported; the architecture allows adding OAuth providers without changes to the session model.
 
 \subsection{Data and Robot Control Layer}
 
-Experiment protocols, trial records, and user data are stored in PostgreSQL. The schema and all database queries are managed through Drizzle ORM, which provides compile-time type safety for database interactions. Action configuration parameters and plugin-specific fields are stored as JSONB columns, which allows the same schema to accommodate any robot's action types.
+Experiment protocols, trial records, and user data are stored in PostgreSQL. The schema and all database queries are managed through Drizzle ORM, which provides compile-time type safety for database interactions. Action configuration parameters and plugin-specific fields are stored as JSONB columns, which allows the same schema to accommodate any robot's action types without schema migrations.
 
-Video and audio recordings captured during trials are stored in a self-hosted MinIO instance, an S3-compatible object storage service. Recordings are captured in the browser using the native MediaRecorder API (assisted by \texttt{react-webcam}) and uploaded to MinIO as a chunked transfer when the trial concludes.
+Video and audio recordings captured during trials are stored in a self-hosted MinIO instance, an S3-compatible object storage service. Recordings are captured in the browser using the native MediaRecorder API and uploaded to MinIO when the trial concludes. Structured data (experiment specifications, trial event logs) and media files are stored separately: the database handles queryable records, and MinIO handles large binary files that the system never queries by content.
 
-Robot communication is handled through a ROS Bridge (\texttt{rosbridge\_suite} or \texttt{ros2-web-bridge}) running on the robot's local network. The server connects to the bridge over a WebSocket and exchanges JSON-encoded ROS messages; it does not run as a ROS node itself. The bridge address is configured per robot in the plugin file (for example, \texttt{"rosbridgeUrl": "ws://localhost:9090"} in the NAO6 plugin).
+Robot communication is handled through a ROS~2 WebSocket bridge running on the robot's local network. The HRIStudio server connects to the bridge over a WebSocket and exchanges JSON-encoded ROS messages; it does not run as a ROS node itself. The bridge address is configured per robot in the plugin file. For actions that do not require ROS message passing, the system can also execute commands directly on the robot via SSH (see Section~\ref{sec:nao6-integration}).
 
-\section{Deployment}
+\section{Deployment Infrastructure}
+\label{sec:deployment}
 
-The full stack is orchestrated using Docker Compose. The \texttt{docker-compose.yml} file defines three services: the PostgreSQL database (\texttt{postgres:15}), the MinIO storage instance, and the Next.js application server. Starting the entire system on any machine with Docker installed is a single \texttt{docker compose up} command. This configuration is intended for on-premises deployment, which is important for studies involving participant data that cannot leave the institution's network.
+HRIStudio uses a double Docker Compose stack: one stack runs the application and its backing services, and a second stack runs the robot integration layer. This separation allows the application to run on any host while the robot stack runs on a machine with network access to the physical robot. Both stacks can run on the same machine for single-lab deployments.
 
-\section{Plugin Specification}
+\subsection{Application Stack}
 
-Robot capabilities are defined in JSON plugin files. Each file describes a robot platform and the actions it supports. The structure of a plugin file is as follows:
+The application stack is defined in \texttt{hristudio/docker-compose.yml} and provides three services:
+
+\begin{description}
+\item[db.] PostgreSQL~15 with a persistent named volume. Exposes port~5432.
+\item[minio.] MinIO object storage with a persistent named volume. Exposes port~9000 (S3 API) and port~9001 (web console).
+\item[createbuckets.] An initialization container that runs once at startup using the MinIO client to create the default storage bucket.
+\end{description}
+
+The Next.js application server and the Bun WebSocket server run outside Docker on the host, connecting to the containerized database and object store. Starting the backing services requires a single \texttt{docker compose up} command. This configuration is intended for on-premises deployment, which is important for studies involving participant data that cannot leave the institution's network.
+
+\subsection{NAO6 Integration Stack}
+\label{sec:nao6-integration}
+
+The NAO6 integration stack is defined in a separate repository and provides three ROS~2 services that collectively bridge HRIStudio to the physical robot.
+
+\begin{enumerate}
+\item The \textbf{nao\_driver} service runs the NaoQi driver ROS~2 node, which connects to the NAO's proprietary framework over the local network and publishes sensor data (joint states, camera feeds) as standard ROS~2 topics.
+\item The \textbf{ros\_bridge} service runs the rosbridge WebSocket server, which exposes all ROS~2 topics over a WebSocket interface on a configurable port (default~9090). This is the endpoint that the HRIStudio server connects to.
+\item The \textbf{ros\_api} service provides runtime introspection of available ROS~2 topics, services, and parameters.
+\end{enumerate}
+
+All three services are built from a single Dockerfile based on the ROS~2 Humble base image (Ubuntu~22.04). The image installs the NaoQi driver and rosbridge server packages along with their dependencies (NaoQi libraries, bridge message types, OpenCV bridge, and TF2) and builds them with colcon. All services use host networking so that ROS~2 discovery and the NaoQi connection operate without port forwarding.
+
+Before starting the driver, an initialization script connects to the NAO via SSH and prepares it for external control:
+
+\begin{enumerate}
+\item Disables Autonomous Life, which would otherwise cause the robot to move unpredictably.
+\item Calls \texttt{ALMotion.wakeUp} to energize the motors.
+\item Commands the robot to assume a standing posture via the ALRobotPosture service.
+\end{enumerate}
+
+Environment variables for the robot IP address, credentials, and bridge port are read from a \texttt{.env} file shared across all three services.
+
+\subsection{Communication Between Stacks}
+
+Figure~\ref{fig:deployment-arch} shows the relationship between the two Docker stacks and the components that run on the host. The HRIStudio server communicates with the robot integration stack over a single WebSocket connection to the \texttt{rosbridge\_websocket} endpoint. For actions that bypass ROS entirely (posture changes, animation playback), the server connects directly to the NAO via SSH and invokes NaoQi commands through the \texttt{qicli} command-line tool. Both communication paths are configured per-robot in the plugin file.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+    box/.style={rectangle, draw=black, thick, rounded corners=2pt, align=center,
+        font=\footnotesize, inner sep=4pt, minimum height=0.9cm},
+    container/.style={rectangle, draw=black!60, thick, dashed, rounded corners=4pt,
+        inner sep=8pt},
+    arrow/.style={->, thick},
+    lbl/.style={font=\scriptsize\itshape, fill=white, inner sep=1pt}]
+
+    %% ---- Browser ----
+    \node[box, fill=gray!10, minimum width=3.5cm] (browser) at (0, 7.2)
+        {Browser Client\\[-1pt]{\scriptsize React, tRPC, WebSocket}};
+
+    %% ---- Host processes ----
+    \node[box, fill=gray!20, minimum width=2.6cm] (nextjs) at (-1.8, 5.4)
+        {Next.js Server\\[-1pt]{\scriptsize port 3000}};
+    \node[box, fill=gray!20, minimum width=2.6cm] (wsserver) at (1.8, 5.4)
+        {Bun WS Server\\[-1pt]{\scriptsize port 3001}};
+
+    \begin{scope}[on background layer]
+    \node[container, fill=blue!4,
+        fit=(nextjs)(wsserver),
+        label={[font=\scriptsize\bfseries, anchor=south]above:Host}] {};
+    \end{scope}
+
+    %% ---- Docker App Stack ----
+    \node[box, fill=gray!15, minimum width=2.2cm] (pg) at (-1.8, 3.3)
+        {PostgreSQL\\[-1pt]{\scriptsize port 5432}};
+    \node[box, fill=gray!15, minimum width=2.2cm] (minio) at (1.8, 3.3)
+        {MinIO\\[-1pt]{\scriptsize port 9000}};
+
+    \begin{scope}[on background layer]
+    \node[container, fill=green!4,
+        fit=(pg)(minio),
+        label={[font=\scriptsize\bfseries, anchor=south]above:Application Stack}] {};
+    \end{scope}
+
+    %% ---- NAO6 Docker Stack ----
+    \node[box, fill=gray!30, minimum width=1.7cm] (driver) at (-2.4, 1.2)
+        {nao\_driver};
+    \node[box, fill=gray!30, minimum width=1.7cm] (bridge) at (0, 1.2)
+        {ros\_bridge\\[-1pt]{\scriptsize port 9090}};
+    \node[box, fill=gray!30, minimum width=1.7cm] (rosapi) at (2.4, 1.2)
+        {ros\_api};
+
+    \begin{scope}[on background layer]
+    \node[container, fill=orange!6,
+        fit=(driver)(bridge)(rosapi),
+        label={[font=\scriptsize\bfseries, anchor=south]above:NAO6 Integration Stack}] {};
+    \end{scope}
+
+    %% ---- NAO Robot ----
+    \node[box, fill=gray!40, minimum width=2.8cm] (nao) at (0, -0.8)
+        {NAO6 Robot\\[-1pt]{\scriptsize NaoQi}};
+
+    %% ---- Arrows: browser to host ----
+    \draw[arrow] (browser.south west) -- node[lbl, left] {HTTP} (nextjs.north);
+    \draw[arrow] (browser.south east) -- node[lbl, right] {WS} (wsserver.north);
+
+    %% ---- Host internal ----
+    \draw[arrow, dashed] (nextjs.east) -- node[lbl, above] {broadcast} (wsserver.west);
+
+    %% ---- Host to app stack (straight down) ----
+    \draw[arrow] (nextjs.south) -- (pg.north);
+    \draw[arrow] ([xshift=4pt]nextjs.south east) -- (minio.north west);
+
+    %% ---- Next.js to ros_bridge: route down the LEFT outside ----
+    \draw[arrow] (nextjs.west) -- ++(-1.2, 0) |- node[lbl, pos=0.22, left] {WS} (bridge.west);
+
+    %% ---- Next.js to NAO via SSH: route down the RIGHT outside ----
+    \draw[arrow, dashed] ([yshift=-2pt]nextjs.west) -- ++(-1.6, 0) |- node[lbl, pos=0.18, left] {SSH} (nao.west);
+
+    %% ---- ROS containers to robot ----
+    \draw[arrow] (driver.south) -- ([xshift=-8pt]nao.north);
+    \draw[arrow] (bridge.south) -- ([xshift=8pt]nao.north);
+
+\end{tikzpicture}
+\caption{Deployment architecture: two Docker stacks and their communication paths.}
+\label{fig:deployment-arch}
+\end{figure}
+
+\section{WebSocket Architecture}
+\label{sec:ws-arch}
+
+Real-time communication during trials is handled by a dedicated WebSocket server that runs as a separate process alongside the Next.js application server. The WebSocket server is implemented in TypeScript and runs on the Bun runtime, listening on port~3001.
+
+When a wizard or observer opens the Execution interface for a trial, the browser establishes a WebSocket connection to the server, passing the trial identifier and an authentication token as query parameters. The server registers the connection in an in-memory map keyed by client identifier and also records it in the database (\texttt{hs\_ws\_connection} table) for persistence across restarts.
+
+The server handles four message types from connected clients:
+
+\begin{description}
+\item[Heartbeat.] Keeps the connection alive; the server responds with a timestamped acknowledgment.
+\item[Request trial status.] Returns the current trial state (status, current step index) by querying the database.
+\item[Request trial events.] Returns the most recent trial events from the trial event log table.
+\item[Ping.] Returns a pong response with a timestamp for latency measurement.
+\end{description}
+
+When the Next.js server needs to push an update to all clients observing a trial (for example, after a step completes), it sends an HTTP POST to the WebSocket server's internal \texttt{/internal/broadcast} endpoint. The WebSocket server then forwards the message to every client registered for that trial. This architecture separates the stateful WebSocket connections from the stateless HTTP request handling of the Next.js server.
+
+\section{Plugin System}
+
+Robot capabilities are defined in JSON plugin files hosted in a plugin repository. A plugin repository is a static file server (served by an nginx container on port~8080 in the default configuration) that exposes three resources:
+
+\begin{description}
+\item[\texttt{repository.json}.] Repository metadata including name, maintainers, trust level, supported ROS~2 distributions, and compatibility constraints.
+\item[\texttt{plugins/index.json}.] An array of plugin filenames available in the repository.
+\item[\texttt{plugins/\{name\}.json}.] Individual plugin files, one per robot platform.
+\end{description}
+
+When an administrator triggers a repository sync in the HRIStudio admin interface, the server fetches the repository metadata, retrieves the plugin index, and then fetches each plugin file. The action definitions from each plugin are stored as JSONB in the \texttt{hs\_robot\_plugin} database table, making them available to the experiment designer and the execution engine without further network requests.
+
+\subsection{Plugin File Structure}
+
+Each plugin file is a self-contained description of a robot platform. The top-level fields include robot metadata (name, manufacturer, version, capabilities, physical specifications), a ROS~2 configuration block (namespace, default topics), and an array of action definitions. The official repository currently contains three plugins: \texttt{nao6-ros2.json}, \texttt{turtlebot3-burger.json}, and \texttt{turtlebot3-waffle.json}.
+
+Each action definition specifies:
 
 \begin{itemize}
-  \item \textbf{Metadata}: name, version, and a human-readable description of the platform.
-  \item \textbf{ROS configuration} (\texttt{ros2Config}): the bridge URL and any global connection parameters.
-  \item \textbf{Actions}: an array of action definitions. Each action specifies:
-    \begin{itemize}
-      \item A unique action type identifier (e.g., \texttt{speak}, \texttt{raise\_arm})
-      \item A human-readable label shown in the Design interface
-      \item A parameter schema defining the input fields the researcher configures
-      \item The target ROS topic and message type
-      \item A mapping from parameter names to message fields
-    \end{itemize}
+\item A unique identifier (e.g., \texttt{say\_text}, \texttt{walk\_forward}, \texttt{play\_animation\_bow}).
+\item A human-readable name and icon for display in the Design interface.
+\item A parameter schema (JSON Schema format) defining the input fields the researcher configures.
+\item A timeout and retry policy.
+\item A ROS~2 dispatch block containing the target topic, message type, and a payload mapping.
 \end{itemize}
 
-When the server dispatches a robot command, it loads the active plugin, locates the matching action definition, constructs the ROS message by applying the parameter mapping, and sends it to the bridge. Adding a new robot means writing a new plugin file; no server code changes are required.
+The payload mapping supports two modes. In \emph{static} mode, the plugin defines a fixed message template with placeholder tokens (e.g., \texttt{\{\{text\}\}}) that the execution engine fills from the researcher's parameters. In \emph{SSH} mode, the action bypasses ROS entirely and executes a shell command on the robot via SSH; this is used for NaoQi-native operations such as posture changes and animation playback that are not exposed as ROS~2 topics.
+
+The NAO6 plugin defines 20 actions across three categories: speech (say text, say with emotion), movement (walk forward/backward, turn, stop, wake up, rest, stand, sit, crouch), and animation (bow, wave, nod, head shake, shrug, enthusiastic gesture, and others). Movement actions publish ROS~2 Twist messages to the velocity command topic. Animation actions publish animation path strings to the animation topic. Posture and lifecycle commands use SSH mode to call NaoQi services directly via the \texttt{qicli} command-line tool.
+
+\subsection{Adding a New Robot}
+
+Adding support for a new robot platform requires writing a single JSON plugin file and placing it in the repository. No changes to the HRIStudio server code are required. The plugin author defines the robot's capabilities, maps each action to a ROS~2 topic or SSH command, and specifies the parameter schema for each action. After the repository is synced, the new robot's actions appear in the experiment designer and can be used in any study.
+
+\section{Database Schema}
+
+The database schema is managed through Drizzle ORM and uses a consistent \texttt{hs\_} prefix for all tables. The schema is organized into five groups:
+
+\begin{description}
+\item[Authentication.] User accounts, sessions, and system role assignments.
+\item[Study management.] Studies with status tracking, study membership with per-study roles, and participant records with consent tracking.
+\item[Experimental design.] Experiments, steps, and actions. Each action stores its transport type, configuration, parameter schema, and retry policy as JSONB columns.
+\item[Trial execution.] Trials with status and duration tracking, and a trial event log that records every action, step transition, and deviation with a timestamp.
+\item[Robot integration.] Robot definitions and installed plugins with cached action definitions. A block registry maps visual blocks in the experiment designer to their underlying action types, parameter schemas, and display properties.
+\end{description}
+
+All tables use a consistent \texttt{hs\_} prefix (e.g., \texttt{hs\_study}, \texttt{hs\_trial}, \texttt{hs\_action}).
 
 \section{Role-Based Access Control}
 
-HRIStudio uses a two-layer role system. System roles (\texttt{systemRoleEnum}) govern what a user can do across the platform: \emph{administrator}, \emph{researcher}, \emph{wizard}, and \emph{observer}. Study roles (\texttt{studyMemberRoleEnum}) govern what a user can see and do within a specific study: \emph{owner}, \emph{researcher}, \emph{wizard}, and \emph{observer}. A user's system role and study role are checked independently, so a user who is a wizard on one study can be an observer on another without any additional configuration.
+As described in Chapter~\ref{ch:implementation}, HRIStudio uses a two-layer role system. System roles are stored in the \texttt{systemRoleEnum} column: \emph{administrator}, \emph{researcher}, \emph{wizard}, and \emph{observer}. Study roles are stored in the \texttt{studyMemberRoleEnum} column: \emph{owner}, \emph{researcher}, \emph{wizard}, and \emph{observer}. The two layers are checked independently at the database level. On the server, tRPC middleware enforces access control: public procedures require no authentication, protected procedures require a valid session, and admin procedures additionally verify the user's system role. Study-level permissions are checked per-request by querying the \texttt{hs\_study\_member} table.

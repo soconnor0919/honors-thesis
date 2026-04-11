@@ -99,11 +99,11 @@ No two human subjects respond identically to an experimental protocol. One subje
 
 \section{Robot Integration}
 
-A configuration file describes each robot platform, listing the actions it supports and specifying how each one maps to a command the robot understands. The execution engine reads this file at startup and uses it whenever it needs to dispatch a command: it looks up the action type, assembles the appropriate message, and sends it to the robot over a bridge process running on the local network. The web server itself has no knowledge of any specific robot; all hardware-specific logic lives in the configuration file.
+A plugin file describes each robot platform, listing the actions it supports and specifying how each one maps to a command the robot understands. The execution engine reads this file at startup and uses it whenever it needs to dispatch a command: it looks up the action type, assembles the appropriate message, and sends it to the robot over a bridge process running on the local network. The web server itself has no knowledge of any specific robot; all hardware-specific logic lives in the plugin file.
 
 The execution engine treats control flow elements such as branches and conditionals, which function as elements of a computer program, the same way as robot actions. These control-flow elements appear as action groups in the experiment and are evaluated during the trial, so researchers can freely mix logical decisions and physical robot behaviors when designing an experiment without any special handling.
 
-Figure~\ref{fig:plugin-architecture} illustrates this mapping using NAO6 and TurtleBot as an example. Actions a platform does not support (such as \texttt{raise\_arm} on TurtleBot) appear as explicitly unsupported in the configuration file rather than silently failing. Because all hardware-specific logic lives in the configuration file, the experiment itself does not change between platforms.
+Figure~\ref{fig:plugin-architecture} illustrates this mapping using NAO6 and TurtleBot as an example. Actions a platform does not support (such as \texttt{raise\_arm} on TurtleBot) appear as explicitly unsupported in the plugin file rather than silently failing. Because all hardware-specific logic lives in the plugin file, the experiment itself does not change between platforms.
 
 \begin{figure}[htbp]
 \centering
@@ -146,13 +146,13 @@ Figure~\ref{fig:plugin-architecture} illustrates this mapping using NAO6 and Tur
     \draw[arrow] (cfg.east) -- (tb.west);
 
 \end{tikzpicture}
-\caption{Abstract experiment actions translated to platform-specific robot commands through per-platform configuration files.}
+\caption{Abstract experiment actions translated to platform-specific robot commands through per-platform plugin files.}
 \label{fig:plugin-architecture}
 \end{figure}
 
 \section{Access Control}
 
-I implemented access control using a role-based access control (RBAC) model. Each study has a membership list, and each member is assigned one of four roles that define a clear separation of capabilities: those who own the study, those who design it, those who run it, and those who observe it. This enforces need-to-know access at the study level so that each team member sees or is able to modify only what their role requires.
+I implemented access control using a role-based access control (RBAC) model with two layers. System-level roles govern what a user can do across the platform (administrator, researcher, wizard, observer), while study-level roles govern what a user can see and do within a specific study (owner, researcher, wizard, observer). The two layers are checked independently, so a user who is a wizard on one study can be an observer on another without any additional configuration. Within a study, the four study-level roles define a clear separation of capabilities: those who own the study, those who design it, those who run it, and those who observe it. This enforces need-to-know access at the study level so that each team member sees or is able to modify only what their role requires.
 
 \begin{description}
     \item[Owner.] Full control over the study: can invite or remove members, configure the study settings, and access all data.
@@ -177,8 +177,8 @@ The following two problems required specific solutions during implementation.
 
 HRIStudio is fully operational for controlled Wizard-of-Oz studies. The Design, Execution, and Analysis interfaces are complete and integrated. The execution engine handles scripted and unscripted actions with full timestamped logging, and I validated robot communication on the NAO6 platform during development. A researcher can design an experiment, run a live trial with a wizard, and review the resulting logs and recordings without modification to the platform's core architecture or execution workflow.
 
-Work remaining for future development includes broader validation of the configuration file approach on robot platforms beyond NAO6.
+Work remaining for future development includes broader validation of the plugin file approach on robot platforms beyond NAO6.
 
 \section{Chapter Summary}
 
-This chapter described how HRIStudio realizes the design principles from Chapter~\ref{ch:design} in practice. Experiments are persistent, reusable specifications that produce complete, comparable trial records. The execution engine is event-driven rather than timer-driven, keeping the wizard in control of pacing while logging every action automatically. Per-platform configuration files keep the execution engine hardware-agnostic. The role system enforces access control at the study level. The platform is fully operational for controlled WoZ studies today, demonstrated through the pilot validation study presented in Chapter~\ref{ch:evaluation}. The design principles are general; HRIStudio shows they are workable.
+This chapter described how HRIStudio realizes the design principles from Chapter~\ref{ch:design} in practice. Experiments are persistent, reusable specifications that produce complete, comparable trial records. The execution engine is event-driven rather than timer-driven, keeping the wizard in control of pacing while logging every action automatically. Per-platform plugin files keep the execution engine hardware-agnostic. The role system enforces access control at the study level. The platform is fully operational for controlled WoZ studies today, demonstrated through the pilot validation study presented in Chapter~\ref{ch:evaluation}. The design principles are general; HRIStudio shows they are workable.

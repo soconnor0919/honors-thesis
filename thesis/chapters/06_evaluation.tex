@@ -5,7 +5,7 @@ This chapter presents the pilot validation study used to evaluate whether HRIStu
 
 \section{Research Questions}
 
-The evaluation targets the two problems established in Chapter~\ref{ch:background}. The first is the \emph{Accessibility Problem}: existing tools require substantial programming expertise, which prevents domain experts from conducting independent HRI studies. The second is the \emph{Reproducibility Problem}: without structured logging and protocol enforcement, experiment execution varies across participants and wizards in ways that are difficult to detect or control after the fact.
+The validation study targets the two problems established in Chapter~\ref{ch:background}. The first is the \emph{Accessibility Problem}: existing tools require substantial programming expertise, which prevents domain experts from conducting independent HRI studies. The second is the \emph{Reproducibility Problem}: without structured logging and protocol enforcement, experiment execution varies across participants and wizards in ways that are difficult to detect or control after the fact.
 
 These problems give rise to two research questions. The first asks whether HRIStudio enables domain experts without prior robotics experience to successfully implement a robot interaction from a written specification. The second asks whether HRIStudio produces more reliable execution of that interaction compared to standard practice.
 
@@ -44,7 +44,7 @@ Both conditions used the same NAO humanoid robot (Figure~\ref{fig:nao6-photo}), 
 
 The control condition used Choregraphe \cite{Pot2009}, a proprietary visual programming tool developed by Aldebaran Robotics and the standard software for NAO programming. Choregraphe organizes behavior as a finite state machine: nodes represent states and edges represent transitions triggered by conditions or timers.
 
-The experimental condition used HRIStudio, described in Chapter~\ref{ch:implementation}. HRIStudio organizes behavior as a sequential action timeline with support for conditional branches. Unlike Choregraphe, it abstracts robot-specific commands through configuration files, though for this study both tools controlled the same NAO platform.
+The experimental condition used HRIStudio, described in Chapter~\ref{ch:implementation}. HRIStudio organizes behavior as a sequential action timeline with support for conditional branches. Unlike Choregraphe, it abstracts robot-specific commands through plugin files, though for this study both tools controlled the same NAO platform.
 
 \section{Procedure}
 
@@ -69,7 +69,7 @@ Following the trial, the wizard completed the System Usability Scale survey. The
 \section{Measures}
 \label{sec:measures}
 
-The study collected four measures, two primary and two supplementary.
+The study collected five measures, two primary and three supplementary, operationalized through five instruments.
 
 \subsection{Design Fidelity Score}
 
@@ -106,7 +106,7 @@ Only T-type interventions affect rubric scoring; the others are recorded to prov
 
 \section{Measurement Instruments}
 
-The four primary and supplementary measures are designed to work together. The DFS and ERS address separate phases of the session: DFS captures what was designed, and ERS captures whether that design translated faithfully into execution. Taken together, they make it possible to distinguish a wizard who implemented the specification correctly but whose design failed during the trial from one whose design was incomplete but executed without researcher assistance. The SUS grounds both scores in the wizard's subjective experience of the tool. The intervention log and session timing are supplementary: they do not directly answer the research questions but provide context for interpreting the primary scores, particularly for understanding whether help requests concerned the tool itself or the task.
+The five measures are designed to work together. The DFS and ERS address separate phases of the session: DFS captures what was designed, and ERS captures whether that design translated faithfully into execution. Taken together, they make it possible to distinguish a wizard who implemented the specification correctly but whose design failed during the trial from one whose design was incomplete but executed without researcher assistance. The SUS grounds both scores in the wizard's subjective experience of the tool. The intervention log and session timing are supplementary: they do not directly answer the research questions but provide context for interpreting the primary scores, particularly for understanding whether help requests concerned the tool itself or the task.
 
 Table~\ref{tbl:measurement_instruments} summarizes the five instruments, when they were collected, and which research question each addresses.
 
