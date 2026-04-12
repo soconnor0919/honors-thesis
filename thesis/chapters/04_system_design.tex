@@ -5,15 +5,19 @@ Chapter~\ref{ch:background} established six requirements for modern WoZ infrastr
 
 \section{Hierarchical Organization of Experiments}
 
-WoZ studies involve multiple reusable conditions, shared protocol phases, and platform-specific behaviors that span the full research lifecycle. To organize these components without requiring researchers to write code, the system structures every study as a four-level hierarchy: \emph{study} $\rightarrow$ \emph{experiment} $\rightarrow$ \emph{step} $\rightarrow$ \emph{action}. This structure separates high-level protocol design from low-level execution behavior, keeping the authoring process code-free while integrating design, execution, and analysis into a single unified workflow.
+WoZ studies involve multiple experiments, shared protocol phases, and platform-specific behaviors that span the full research lifecycle. To organize these elements without requiring researchers to write code, the system structures every study as a four-level hierarchy: \emph{study} $\rightarrow$ \emph{experiment} $\rightarrow$ \emph{step} $\rightarrow$ \emph{action}. This structure separates high-level protocol design from low-level execution behavior, keeping the authoring process code-free while integrating design, execution, and analysis into a single unified workflow.
 
-The terms in this hierarchy are used in a strict way. A \emph{study} is the top-level research container that groups related protocol conditions. An \emph{experiment} is one reusable condition within that study (for example, a control versus experimental condition). A \emph{step} is one phase of the protocol timeline (for example, an introduction, telling a story, or testing recall). An \emph{action} is the smallest executable unit inside a step (for example, trigger a gesture, play audio, or speak a prompt).
+I define the elements in this hierarchy as follows. A \emph{study} is the top-level container that groups related experiments. An \emph{experiment} is one independently runnable protocol within that study (for example, a control or experimental condition). A \emph{step} is one phase of the protocol timeline (for example, an introduction, telling a story, or testing information recall). An \emph{action} is the smallest executable unit inside a step (for example, trigger a gesture, play audio, or speak a prompt).
 
-Figure~\ref{fig:experiment-hierarchy} shows a representation of this hierarchical structure for social robotics studies. Reading top-down, one study contains one or more experiments, each experiment contains one or more steps, and each step contains one or more actions. Figure~\ref{fig:trial-instantiation} shows the protocol-versus-instance separation in isolation. The left column holds the protocol designed once before the study begins; the right column shows the separate trial records produced each time a participant runs it. A dashed line marks the protocol/trial boundary: everything to its left was authored by the researcher before any participant arrived; everything to its right was generated during a live session. The \textit{instantiates} arrows from the experiment node fan out to each trial record, making the relationship explicit. This separation is central to reproducibility: the same experiment specification generates a distinct, timestamped record per participant, so researchers can compare across participants without conflating what was designed with what was executed.
+Figure~\ref{fig:experiment-hierarchy} shows this hierarchical structure. Reading top-down, one study contains one or more experiments, each experiment contains one or more steps, and each step contains one or more actions.
 
-To illustrate how the schema can be used with a concrete example, consider an interactive storytelling study with the research question: \emph{Does robot interaction modality influence participant recall performance?} The two conditions differ in how the robot looks and behaves: NAO6 has a human-like form and uses expressive gestures, while TurtleBot is visibly machine-like with no social movement cues. This keeps the narrative task the same across both conditions while changing only how the robot delivers it.
+Figure~\ref{fig:trial-instantiation} illustrates how a protocol definition relates to its instantiation. The left column holds the protocol, defined before the study begins; the right column shows how the abstraction defined as a protocol is instantiated as independent trials. A dashed line marks the protocol/trial boundary: everything to its left was authored by the researcher before any participant arrived; everything to its right was generated during a live session. The \textit{instantiates} arrows from the experiment node fan out to each trial record, making the relationship explicit. This separation is central to reproducibility: the same experiment specification generates a distinct, timestamped record per participant, so researchers can compare across participants without conflating what was designed with what was executed.
 
-Figure~\ref{fig:example-hierarchy} maps that study onto the same hierarchy. The study branches into two experiments (TurtleBot with only voice, NAO6 with added gestures), each experiment uses the same ordered steps (Intro, Story Telling, Recall Test), and each step contains actions. The figure expands only the Story Telling step to keep the diagram readable, but Intro and Recall Test follow the same structure. Figures~\ref{fig:experiment-hierarchy}, \ref{fig:trial-instantiation}, and~\ref{fig:example-hierarchy} together progress from abstract schema, to protocol-versus-instance separation, to a concrete instantiation.
+To illustrate the hierarchy with a concrete example, consider an interactive storytelling study with the research question: \emph{Does how the robot tells a story affect how a human will remember the story?} The two experiments use different robots: the NAO6, a humanoid robot with expressive gestures and a human-like form, and the TurtleBot, a wheeled mobile robot that is visibly machine-like with no social movement cues. The narrative task remains the same across both experiments; only how the robot delivers it changes.
+
+Figure~\ref{fig:example-hierarchy} maps the study presented above onto the hierarchical elements defined in Figure~\ref{fig:experiment-hierarchy}. The study branches into two experiments (TurtleBot with only voice, NAO6 with added gestures), each experiment uses the same sequence of ordered steps (Intro, Story Telling, Recall Test), and each step defines the specific actions the robot will perform. The figure expands only the Story Telling step to keep the diagram readable, but Intro and Recall Test follow the same structure.
+
+Together, these three figures motivate why the hierarchy is useful in practice. These three figures are interrelated as follows: Figure~\ref{fig:experiment-hierarchy} defines the experimental structure as an abstraction; Figure~\ref{fig:trial-instantiation} shows how the abstract experimental structure is instantiated as concrete trial records; and Figure~\ref{fig:example-hierarchy} shows the expansion of each element of the experimental structure.
 
 \begin{figure}[htbp]
 \centering
@@ -134,7 +138,7 @@ Figure~\ref{fig:example-hierarchy} maps that study onto the same hierarchy. The 
 \label{fig:example-hierarchy}
 \end{figure}
 
-Together, these three figures motivate why the hierarchy is useful in practice. The layered structure lets researchers define protocols at any level of granularity without writing code, which keeps the tool accessible to non-programmers. The step and action levels also align naturally with trial flow, so the wizard stays guided by the protocol while retaining control over timing, which supports the real-time control requirement. Action-level execution provides a natural unit for timestamped logging and post-trial analysis, satisfying the automated logging requirement. Finally, keeping experiment definitions separate from trial instances means the same protocol can be reproduced across participants and conditions, supporting both the integrated workflow and collaborative support requirements.
+The layered structure compels researchers to define experimental protocols at multiple levels of granularity without writing code, which creates a process that is accessible to non-programmers. The step and action elements also align naturally with the sequence of events in a trial, so the wizard stays guided by the protocol while retaining control over the timing of each event, which supports the real-time control requirement (R3). Action-level execution provides a natural unit for timestamped logging and post-trial analysis, satisfying the automated logging requirement (R4). Finally, keeping experiment definitions separate from trial instances means the same protocol can be reproduced across participants and experiments, supporting both the integrated workflow (R1) and collaborative support (R6) requirements.
 
 \section{Event-Driven Execution Model}
 
@@ -217,9 +221,9 @@ To achieve real-time responsiveness while maintaining methodological rigor (R3, 
 \label{fig:event-driven-timeline}
 \end{figure}
 
-This approach has several implications. First, not all trials of the same experiment will have identical timing or duration; the length of a learning task, for example, depends on the participant's progress. The system records the actual timing of actions, permitting researchers to capture these natural variations in their data. Second, the event-driven model enables the wizard to respond contextually without departing from the protocol; the wizard remains guided by the sequence of available actions while having control over when to advance based on participant cues.
+This approach has several implications. What the event-driven model guarantees is not identical timing across trials, but consistent action ordering: every participant experiences the same sequence of protocol steps, even if the pace varies. Timing is recorded accurately, permitting researchers to analyze natural variation across participants. The wizard responds contextually without departing from the protocol; the wizard remains guided by the sequence of available actions while retaining control over when to advance based on participant cues.
 
-The system guides the wizard through the protocol step-by-step, ensuring the intended sequence is followed. Every action is logged with a timestamp whether it was scripted or not, and anything outside the protocol is flagged as a deviation. This means inconsistent wizard behavior shows up in the data rather than disappearing into it.
+The system guides the wizard through the protocol step-by-step, ensuring the intended sequence is followed. Every action is logged with a timestamp whether it was scripted or not, and anything outside the protocol is flagged as a deviation. This means inconsistent wizard behavior can be evident in the data rather than disappearing into it.
 
 \section{Modular Interface Architecture}
 
@@ -229,19 +233,19 @@ Researchers interact with the system through three interfaces, each one encapsul
 
 The \emph{Design} interface gives researchers a drag-and-drop canvas for building experiment protocols, creating a visual programming environment. Researchers drag pre-built action components, including robot movements, speech, wizard instructions, and conditional logic, onto the canvas and drop them into sequence. Clicking a component opens a side panel where its parameters can be set, such as the text for a speech action or the gesture name for a movement.
 
-By treating experiment design as a visual specification task, the interface lowers technical barriers (R2). Researchers can assemble interaction logic by dragging components into sequence and setting parameters in plain language, without writing code. The resulting protocol specification is also human-readable and shareable alongside research results. The specification is stored in a structured format that can be displayed as a timeline for analysis and executed directly by the platform's runtime.
+By treating experiment design as a visual specification task, the interface lowers technical barriers (R2). Researchers can assemble interaction logic by dragging components into sequence and setting parameters naturally, without even having to write code. The resulting protocol specification is also human-readable and shareable alongside experimental results. The specification is stored in a structured format that can be displayed as a timeline for analysis and executed directly by the platform's runtime. This property is central to reproducibility: a third party with access to the specification can run the experiment faithfully without reverse-engineering the original system.
 
 \subsection{Execution Interface}
 
-During trials, the Execution interface shows the wizard exactly where they are in the protocol: the current step, the available actions, and the robot's current state, all updated in real time as the trial progresses.
+During trials, the \emph{Execution} interface keeps the wizard informed of exactly where they are in the protocol. The current step, the available actions, and the robot's current state are all updated in real time as the trial progresses.
 
-The Execution interface also exposes a set of manual controls for actions that fall outside the scripted protocol. Consider a participant who asks an unexpected question mid-trial: the wizard can trigger an unscripted speech response on the spot rather than leaving the interaction to stall. This keeps the interaction feeling natural for the participant. Critically, the system does not simply ignore these moments. Every unscripted action is timestamped and written to the trial log as an explicit deviation, giving researchers a complete picture of what actually happened versus what was planned. This makes unscripted actions a feature rather than a source of noise: the wizard retains real-time control over the interaction, and the logging infrastructure captures everything needed for post-trial analysis.
+The \emph{Execution} interface also exposes a set of manual controls for actions that fall outside the scripted protocol. A \emph{deviation} is a spontaneous action introduced by the wizard in response to a reaction of the human subject that was not anticipated when the script was created. Consider a human subject who asks an unexpected question mid-trial: the wizard can trigger an unscripted speech response on the spot rather than leaving the interaction to stall, keeping the interaction feeling natural for the human subject. Critically, the system does not ignore these deviations from the script. Every deviation is timestamped and written to the trial log, giving researchers a complete picture of what actually happened versus what was planned. This makes unscripted actions a feature rather than a source of noise: the wizard retains real-time control over the interaction, and the logging infrastructure captures everything needed for post-trial analysis.
 
-Additional researchers can simultaneously access this same live view through the platform's Dashboard by selecting a trial to ``spectate.'' Multiple researchers observing the same trial view the identical synchronized display of the wizard's controls, participant interactions, and robot state, supporting real-time collaboration and interdisciplinary observation (R6). Observers can take notes and mark significant moments without interfering with the wizard's control or the participant's experience.
+Additional researchers can simultaneously access a live view of a trial through the platform's Dashboard by selecting a trial to ``spectate.'' Multiple researchers observing the same trial view an identical synchronized display of the wizard's controls, human subject interactions, and robot state, supporting real-time collaboration and interdisciplinary observation (R6). Observers can take notes and mark significant moments without interfering with the wizard's control or the human subject's experience.
 
 \subsection{Analysis Interface}
 
-After a trial concludes, the \emph{Analysis} interface lets researchers review everything that was recorded: video of the interaction, audio, timestamped action logs, and robot sensor data, all scrubable from a single timeline. Researchers can annotate significant moments and export segments for further analysis. Because the same platform produced both the protocol and the recording, the interface can show exactly where the execution matched the design and where it deviated, without any manual cross-referencing.
+After a trial concludes, the \emph{Analysis} interface lets researchers review everything that was recorded: video of the interaction, audio, timestamped action logs, and robot sensor data, all scrubable from a single timeline. Researchers can annotate significant moments and export segments for further analysis. Because the same platform produced both the protocol and the recording, the interface eliminates the need for manual cross-referencing by showing exactly where the execution matched the design and where it deviated.
 
 \section{Data Flow and Infrastructure Implementation}
 
@@ -249,7 +253,7 @@ To ensure that data from every experimental phase remains traceable, the system 
 
 \subsection{Architectural Layers}
 
-The system is structured as a three-layer architecture, each with a specific responsibility:
+Like the ISO/OSI reference model for networking software, HRIStudio separates its communicative and functional responsibilities into distinct layers, as shown in Figure~\ref{fig:three-tier}. More specifically, the system is organized as a three-layer architecture, each layer with a specific responsibility:
 
 \begin{description}
 \item[User Interface layer.] Runs in researchers' web browsers and exposes the three interfaces (Design, Execution, Analysis), managing user interactions such as clicking buttons, dragging and dropping experiment components, and reviewing experimental results.
@@ -274,18 +278,18 @@ This separation of concerns provides two concrete benefits. First, each layer ca
     % Layer 2: Logic
     \node[layer, fill=gray!30] (logic) at (0, 1.8) {
         \textbf{Application Logic}\\[0.1cm]
-        {\small Execution, Authentication, Logger}
+        {\small Trial Engine, Authentication, Logger}
     };
-    
+
     % Layer 3: Data
     \node[layer, fill=gray!45] (data) at (0, 0.1) {
         \textbf{Data \& Robot Control}\\[0.1cm]
         {\small Database, File Storage, ROS}
     };
-    
-    % Arrows
-    \draw[arrow] (ui.south) -- (logic.north);
-    \draw[arrow] (logic.south) -- (data.north);
+
+    % Arrows (bidirectional)
+    \draw[<->, thick, line width=1.5pt] (ui.south) -- (logic.north);
+    \draw[<->, thick, line width=1.5pt] (logic.south) -- (data.north);
     
 \end{tikzpicture}
 \caption{Three-layer architecture separates user interface, application logic, and data/robot control.}
@@ -296,9 +300,18 @@ This separation of concerns provides two concrete benefits. First, each layer ca
 
 During the design phase, researchers create experiment specifications that are stored in the system database. During a trial, the system manages bidirectional communication between the wizard's interface and the robot control layer. All actions, sensor data, and events are streamed to a data logging service that stores complete records. After the trial, researchers can inspect these records through the Analysis interface.
 
-The flow of data during a trial proceeds through six distinct phases, as shown in Figure~\ref{fig:trial-dataflow}. First, a researcher creates an experiment protocol using the Design interface. Second, when a trial begins, the application server loads the protocol and begins stepping through it, sending commands to the robot and waiting for events such as wizard inputs, sensor readings, or timeouts. Third, every action, both planned protocol steps and unexpected events, is immediately written to the trial log with precise timing information. Fourth, the Execution interface continuously displays the current state, allowing the wizard and observers to monitor the progress of a trial in real-time. Fifth, when the trial concludes, all recorded media (video and audio) is transferred from the browser to the server and persisted in a database as part of the trial record. Sixth, the Analysis interface retrieves the stored trial data and reconstructs exactly what happened, synchronizing notable events with the video and audio recordings.
+The flow of data during a trial proceeds through six distinct phases, as shown in Figure~\ref{fig:trial-dataflow}:
 
-This design ensures comprehensive documentation of every trial, supporting both fine-grained analysis and reproducibility. Researchers can review not just what they intended to happen, but what actually did happen, including timing variations and unexpected events.
+\begin{enumerate}
+\item A researcher creates an experiment protocol using the Design interface.
+\item When a trial begins, the application server loads the protocol and allows the wizard to step through it, sending commands to the robot and waiting for events such as wizard inputs, sensor readings, or timeouts.
+\item Every action, both planned protocol steps and deviations, is immediately written to the trial log with precise timing information.
+\item The \emph{Execution} interface continuously displays the current state, allowing the wizard and observers to monitor the progress of a trial in real-time.
+\item When the trial concludes, all recorded media (video and audio) is transferred from the browser to the server and persisted in a database as part of the trial record.
+\item The \emph{Analysis} interface retrieves the stored trial data and reconstructs exactly what happened, synchronizing notable events with the video and audio recordings.
+\end{enumerate}
+
+This design creates automatically a comprehensive documentation of every trial, supporting both fine-grained analysis and reproducibility. Researchers can review not just what they intended to happen, but what actually did happen, including timing variations and deviations.
 
 \begin{figure}[htbp]
 \centering
