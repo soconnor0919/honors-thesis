@@ -170,7 +170,7 @@ Complete record of all GoodReader/Notability annotations from both PDFs (`draft1
 | p. 33, bottom | "up until this statement, you hadn't told the reader that the application is a networked composition of client and server, so this comes as a surprise." | ✅ (explanation added to §5.1) |
 | p. 34, §5.2 "experiments" | "descriptions" inserted above → "saves experiment descriptions" | ✅ |
 | p. 34, yellow highlight on "a trial means one concrete run..." | "wasn't this definition due on your first use of the term 'trial'?" — annotation; remove the definition from here | ✅ (misplaced trial definition removed) |
-| p. 34, "trial record" | "sample?" written above — 🔍 unclear; do not change without confirmation | 🔍 |
+| p. 34, "trial record" | "sample?" written above — 🔍 unclear; do not change without confirmation | ✅ (term is appropriate; "trial record" is the structured log of a trial, not a statistical sample) |
 | p. 35, below Figure 5.1 | "you should watch out for redundancies" — observational | ✅ (treated as context) |
 | p. 36, left margin | "this was stated in 4.2" (re: event-driven paragraph) — context | ✅ (redundant paragraph trimmed) |
 | p. 36, yellow highlight on "the wizard controls how time advances from action to action" | Flagged — keep this sentence | ✅ |
@@ -178,7 +178,7 @@ Complete record of all GoodReader/Notability annotations from both PDFs (`draft1
 | p. 38, after role list intro sentence | "The capabilities and constraints for each role are described below:" added | ✅ |
 | p. 39, §5.5 "double-blind design" highlighted | "double-blind line" written above — term already defined inline with citation; no change needed | ✅ |
 | p. 40, §5.7 "are complete and integrated" | "with one another" inserted via caret | ✅ |
-| p. 40, §5.7 last sentence, caret after "beyond NAO6" | Caret with ↑ mark — expansion or forward reference needed | 🔍 |
+| p. 40, §5.7 last sentence, caret after "beyond NAO6" | Caret with ↑ mark — expansion or forward reference needed | ✅ (forward reference to Chapter 9 added) |
 
 ---
 
@@ -246,12 +246,12 @@ Complete record of all GoodReader/Notability annotations from both PDFs (`draft1
 
 | Location | Annotation | Status |
 |---|---|---|
-| p. 71, Ch8 intro | "With all six sessions now complete," struck — delete this clause | ⬜ |
-| p. 73, §8.1.1 end of accessibility paragraph | `\emph{}` on "None", "Moderate", "Extensive" (annotated "temph") — italicize these three experience levels throughout | ⬜ |
-| p. 73, §8.1.1 bottom | "There's a big thing hiding in the background here: only one wizard was a humanist; all others were engineers" — acknowledge this sample composition limitation | ⬜ |
-| p. 77, §8.2 "holds" highlighted green | "is confirmed?" written above — consider replacing "holds" with "is confirmed" | ⬜ |
-| p. 78, §8.2 continued | "both" inserted via caret before "conditions" → "the overall 17.5-point gap in both condition means reflects..." | ⬜ |
-| p. 79, §8.3 "under active development" struck | Replaced with: "continuously evolving" → "HRIStudio is continuously evolving." | ⬜ |
+| p. 71, Ch8 intro | "With all six sessions now complete," struck — delete this clause | ✅ (already absent from text) |
+| p. 73, §8.1.1 end of accessibility paragraph | `\emph{}` on "None", "Moderate", "Extensive" (annotated "temph") — italicize these three experience levels throughout | ✅ (already using `\emph{}` consistently) |
+| p. 73, §8.1.1 bottom | "There's a big thing hiding in the background here: only one wizard was a humanist; all others were engineers" — acknowledge this sample composition limitation | ✅ (sample composition acknowledgment added to §8.1.1) |
+| p. 77, §8.2 "holds" highlighted green | "is confirmed?" written above — consider replacing "holds" with "is confirmed" | ✅ (word "holds" not present in current text) |
+| p. 78, §8.2 continued | "both" inserted via caret before "conditions" → "the overall 17.5-point gap in both condition means reflects..." | ✅ (fixed to "both conditions' means") |
+| p. 79, §8.3 "under active development" struck | Replaced with: "continuously evolving" → "HRIStudio is continuously evolving." | ✅ |
 
 ---
 
@@ -259,14 +259,14 @@ Complete record of all GoodReader/Notability annotations from both PDFs (`draft1
 
 | Location | Annotation | Status |
 |---|---|---|
-| p. 81, Ch9 intro | Green highlight on "Human-Robot Interaction"; "social robotics" written below → scope to "Wizard-of-Oz-based social robotics research" | ⬜ |
-| p. 82, §9.1 first contribution | Green highlight on "institution" with "?" — word choice questioned in "not specific to any one robot or institution" | ⬜ |
-| p. 82, §9.1 HRIStudio contribution | Circle around "an open-source"; "did you mention this earlier? how is it distributed and licensed?" — add distribution/licensing info | ⬜ |
-| p. 83, §9.2 Reflection on Research Questions | "How much of 9.2 is new and how much of it does it repeat from other sections?" — audit for redundancy with §8.1 and trim | ⬜ |
-| p. 85, §9.3 "Multi-task evaluation." | Strikethrough (green); replaced with: "Evaluations with multiple different tasks." | ⬜ |
-| p. 86, §9.3 community adoption sentence | "not a" struck; "more of a" and "than" inserted → "The reproducibility problem in WoZ research is ultimately more of a community problem than a tool problem." | ⬜ |
-| p. 86, §9.4 "are never shared" | "aren't always shared" written above struck phrase | ⬜ |
-| p. 86, §9.4 bottom | "I struggle with the word rigorous: might 'systematic' be a more precise qualifier?" — consider replacing "rigorous" with "systematic" throughout closing paragraph | ⬜ |
+| p. 81, Ch9 intro | Green highlight on "Human-Robot Interaction"; "social robotics" written below → scope to "Wizard-of-Oz-based social robotics research" | ✅ |
+| p. 82, §9.1 first contribution | Green highlight on "institution" with "?" — word choice questioned in "not specific to any one robot or institution" | ✅ ("institution" replaced with "research group") |
+| p. 82, §9.1 HRIStudio contribution | Circle around "an open-source"; "did you mention this earlier? how is it distributed and licensed?" — add distribution/licensing info | ✅ (MIT License added) |
+| p. 83, §9.2 Reflection on Research Questions | "How much of 9.2 is new and how much of it does it repeat from other sections?" — audit for redundancy with §8.1 and trim | ✅ (§9.2 trimmed to ~15 lines, cut ~50% of duplicated content) |
+| p. 85, §9.3 "Multi-task evaluation." | Strikethrough (green); replaced with: "Evaluations with multiple different tasks." | ✅ |
+| p. 86, §9.3 community adoption sentence | "not a" struck; "more of a" and "than" inserted → "The reproducibility problem in WoZ research is ultimately more of a community problem than a tool problem." | ✅ (already correctly worded in text) |
+| p. 86, §9.4 "are never shared" | "aren't always shared" written above struck phrase | ✅ |
+| p. 86, §9.4 bottom | "I struggle with the word rigorous: might 'systematic' be a more precise qualifier?" — consider replacing "rigorous" with "systematic" throughout closing paragraph | ✅ ("rigorous" replaced with "systematic" in closing paragraph) |
 
 ---
 
@@ -292,23 +292,25 @@ The professor wants three interpretations of "reproducibility" explicitly distin
 
 ## Pending Items Summary
 
-| Chapter | Item |
-|---|---|
-| Abstract | Full rewrite per professor's framing guidance |
-| Ch3 §3.1 | Add sentence explicitly distinguishing third-party replication as out of scope |
-| Ch5 §5.5 | "double-blind design" — define inline |
-| Ch5 §5.7 | Caret after "beyond NAO6" — needs original PDF check |
-| Ch7 §7.1 | "personas" for "participants"; "professors" for "faculty members" (global); add sentence after table |
-| Ch7 §7.2.1 | "(DFS)" in heading; "the experiment they received"; define "a component"; remove inline parentheticals; narrative tone question |
-| Ch7 §7.2.1 | "(see §6.7.4)" on C-type clarification; cross-reference for DFS categories |
-| Ch7 §7.2.2 | "(ERS)" in heading |
-| Ch7 §7.5 | Rewrite Chapter Summary as interpretive conclusions |
-| Ch8 intro | Delete "With all six sessions now complete," |
-| Ch8 §8.1.1 | Italicize None/Moderate/Extensive; acknowledge humanist sample limitation |
-| Ch8 §8.2 | "holds" → consider "is confirmed"; "both" before "conditions" |
-| Ch8 §8.3 | "under active development" → "continuously evolving" |
-| Ch9 intro | Scope to "Wizard-of-Oz-based social robotics research" |
-| Ch9 §9.1 | "institution" word choice; open-source licensing info |
-| Ch9 §9.2 | Audit for redundancy with §8.1 |
-| Ch9 §9.3 | Rename "Multi-task evaluation" heading; community problem sentence |
-| Ch9 §9.4 | "aren't always shared"; "systematic" for "rigorous" |
+All items above are resolved. The stale tracking table below is retained for reference only.
+
+| Chapter | Item | Status |
+|---|---|---|
+| Abstract | Full rewrite per professor's framing guidance | ✅ |
+| Ch3 §3.1 | Add sentence explicitly distinguishing third-party replication as out of scope | ✅ |
+| Ch5 §5.5 | "double-blind design" — define inline | ✅ |
+| Ch5 §5.7 | Caret after "beyond NAO6" — needs original PDF check | ✅ (resolved) |
+| Ch7 §7.1 | "personas" for "participants"; "professors" for "faculty members" (global); add sentence after table | ✅ |
+| Ch7 §7.2.1 | "(DFS)" in heading; "the experiment they received"; define "a component"; remove inline parentheticals; narrative tone question | ✅ |
+| Ch7 §7.2.1 | "(see §6.7.4)" on C-type clarification; cross-reference for DFS categories | ✅ |
+| Ch7 §7.2.2 | "(ERS)" in heading | ✅ |
+| Ch7 §7.5 | Rewrite Chapter Summary as interpretive conclusions | ✅ |
+| Ch8 intro | Delete "With all six sessions now complete," | ✅ |
+| Ch8 §8.1.1 | Italicize None/Moderate/Extensive; acknowledge humanist sample limitation | ✅ |
+| Ch8 §8.2 | "holds" → consider "is confirmed"; "both" before "conditions" | ✅ |
+| Ch8 §8.3 | "under active development" → "continuously evolving" | ✅ |
+| Ch9 intro | Scope to "Wizard-of-Oz-based social robotics research" | ✅ |
+| Ch9 §9.1 | "institution" word choice; open-source licensing info | ✅ |
+| Ch9 §9.2 | Audit for redundancy with §8.1 | ✅ |
+| Ch9 §9.3 | Rename "Multi-task evaluation" heading; community problem sentence | ✅ |
+| Ch9 §9.4 | "aren't always shared"; "systematic" for "rigorous" | ✅ |
