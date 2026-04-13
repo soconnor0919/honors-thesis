@@ -1,5 +1,5 @@
 %documentclass{buthesis}          %Gives author-year citation style
-\documentclass[numbib, twoadv]{buthesis} %Gives numerical citation style
+\documentclass[numbib]{buthesis} %Gives numerical citation style
 %\documentclass[twoadv}{buthesis} %Allows entry of second advisor
 %\usepackage{graphics}            %Select graphics package
 \usepackage{graphicx}             %
@@ -22,14 +22,25 @@
 \degree{Bachelor of Science}
 \department{Computer Science}
 \advisor{L. Felipe Perrone}
-\advisorb{Brian King}
+% \advisorb{Brian King}
 \chair{Alan Marchiori}
 \maketitle
 
 \frontmatter
 
 \acknowledgments{
-    (Draft Acknowledgments)
+    \begin{spacing}{1.3}
+    {\setlength{\parskip}{0.1in}
+    I owe a great deal to my advisor, Felipe Perrone. From my first year at Bucknell,
+    he gave me the resources and the space to learn on my own terms, and has supported me at every turn --- inside the classroom and far beyond it. The many credits I spent in his courses; the countless hours spent meeting, reading, and rereading drafts together; the two papers we wrote and the trips we took to present them; all of it built the skills and the judgment that this thesis required, and much more besides. I could not have done this without him.
+
+    I also thank Professor Brian King, whose encouragement of curiosity and discovery has stayed with me, and whose courses have given me the technical foundation to take on projects with confidence and lead them well. I am glad to have him on my committee.
+
+    I thank Professor Kopec for her service as the Honors Council representative on my thesis committee, and the six Bucknell faculty members who volunteered their time to participate in the pilot study that made this evaluation possible.
+
+    My parents have supported me throughout my time at Bucknell and in everything that came before it. This is for them, and for my grandfather, whose journey here made mine possible.
+    }
+    \end{spacing}
 }
 
 \tableofcontents
@@ -39,11 +50,13 @@
 \listoffigures
 
 \abstract{
-    The Wizard-of-Oz (WoZ) technique is widely used in Human-Robot Interaction research to prototype and evaluate robot interaction designs before autonomous capabilities are fully developed. However, two persistent problems limit the technique's effectiveness. First, existing WoZ tools impose technical barriers that prevent domain experts outside engineering from conducting independent studies --- the Accessibility Problem. Second, the fragmented landscape of custom, robot-specific tools makes it difficult to run the same social interaction script on a different robot platform without rebuilding the implementation from scratch --- the Reproducibility Problem, as the term is used in this thesis. Note that reproducibility here concerns execution consistency within a study and the portability of interaction scripts across robot platforms; it does not refer to independent replication of a published study by third-party researchers.
+    \begin{spacing}{1.3}
+    {\setlength{\parskip}{0.1in}
+    The Wizard-of-Oz (WoZ) technique is widely used in Human-Robot Interaction research, but two persistent problems limit its effectiveness: existing tools impose technical barriers that exclude non-engineering domain experts (the Accessibility Problem), and the fragmented landscape of robot-specific implementations makes interaction scripts difficult to port across platforms (the Reproducibility Problem --- concerning execution consistency and portability, not third-party replication). Through a literature review, I identified three design principles to address both: a hierarchical specification model, an event-driven execution model, and a plugin architecture that decouples experiment logic from robot-specific implementations. I realized these principles in HRIStudio, an open-source, web-based platform providing a visual experiment designer, a guided wizard execution interface, automated timestamped logging with deviation tracking, and role-based access control.
 
-    Through a thorough literature review, I identified a set of design principles to guide the development of WoZ support tools: a hierarchical specification model that organizes experiments as studies, experiments, steps, and actions; an event-driven execution model that separates protocol design from live trial control; and a plugin architecture that decouples experiment logic from robot-specific implementations. I implemented HRIStudio, an open-source, web-based platform that follows these design principles, providing a visual experiment designer, a guided wizard execution interface, automated timestamped logging with explicit deviation tracking, and role-based access control for research teams. I then evaluated HRIStudio in a pilot between-subjects study comparing it against Choregraphe, the standard NAO programming tool, using six participants who each designed and executed an interactive storytelling task on a NAO robot.
-
-    The pilot study confirms the thesis: HRIStudio wizards achieved higher design fidelity, higher execution reliability, and higher perceived usability than Choregraphe wizards across all six sessions. The only unprompted specification deviation in the dataset occurred in the Choregraphe condition, illustrating the execution-consistency failure mode that HRIStudio's enforcement model is designed to prevent. While the pilot scale precludes inferential claims, the directional evidence across all measures supports the position that a tool built to realize the identified design principles can have significant impact on accessibility and reproducibility in WoZ-based HRI research.
+    I evaluated HRIStudio in a pilot between-subjects study (N=6) against Choregraphe, the standard NAO programming tool. HRIStudio wizards achieved higher design fidelity, execution reliability, and perceived usability across all six sessions; the only unprompted specification deviation in the dataset occurred in the Choregraphe condition. While the pilot scale precludes inferential claims, the directional evidence across all measures supports the position that a tool built to realize the identified design principles can have significant impact on accessibility and reproducibility in WoZ-based HRI research.
+    }
+    \end{spacing}
 }
 
 \mainmatter
