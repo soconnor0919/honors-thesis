@@ -36,6 +36,7 @@
 \setlength{\parskip}{0.2in}
 \newcommand{\advisor}[1]{\newcommand{\advisorname}{#1}}
 \newcommand{\advisorb}[1]{\newcommand{\advisornameb}{#1}}
+\newcommand{\honorscouncilrep}[1]{\newcommand{\honorscouncilrepname}{#1}}
 \newcommand{\chair}[1]{\newcommand{\chairname}{#1}}
 \newcommand{\department}[1]{\newcommand{\departmentname}{#1}}
 \newcommand{\butitle}[1]{\newcommand{\titletext}{#1}}
@@ -114,33 +115,46 @@ in Partial Fulfillment of the Requirements for the Degree of\\
 \today
 \end{center}
 
-
+\vspace{0.03in}
+{\small
 \ifthenelse{\boolean{@twoadv}}{
-\vspace{0.25in}
-
 Approved: \hspace{0.2in}\underline{\hspace{2.5in}}\\
 \mbox{\hspace{1.3in}}\advisorname\\
 \mbox{\hspace{1.3in}}Thesis Advisor
-\vspace{0.25in}
+\vspace{0.03in}
 
 \mbox{\hspace{1.0in}}\underline{\hspace{2.5in}}\\
 \mbox{\hspace{1.3in}}\advisornameb\\
-\mbox{\hspace{1.3in}}Second Reader
-\vspace{0.25in}
+\mbox{\hspace{1.3in}}Reader
+\vspace{0.03in}
 
 \mbox{\hspace{1.0in}}\underline{\hspace{2.5in}}\\
 \mbox{\hspace{1.3in}}\chairname\\
-\mbox{\hspace{1.3in}}Chair of the Department of \departmentname}
-{\vspace{1.0in}
+\mbox{\hspace{1.3in}}Chair of the Department of \departmentname
+\vspace{0.03in}
 
-Approved: \hspace{0.2in}\underline{\hspace{2.5in}}\\
+\mbox{\hspace{1.0in}}\underline{\hspace{2.5in}}\\
+\mbox{\hspace{1.3in}}\honorscouncilrepname\\
+\mbox{\hspace{1.3in}}Honors Council Representative}
+{Approved: \hspace{0.2in}\underline{\hspace{2.5in}}\\
 \mbox{\hspace{1.3in}}\advisorname \\
 \mbox{\hspace{1.3in}}Thesis Advisor
-\vspace{0.5in}
+\vspace{0.03in}
+
+\mbox{\hspace{1.0in}}\underline{\hspace{2.5in}}\\
+\mbox{\hspace{1.3in}}\advisornameb\\
+\mbox{\hspace{1.3in}}Reader
+\vspace{0.03in}
 
 \mbox{\hspace{1.0in}}\underline{\hspace{2.5in}}\\
 \mbox{\hspace{1.3in}}\chairname\\
-\mbox{\hspace{1.3in}}Chair of the Department of \departmentname}
+\mbox{\hspace{1.3in}}Chair of the Department of \departmentname
+\vspace{0.03in}
+
+\mbox{\hspace{1.0in}}\underline{\hspace{2.5in}}\\
+\mbox{\hspace{1.3in}}\honorscouncilrepname\\
+\mbox{\hspace{1.3in}}Honors Council Representative}
+}
 \end{singlespace}
 \vfill
 \end{titlepage}}
