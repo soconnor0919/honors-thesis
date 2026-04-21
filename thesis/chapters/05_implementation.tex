@@ -11,6 +11,15 @@ I organized the system into three layers: User Interface, Application Logic, and
 
 I implemented all three layers in the same language: TypeScript~\cite{TypeScript2014}, a statically-typed superset of JavaScript. The single-language decision keeps the type system consistent across the full stack. When the structure of experiment data changes, the type checker surfaces inconsistencies across the entire codebase at compile time rather than allowing them to appear as runtime failures during a trial.
 
+HRIStudio is released as open-source software under the MIT License, with the application hosted at a public repository~\cite{HRIStudioRepo} and the companion robot plugin repository hosted separately~\cite{RobotPluginsRepo}. Both are available for inspection, extension, and deployment by other research groups.
+
+\subsection{Working with AI Coding Assistants}
+\label{sec:ai-ws}
+
+The scale of the implementation described in this chapter, a full-stack TypeScript application spanning user interface, application logic, persistent storage, and real-time robot control, would not have been possible within the timeframe of this thesis without the use of AI coding assistants. I distinguish clearly between the engineering and implementation roles in this work: I architected the system, made the design decisions documented in Chapter~\ref{ch:design} and this chapter, specified the behavior and constraints of each component, and reviewed and integrated all code before it entered the codebase. AI agents acted as software developers working under that direction, producing TypeScript code in response to the specifications I provided and the feedback I gave as the implementation evolved. The division of labor was consistent throughout: I engineered, they implemented.
+
+The tools I used in this capacity spanned several vendors and interaction paradigms, and the set evolved as the AI landscape changed over the course of the project. Claude~\cite{Anthropic2024Claude} was the conversational model I relied on most consistently for design discussions and code review. I used Claude Code~\cite{AnthropicClaudeCode}, OpenCode~\cite{OpenCode}, the Gemini CLI~\cite{GeminiCLI}, and Google Antigravity~\cite{GoogleAntigravity} as terminal- and editor-integrated coding agents for implementing the features I specified; the Zed editor~\cite{ZedEditor} served as the surrounding development environment and provided its own AI-assisted editing features. These tools overlapped in places, but I generally used one at a time and switched between them as new capabilities became available and as I learned which tool suited which kind of work. Appendix~\ref{app:ai_workflow} documents this workflow in more detail: the division of responsibility between me and the agents, the kinds of tasks each category of tool handled well, and the limits I ran into.
+
 \section{Experiment Storage and Trial Logging}
 
 The system saves experiment descriptions to persistent storage when a researcher completes them in the Design interface. A saved experiment is a complete, reusable specification that a researcher can run across any number of trials without modification.
@@ -85,9 +94,18 @@ When a trial begins, the system creates a new trial record linked to that experi
 \label{fig:trial-record}
 \end{figure}
 
-Video and audio are recorded locally in the researcher's browser during the trial rather than streamed to the server in real time. This prevents network delays or server load from dropping frames or degrading audio quality during the interaction. When the trial concludes, the browser transfers the complete recordings to the server and associates them with the trial record. The Analysis interface can align video and audio with the logged actions without any manual synchronization, because the timestamp when recording starts is logged alongside the action log.
+Video and audio are recorded locally in the wizard's browser during the trial rather than streamed to the server in real time. The wizard's browser is the canonical recording client because the wizard is the only role required for a trial to run; observer and researcher roles connect in read-only capacities and do not capture media. Recording locally prevents network delays or server load from dropping frames or degrading audio quality during the interaction. When the trial concludes, the wizard's browser transfers the complete recordings to the server and associates them with the trial record. The Analysis interface can align video and audio with the logged actions without any manual synchronization, because the timestamp when recording starts is logged alongside the action log.
 
 The system stores structured and media data separately. Experiment specifications and trial records are stored in the same structured database, which makes it efficient to query across trials (for example, retrieving all trials for a specific participant or comparing action timing across conditions). Video and audio files are stored in a dedicated file store, since their size makes them unsuitable for a database and the system never queries their content directly.
+
+Figure~\ref{fig:trial-report} shows the Analysis interface reconstructing a completed trial. The recorded video is presented alongside a synchronized action log, with each logged event linked to its moment in the recording so researchers can jump directly to the corresponding interaction without manual cross-referencing.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.95\textwidth]{assets/trial-report.png}
+\caption{The HRIStudio Analysis interface showing a completed trial with video and a synchronized, timestamped action log.}
+\label{fig:trial-report}
+\end{figure}
 
 \section{The Execution Engine}
 
@@ -96,6 +114,15 @@ The execution engine is the component that runs a trial: it loads the experiment
 When a trial begins, the server loads the experiment and maintains a live connection to the wizard's browser and any observer connections. The wizard controls how time advances from action to action. When the wizard triggers an action, the server sends the related command to the robot, writes the log entry, and pushes the updated experiment state to all connected clients in the same operation, keeping the wizard's view, the observer view, and the actual robot state synchronized in real time.
 
 No two human subjects respond identically to an experimental protocol. One subject gives a one-word answer; another offers a paragraph; a third asks the robot a question the script never anticipated. Unscripted actions give the wizard the tools to record how these interactions unfold when deviations from the script are required. The wizard triggers them via the manual controls in the Execution interface, the robot command runs, and the system logs the action with a deviation flag. This design preserves research value: the interaction gains the flexibility only a human can provide, and that flexibility appears explicitly in the record rather than disappearing into it.
+
+Figure~\ref{fig:execution-view} shows the Execution interface as it appears to a wizard during a live trial. The current step is highlighted in the protocol sidebar, the available actions for that step are surfaced as triggerable buttons, and the wizard has manual-control affordances for introducing unscripted actions that the system will flag as deviations in the trial log.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.95\textwidth]{assets/execution-view.png}
+\caption{The HRIStudio Execution interface during a live trial, showing the current step, available actions, and manual deviation controls.}
+\label{fig:execution-view}
+\end{figure}
 
 \section{Robot Integration}
 

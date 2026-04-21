@@ -38,7 +38,7 @@ This table also presents numerical data representing the study's results, which 
 
 \subsection{Design Fidelity Score (DFS)}
 
-The Design Fidelity Score measures how completely and correctly each wizard implemented the written specification, the experiment they received. Scores range from 0 to 100, with full points awarded only when a component — a rubric criterion representing a required speech action, gesture, or control-flow element — is both present and correct. (For a full description of rubric categories, see Section~\ref{sec:measures}.)
+The Design Fidelity Score measures how completely and correctly each wizard implemented the written specification of their assigned experiment. Scores range from 0 to 100, with full points awarded only when a component — a rubric criterion representing a required speech action, gesture, or control-flow element — is both present and correct. (For a full description of rubric categories, see Section~\ref{sec:measures}.)
 
 Across the six participants, DFS scores divided sharply by study condition: all three HRIStudio wizards achieved a perfect score of 100, while the three Choregraphe wizards scored 42.5, 65, and 62.5. The following paragraphs describe the key findings from each session.
 
@@ -92,36 +92,62 @@ W-06 rated HRIStudio with a SUS score of 70. W-06, a Computer Science faculty me
 
 HRIStudio study condition SUS scores were 90, 70, and 70 (mean 76.7). Choregraphe study condition SUS scores were 60, 75, and 42.5 (mean 59.2).
 
+Figure~\ref{fig:results-chart} summarizes the three primary measures side-by-side. In each group, the left bar represents the Choregraphe mean and the right bar represents the HRIStudio mean. HRIStudio exceeds Choregraphe on every measure, with the largest gap on DFS (43.3 points) and the smallest on SUS (17.5 points).
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+    % Axes
+    \draw[thick] (0,0) -- (0,6.3);
+    \draw[thick] (0,0) -- (11.2,0);
+
+    % Y-axis ticks and labels (0--100, with 1 unit = 0.06 cm)
+    \foreach \tick/\val in {0/0, 1.2/20, 2.4/40, 3.6/60, 4.8/80, 6.0/100} {
+        \draw (-0.08, \tick) -- (0, \tick);
+        \node[left, font=\footnotesize] at (-0.05, \tick) {\val};
+    }
+    \node[rotate=90, font=\small] at (-1.05, 3.0) {Mean Score (0--100)};
+
+    % Horizontal gridlines
+    \foreach \tick in {1.2, 2.4, 3.6, 4.8, 6.0} {
+        \draw[gray!25, thin] (0.02, \tick) -- (11.2, \tick);
+    }
+
+    % DFS group
+    \fill[gray!40, draw=black] (1.0, 0) rectangle (2.3, 3.402);
+    \fill[gray!75, draw=black] (2.4, 0) rectangle (3.7, 6.000);
+    \node[font=\footnotesize] at (1.65, 3.60) {56.7};
+    \node[font=\footnotesize] at (3.05, 6.20) {100};
+    \node[font=\small] at (2.35, -0.38) {DFS};
+
+    % ERS group
+    \fill[gray!40, draw=black] (4.5, 0) rectangle (5.8, 4.002);
+    \fill[gray!75, draw=black] (5.9, 0) rectangle (7.2, 5.802);
+    \node[font=\footnotesize] at (5.15, 4.20) {66.7};
+    \node[font=\footnotesize] at (6.55, 6.00) {96.7};
+    \node[font=\small] at (5.85, -0.38) {ERS};
+
+    % SUS group
+    \fill[gray!40, draw=black] (8.0, 0) rectangle (9.3, 3.552);
+    \fill[gray!75, draw=black] (9.4, 0) rectangle (10.7, 4.602);
+    \node[font=\footnotesize] at (8.65, 3.75) {59.2};
+    \node[font=\footnotesize] at (10.05, 4.80) {76.7};
+    \node[font=\small] at (9.35, -0.38) {SUS};
+
+    % Legend
+    \fill[gray!40, draw=black] (2.6, -1.25) rectangle (3.0, -1.00);
+    \node[anchor=west, font=\footnotesize] at (3.1, -1.125) {Choregraphe};
+    \fill[gray!75, draw=black] (7.0, -1.25) rectangle (7.4, -1.00);
+    \node[anchor=west, font=\footnotesize] at (7.5, -1.125) {HRIStudio};
+
+\end{tikzpicture}
+\caption{Mean scores by condition across the three primary outcome measures. Within each group, the left bar is Choregraphe and the right bar is HRIStudio.}
+\label{fig:results-chart}
+\end{figure}
+
 \section{Supplementary Measures}
 
 \subsection{Session Timing}
-
-Table~\ref{tbl:timing} summarizes the time spent in each phase per session.
-
-
-\begin{table}[htbp]
-\centering
-\footnotesize
-\begin{tabular}{|l|l|l|l|l|l|}
-\hline
-\textbf{ID} & \textbf{Training} & \textbf{Design} & \textbf{Trial} & \textbf{Debrief} & \textbf{Total} \\
-\hline
-W-01 & 15 min & 35 min & 5 min & 5 min & 60 min \\
-\hline
-W-02 & 7 min & 24 min & 5 min & 5 min & 41 min \\
-\hline
-W-03 & 12 min & 37 min & 5 min & 5 min & 59 min \\
-\hline
-W-04 & 17 min & 35 min & 4 min & 4 min & 60 min \\
-\hline
-W-05 & 6 min & 18 min & 4 min & 4 min & 32 min \\
-\hline
-W-06 & 8 min & 21 min & 3 min & 5 min & 37 min \\
-\hline
-\end{tabular}
-\caption{Time spent in each session phase per wizard participant.}
-\label{tbl:timing}
-\end{table}
 
 W-01's design phase extended to 35 minutes, five minutes over the 30-minute allocation, compressing the trial and debrief to 5 minutes each. Despite this, W-01 declared the design complete rather than abandoning it, and the robot executed a recognizable version of the specification during the trial.
 
@@ -136,6 +162,59 @@ W-05's design phase completed in 18 minutes, the shortest in the study. The over
 W-06's training phase concluded in 8 minutes and the design phase completed in 21 minutes, both within their allocations. The overall session lasted 37 minutes. The trial ran for approximately three minutes, the shortest trial phase in the study, reflecting a clean execution without errors or researcher interventions.
 
 Across all six sessions, Choregraphe design phases averaged approximately 35.7 minutes; W-01 and W-03 exceeded the 30-minute target but completed their designs before the session time limit, while W-04 was the only wizard cut off by the limit without finishing. HRIStudio design phases averaged 21 minutes across three sessions, all within the allocation. Training phases similarly diverged: Choregraphe training averaged approximately 14.7 minutes, while HRIStudio training averaged 7 minutes.
+
+Figure~\ref{fig:timing-chart} compares the per-condition means for training, design, and total session duration. The gap is concentrated in the design phase and carries through to the total session length; training duration also diverges, with Choregraphe wizards requiring roughly twice as long to reach readiness.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+    % Axes (1 minute = 0.1 cm, so 60 min = 6 cm)
+    \draw[thick] (0,0) -- (0,6.3);
+    \draw[thick] (0,0) -- (11.2,0);
+
+    % Y-axis ticks and labels (0--60 minutes)
+    \foreach \tick/\val in {0/0, 1/10, 2/20, 3/30, 4/40, 5/50, 6/60} {
+        \draw (-0.08, \tick) -- (0, \tick);
+        \node[left, font=\footnotesize] at (-0.05, \tick) {\val};
+    }
+    \node[rotate=90, font=\small] at (-1.05, 3.0) {Mean Duration (minutes)};
+
+    % Horizontal gridlines
+    \foreach \tick in {1,2,3,4,5,6} {
+        \draw[gray!25, thin] (0.02, \tick) -- (11.2, \tick);
+    }
+
+    % Training group — Choregraphe 14.7, HRIStudio 7.0
+    \fill[gray!40, draw=black] (1.0, 0) rectangle (2.3, 1.47);
+    \fill[gray!75, draw=black] (2.4, 0) rectangle (3.7, 0.70);
+    \node[font=\footnotesize] at (1.65, 1.67) {14.7};
+    \node[font=\footnotesize] at (3.05, 0.90) {7.0};
+    \node[font=\small] at (2.35, -0.38) {Training};
+
+    % Design group — Choregraphe 35.7, HRIStudio 21.0
+    \fill[gray!40, draw=black] (4.5, 0) rectangle (5.8, 3.57);
+    \fill[gray!75, draw=black] (5.9, 0) rectangle (7.2, 2.10);
+    \node[font=\footnotesize] at (5.15, 3.77) {35.7};
+    \node[font=\footnotesize] at (6.55, 2.30) {21.0};
+    \node[font=\small] at (5.85, -0.38) {Design};
+
+    % Total group — Choregraphe 59.7, HRIStudio 36.7
+    \fill[gray!40, draw=black] (8.0, 0) rectangle (9.3, 5.97);
+    \fill[gray!75, draw=black] (9.4, 0) rectangle (10.7, 3.67);
+    \node[font=\footnotesize] at (8.65, 6.17) {59.7};
+    \node[font=\footnotesize] at (10.05, 3.87) {36.7};
+    \node[font=\small] at (9.35, -0.38) {Total Session};
+
+    % Legend
+    \fill[gray!40, draw=black] (2.6, -1.25) rectangle (3.0, -1.00);
+    \node[anchor=west, font=\footnotesize] at (3.1, -1.125) {Choregraphe};
+    \fill[gray!75, draw=black] (7.0, -1.25) rectangle (7.4, -1.00);
+    \node[anchor=west, font=\footnotesize] at (7.5, -1.125) {HRIStudio};
+
+\end{tikzpicture}
+\caption{Mean phase durations (in minutes) by condition. Within each group, the left bar is Choregraphe and the right bar is HRIStudio.}
+\label{fig:timing-chart}
+\end{figure}
 
 \subsection{Intervention Log}
 

@@ -13,7 +13,7 @@ I hypothesized that HRIStudio would improve both accessibility and reproducibili
 
 \section{Study Design}
 
-I used what Bartneck et al.~\cite{Bartneck2024} call a between-subjects design, in which each participant is assigned to only one condition. I randomly assigned each wizard participant to one of two conditions: HRIStudio or Choregraphe. Both groups received the same task, the same time allocation, and a similar training structure. Measuring each participant in only one condition prevents carryover effects, meaning performance changes caused by prior exposure to another condition rather than by the assigned condition itself.
+I used what Bartneck et al.~\cite{Bartneck2024} call a between-subjects design, in which each participant is assigned to only one condition. To ensure that programming experience was balanced across conditions, I stratified assignment by self-reported programming background: each wizard was first classified into one of three strata (\emph{None}, \emph{Moderate}, or \emph{Extensive} programming experience), and then randomly assigned within their stratum to one of the two conditions (HRIStudio or Choregraphe). This produced a design in which each condition contained exactly one wizard at each experience level, allowing the tool effect to be evaluated without confounding from the distribution of programming experience. Both groups received the same task, the same time allocation, and a similar training structure. Measuring each participant in only one condition prevents carryover effects, meaning performance changes caused by prior exposure to another condition rather than by the assigned condition itself.
 
 \section{Participants}
 
@@ -48,6 +48,26 @@ The control condition used Choregraphe \cite{Pot2009}, a proprietary visual prog
 
 The experimental condition used HRIStudio, described in Chapter~\ref{ch:implementation}. HRIStudio organizes behavior as a sequential action timeline with support for conditional branches. Unlike Choregraphe, it abstracts robot-specific commands through plugin files, though for this study both tools controlled the same NAO platform.
 
+Figure~\ref{fig:design-tool-compare} places the two design environments side by side. On the left, Choregraphe's behavior-box canvas (Figure~\ref{fig:choregraphe-ui}) lets the wizard wire nodes and transitions in a finite-state-machine layout. On the right, HRIStudio's experiment designer (Figure~\ref{fig:hristudio-designer}) presents the same protocol as a vertical action timeline with dedicated blocks for speech, gesture, and conditional branching.
+
+\begin{figure}[htbp]
+\centering
+\begin{minipage}[t]{0.48\textwidth}
+\centering
+\includegraphics[width=\textwidth]{assets/choregraphe.png}
+\subcaption{Choregraphe: behavior-box canvas with nodes and transitions.}
+\label{fig:choregraphe-ui}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\textwidth}
+\centering
+\includegraphics[width=\textwidth]{assets/experiment-designer.png}
+\subcaption{HRIStudio: vertical action timeline with structured step and action blocks.}
+\label{fig:hristudio-designer}
+\end{minipage}
+\caption{The two design environments compared. Each wizard used one of these tools to implement the Interactive Storyteller specification.}
+\label{fig:design-tool-compare}
+\end{figure}
+
 \section{Procedure}
 
 Each wizard completed a single 60-minute session structured in four phases.
@@ -77,7 +97,7 @@ The study collected five measures, two primary and three supplementary, operatio
 
 I define the Design Fidelity Score (DFS) as a measure of how completely and correctly the wizard implemented the specification. I evaluated the exported project file against nine weighted criteria grouped into three categories: speech actions, gestures and actions, and control flow and logic. Each criterion is scored as present, correct, and independently achieved.
 
-The DFS rubric includes an \emph{Assisted} column. For each rubric item, the researcher marks T if a tool-operation intervention was given specifically for that item during the design phase (for example, if the researcher explained how to add a gesture node or how to wire a conditional branch). T marks are recorded and reported separately alongside the DFS score; they do not affect the Points total. This preserves the DFS as a clean measure of design fidelity while providing a parallel record of where tool-specific assistance was needed. General interventions (task clarification, hardware issues, or momentary forgetfulness) are not marked T, because those categories of difficulty are independent of the tool under evaluation.
+The DFS rubric includes an \emph{Assisted} column. For each rubric item, I marked a T if I provided a tool-operation intervention specifically for that item during the design phase (for example, if I explained how to add a gesture node or how to wire a conditional branch). T marks are recorded and reported separately alongside the DFS score; they do not affect the Points total. This preserves the DFS as a clean measure of design fidelity while providing a parallel record of where tool-specific assistance was needed. General interventions (task clarification, hardware issues, or momentary forgetfulness) are not marked T, because those categories of difficulty are independent of the tool under evaluation.
 
 DFS is motivated by a gap identified by Riek~\cite{Riek2012}, whose systematic review of 54 published WoZ studies found that only 11\% constrained wizard behavior and fewer than 6\% described wizard training procedures. Porfirio et al.~\cite{Porfirio2023} similarly argued that formal, verifiable behavior specifications are a prerequisite for reproducible HRI. The DFS applies these recommendations as a weighted rubric scored against the exported project file. The complete rubric is reproduced in Appendix~\ref{app:blank_templates}. This measure addresses the question: did the tool allow a wizard to independently produce a correct design?
 
@@ -98,9 +118,9 @@ The System Usability Scale (SUS) is a validated 10-item questionnaire measuring 
 During each session, I maintained a structured intervention log on the observer data sheet, recording the timestamp, type code, affected rubric item number, and a brief description for every instance in which I assisted the wizard. The four intervention type codes are:
 
 \begin{description}
-    \item[T (tool-operation).] The researcher explained how to operate a specific feature of the assigned software tool.
-    \item[C (task clarification).] The researcher clarified the written specification or an aspect of the task design.
-    \item[H (hardware or technical).] The researcher addressed a robot connection issue or other technical problem outside the wizard's control.
+    \item[T (tool-operation).] I explained how to operate a specific feature of the assigned software tool.
+    \item[C (task clarification).] I clarified the written specification or an aspect of the task design.
+    \item[H (hardware or technical).] I addressed a robot connection issue or other technical problem outside the wizard's control.
     \item[G (general).] Brief assistance not attributable to the tool or the task, such as momentary forgetfulness.
 \end{description}
 
