@@ -12,6 +12,7 @@
 *.synctex.gz
 *.dvi
 *.pdf
+!thesis/pdfs/**
 
 # Build directory
 build/
