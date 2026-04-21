@@ -1,16 +1,16 @@
 \chapter{AI-Assisted Development Workflow}
 \label{app:ai_workflow}
 
-This appendix documents the role that AI coding assistants played in the construction of HRIStudio. It is included both for transparency about how the system was built and because the workflow itself is, in my view, one of the more interesting artifacts produced by the project. Section~\ref{sec:ai-ws} in Chapter~\ref{ch:implementation} introduces the topic briefly; here I describe the division of labor, the specific tools I used, the tasks each handled well, the limits I ran into, and the integrity controls I maintained between implementation work and the evaluation reported in Chapter~\ref{ch:results}.
+This appendix documents the role that AI coding assistants played in the construction of HRIStudio. It is included both for transparency about how the system was built and because the workflow itself is, in my view, one of the more interesting artifacts produced by the project. Section~\ref{sec:ai-ws} in Chapter~\ref{ch:implementation} introduces the topic briefly; here I describe the division of labor, the specific tools I used, the tasks each handled well, the limits I encountered, and the integrity controls I maintained between implementation work and the evaluation reported in Chapter~\ref{ch:results}.
 
 \section{Context}
 \label{sec:ai-context}
 
 HRIStudio was built by a single undergraduate in parallel with a full course load, a thesis writeup, and the pilot validation study described in Chapter~\ref{ch:evaluation}. The feature surface described in Chapters~\ref{ch:design} and~\ref{ch:implementation} is larger than what a solo developer on that schedule could reasonably have produced without assistance, and the deadline constraints did not allow for the kind of team that a system of this scope would normally involve. AI coding assistants made the scope tractable. They did not replace design judgment, but they substantially reduced the cost of the mechanical work that sits between a well-specified design and a working feature: scaffolding new modules, implementing well-defined CRUD and validation code, applying consistent patterns across files, and producing the many small edits that a project of this size accumulates.
 
-The set of tools available to a solo developer changed substantially during the project's timeline. When I began, agentic coding tools were still early and most of my AI use was conversational. By the end of the project, multiple mature terminal- and editor-integrated agents were available. I changed tools as the landscape evolved and used what was available to me at each point. Tools overlapped in places, but I generally used one at a time for a given task; I did not operate a fleet of agents in parallel or maintain a consistent pipeline across tools.
+The set of tools available to a solo developer changed substantially during the project's timeline. When I began, agentic coding tools were still early and most of my AI use was conversational, primarily through Cursor~\cite{CursorEditor} and Zed~\cite{ZedEditor}. By the end of the project, multiple mature terminal- and editor-integrated agents were available. I changed tools as the landscape evolved, eventually moving into a mixed workflow between Visual Studio Code, Antigravity~\cite{GoogleAntigravity}, Claude Code~\cite{AnthropicClaudeCode}, and OpenCode~\cite{OpenCode}.
 
-\section{Tools Used}
+\section{Tools and Hardware}
 \label{sec:ai-tools}
 
 Table~\ref{tbl:ai-tools} lists the tools I used during development and the capacity in which I used each. The split between them was determined partly by capability and partly by availability over time.
@@ -22,24 +22,26 @@ Table~\ref{tbl:ai-tools} lists the tools I used during development and the capac
 \hline
 \textbf{Tool} & \textbf{Category} & \textbf{Primary use} \\
 \hline
-Claude~\cite{Anthropic2024Claude} & Chat model & Design discussions, architectural review, debugging assistance, refactoring proposals, occasional help drafting commit messages. \\
+Claude~\cite{Anthropic2024Claude} & Chat model & Design discussions, architectural review, debugging assistance, and refactoring proposals. \\
 \hline
-Claude Code~\cite{AnthropicClaudeCode} & Terminal agent & Multi-file feature implementation against a written spec; codemod-style refactors; test scaffolding. \\
+Claude Code~\cite{AnthropicClaudeCode} & Terminal agent & Multi-file feature implementation against a written spec; codemod-style refactors; and test scaffolding. \\
 \hline
 OpenCode~\cite{OpenCode} & Terminal agent & Same class of task as Claude Code, used when I preferred an open-source workflow or a different backing model. \\
 \hline
 Gemini CLI~\cite{GeminiCLI} & Terminal agent & Occasional cross-check on changes produced by a different agent, and work against Google's models when I wanted a second reading of a larger diff. \\
 \hline
-Google Antigravity~\cite{GoogleAntigravity} & IDE agent & Editor-integrated agentic coding work, primarily late in the project as the tool became available. \\
+Antigravity~\cite{GoogleAntigravity} & IDE agent & Editor-integrated agentic coding work, primarily late in the project as the tool became available. \\
 \hline
-Zed~\cite{ZedEditor} & Editor & Day-to-day development environment; provided its own AI-assisted editing features alongside the agents listed above. \\
+Cursor~\cite{CursorEditor} & Editor & Early development; AI-native editing and indexing. \\
+\hline
+Zed~\cite{ZedEditor} & Editor & High-performance editing; transition phase before moving to specialized agents. \\
 \hline
 \end{tabular}
 \caption{AI tools used during HRIStudio development.}
 \label{tbl:ai-tools}
 \end{table}
 
-I did not use these tools as a coordinated pipeline. I used whichever one fit the task in front of me at the moment, with the set of options expanding as the year progressed. Some of the work overlaps between tools --- any of the agents can, in principle, produce the same diff for a well-scoped task --- but I generally used one at a time and did not run multiple agents against the same code simultaneously.
+Beyond cloud-hosted models, I experimented with local execution using \texttt{llama.cpp} to run various open-weights models on my local hardware (Apple M4 Pro, 14-core CPU, 48GB RAM). While the hardware was capable of running 7B and 14B parameter models with high throughput, the reasoning performance of the local models frequently lagged behind the state-of-the-art frontier models. I found that the additional cognitive overhead of correcting errors in local model output outweighed the benefits of offline execution, leading me to rely primarily on the cloud-hosted agents for complex implementation tasks.
 
 \section{Division of Responsibility}
 \label{sec:ai-division}
@@ -53,36 +55,24 @@ My working rule throughout the project was that I did the engineering and the ag
 
 \item \textbf{Research design.} The pilot validation study in Chapter~\ref{ch:evaluation} was designed and analyzed entirely by me. The Observer Data Sheet, Design Fidelity Score rubric, and Execution Reliability Score rubric were written by hand. No AI tool was used to score sessions, compute results, or draft claims about what the data showed.
 
-\item \textbf{The prose of this thesis.} Every chapter was written by me. AI tools occasionally helped me reword an awkward sentence or catch an inconsistency between sections, but the structure of the argument and the specific claims I make are my own.
+\item \textbf{The prose of this thesis.} Every chapter was written by me. The structure of the argument and the specific claims I make are my own. While AI assisted with the nuances of \LaTeX{} formatting (particularly the generation of TikZ diagrams and complex chart syntax), the linguistic content is mine.
 \end{itemize}
 
-The agents handled the work that sat inside those decisions: implementing tRPC procedures from a written signature, generating the Drizzle migration files that matched a schema change I had specified, producing React components from a layout sketch and a list of props, writing the serializer that turned a plugin definition into the JSON format the runtime expected, and applying consistent edits across files when I changed a shared interface. I read every diff before accepting it. When a diff was wrong, I either explained what was wrong and asked for a revision with specifics, or I discarded it and wrote the code myself.
-
-\section{A Representative Interaction Pattern}
+\section{Evolution of the Workflow}
 \label{sec:ai-pattern}
 
-The typical loop I followed for a medium-sized feature proceeded in five steps.
+The way I used these tools changed as they improved. Early in the project, I treated the agent's output as a draft that required line-by-line review. The typical loop followed five steps: writing a specification, generating a diff, reading the diff, running the code, and then accepting or rejecting.
 
-First, I wrote the specification. This was usually a short markdown document I kept in a scratch file: a statement of what the feature should do, the tRPC procedure signature it would expose, the tables it would touch, the React components that would consume it, and the acceptance criteria that would let me know it was complete. Writing the specification was design work, and I did it myself.
-
-Second, I handed the specification to an agent with the repository open. The agent read the relevant existing files, produced a diff that implemented the specification, and reported what it had done.
-
-Third, I read the diff. This step was non-negotiable: I did not accept code I had not read. For small changes I read directly; for larger ones I asked the agent for a summary first and then read the diff file by file.
-
-Fourth, I ran the code. I ran the development server, exercised the feature manually, checked the database state where relevant, and ran whatever tests existed. If the feature did not work, I returned to step three with a specific failure to investigate.
-
-Fifth, I either accepted the diff, asked for a revision, or discarded it. A revision request described the specific thing that was wrong, not a vague instruction to \textit{try again}. Discarding happened when the agent had misunderstood the specification in a way that made a revision more expensive than rewriting from scratch.
-
-This loop is unremarkable. It is the same loop I would follow if I were reviewing a pull request from a junior engineer. The key point is that the agent's output was treated as a draft pull request that I, as the engineer, either accepted, requested changes on, or rejected --- not as finished work.
+As the models improved and the agents became more reliable, the focus of my effort shifted. By the final stages of development, I spent significantly less time on manual line-by-line diff reviews and more time on empirical testing. I moved from being a ``code reviewer'' to a ``test-driven supervisor.'' If the agent produced a feature that passed my manual acceptance tests and integrated correctly with the existing system, I was more likely to accept the implementation without a complete audit of every semicolon. This shift allowed me to increase the velocity of development significantly in the weeks leading up to the evaluation.
 
 \section{What Worked and What Did Not}
 \label{sec:ai-limits}
 
-The tasks that agents handled well were those with a narrow and well-specified interface. Implementing a tRPC procedure from a signature, writing a Drizzle migration that matched a schema diff, adding a new field through an existing form, or applying a consistent rename across files --- these were cheap to specify and the agent's output was usually accepted on the first or second iteration. Agents were also good at scaffolding: producing the initial shape of a component, test file, or API route that I then edited to completion.
+The tasks that agents handled well were those with a narrow and well-specified interface. Implementing a tRPC procedure from a signature, writing a Drizzle migration that matched a schema diff, adding a new field through an existing form, or applying a consistent rename across files: these were cheap to specify and the agent's output was usually accepted on the first or second iteration. Agents were also good at scaffolding: producing the initial shape of a component, test file, or API route that I then edited to completion.
 
-The tasks that agents handled poorly were those that required reasoning across more of the system than the context window could hold, or that depended on a piece of context I had not written down. Cross-cutting changes to the experiment and trial data models, for example, required careful coordination across the schema, the tRPC procedures, the execution runtime, and the analysis interface; when I tried to delegate changes of this shape to an agent, the diffs were often locally plausible but globally inconsistent. I ended up doing that work myself. Subtle concurrency and timing questions in the execution layer were another category the agents did not handle well; the event-driven execution model in Chapter~\ref{ch:design} has enough non-obvious ordering constraints that an agent without the full picture tended to introduce races. Those parts of the codebase I wrote by hand.
+The tasks that agents handled poorly were those that required reasoning across more of the system than the context window could hold, or that depended on a piece of context I had not written down. Cross-cutting changes to the experiment and trial data models, for example, required careful coordination across the schema, the tRPC procedures, the execution runtime, and the analysis interface. When I tried to delegate changes of this shape to an agent, the diffs were often locally plausible but globally inconsistent; I ended up doing that work myself. Subtle concurrency and timing questions in the execution layer were another category the agents did not handle well. The event-driven execution model in Chapter~\ref{ch:design} has enough non-obvious ordering constraints that an agent without the full picture tended to introduce races; those parts of the codebase I wrote by hand.
 
-Across the full set of tools I used, the differences in capability for the work I asked of them were smaller than I expected. Any of the agents could, in principle, produce a correct diff for a well-scoped task, and when one tool failed it was usually because the task was underspecified rather than because of a difference in model capability. The practical differences between tools mattered more at the workflow level --- which shell integration I preferred, how the tool handled long diffs, how it behaved when it needed to ask for clarification --- than at the capability level.
+Across the full set of tools I used, the differences in capability for the work I asked of them were smaller than I expected. Any of the agents could, in principle, produce a correct diff for a well-scoped task, and when one tool failed it was usually because the task was underspecified rather than because of a difference in model capability. The practical differences between tools mattered more at the workflow level, such as which shell integration I preferred, how the tool handled long diffs, and how it behaved when it needed to ask for clarification, than at the capability level.
 
 \section{Research Integrity}
 \label{sec:ai-integrity}
@@ -94,7 +84,7 @@ Because this thesis reports an empirical evaluation, I treat the boundary betwee
 
 \item No AI tool produced the tables, means, or comparative claims in Chapter~\ref{ch:results}. The numbers were tabulated by hand from the completed Observer Data Sheets reproduced in Appendix~\ref{app:completed_materials}, and the claims about what those numbers support or do not support are mine.
 
-\item No AI tool drafted the prose of this thesis. The chapters were written by me, in my own voice, and I am responsible for every claim they make and every argument they advance. AI tools were occasionally used as a proofreading aid --- catching typos, flagging awkward phrasing, or suggesting an alternative word --- but the sentences are mine.
+\item No AI tool drafted the prose of this thesis. The chapters were written by me, in my own voice, and I am responsible for every claim they make and every argument they advance. AI tools were occasionally used as a proofreading aid to catch typos, flag awkward phrasing, or suggest an alternative word; however, the sentences are mine.
 
 \item The code that implements HRIStudio and that was the subject of the evaluation was written under the workflow described in Sections~\ref{sec:ai-division} and~\ref{sec:ai-pattern}. Agents produced drafts; I read, tested, and accepted or rejected every one. The final state of the code is the product of my engineering decisions, regardless of who wrote any particular line.
 \end{itemize}

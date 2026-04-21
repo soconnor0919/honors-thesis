@@ -15,6 +15,32 @@ Figure~\ref{fig:trial-instantiation} illustrates how a protocol definition relat
 
 To illustrate the hierarchy with a concrete example, consider an interactive storytelling study with the research question: \emph{Does how the robot tells a story affect how a human will remember the story?} The two experiments use different robots: the NAO6, a humanoid robot with expressive gestures and a human-like form, and the TurtleBot, a wheeled mobile robot that is visibly machine-like with no social movement cues. The narrative task remains the same across both experiments; only how the robot delivers it changes.
 
+\begin{figure}[htbp]
+\centering
+\begin{subfigure}[b]{0.3\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{images/nao6.jpg}
+    \caption{NAO6 (Humanoid)}
+    \label{fig:robot-nao}
+\end{subfigure}
+\hfill
+\begin{subfigure}[b]{0.3\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{images/pepper.png}
+    \caption{Pepper (Social)}
+    \label{fig:robot-pepper}
+\end{subfigure}
+\hfill
+\begin{subfigure}[b]{0.3\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{images/turtlebot.png}
+    \caption{TurtleBot (Mechanical)}
+    \label{fig:robot-turtlebot}
+\end{subfigure}
+\caption{Diverse robot morphologies supported by the HRIStudio architecture, ranging from expressive humanoid forms to purely mechanical platforms.}
+\label{fig:robot-morphologies}
+\end{figure}
+
 Figure~\ref{fig:example-hierarchy} maps the study presented above onto the hierarchical elements defined in Figure~\ref{fig:experiment-hierarchy}. The study branches into two experiments (TurtleBot with only voice, NAO6 with added gestures), each experiment uses the same sequence of ordered steps (Intro, Story Telling, Recall Test), and each step defines the specific actions the robot will perform. The figure expands only the Story Telling step to keep the diagram readable, but Intro and Recall Test follow the same structure.
 
 Together, these three figures motivate why the hierarchy is useful in practice. These three figures are interrelated as follows: Figure~\ref{fig:experiment-hierarchy} defines the experimental structure as an abstraction; Figure~\ref{fig:trial-instantiation} shows how the abstract experimental structure is instantiated as concrete trial records; and Figure~\ref{fig:example-hierarchy} shows the expansion of each element of the experimental structure.
