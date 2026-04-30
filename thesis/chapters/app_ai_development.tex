@@ -1,14 +1,14 @@
 \chapter{AI-Assisted Development Workflow}
 \label{app:ai_workflow}
 
-This appendix documents the role that AI coding assistants played in the construction of HRIStudio. It is included both for transparency about how the system was built and because the workflow itself is, in my view, one of the more interesting artifacts produced by the project. Section~\ref{sec:ai-ws} in Chapter~\ref{ch:implementation} introduces the topic briefly; here I describe the division of labor, the specific tools I used, the tasks each handled well, the limits I encountered, and the integrity controls I maintained between implementation work and the evaluation reported in Chapter~\ref{ch:results}.
+This appendix documents the role that AI coding assistants played in the construction of HRIStudio. It is included both for transparency about how the system was built and because the workflow itself is, in my view, one of the more interesting artifacts produced by the project. Section~\ref{sec:ai-ws} in Chapter~\ref{ch:implementation} introduces the topic briefly; here I describe the specific responsibilities I kept for myself, the tasks I delegated to coding agents, the tools I used, the limits I encountered, and the integrity controls I maintained between implementation work and the evaluation reported in Chapter~\ref{ch:results}.
 
 \section{Context}
 \label{sec:ai-context}
 
-HRIStudio was built by a single undergraduate in parallel with a full course load, a thesis writeup, and the pilot validation study described in Chapter~\ref{ch:evaluation}. The feature surface described in Chapters~\ref{ch:design} and~\ref{ch:implementation} is larger than what a solo developer on that schedule could reasonably have produced without assistance, and the deadline constraints did not allow for the kind of team that a system of this scope would normally involve. AI coding assistants made the scope tractable. They did not replace design judgment, but they substantially reduced the cost of the mechanical work that sits between a well-specified design and a working feature: scaffolding new modules, implementing well-defined CRUD and validation code, applying consistent patterns across files, and producing the many small edits that a project of this size accumulates.
+I built HRIStudio while also carrying a full course load, writing this thesis, and running the pilot validation study described in Chapter~\ref{ch:evaluation}. The feature surface described in Chapters~\ref{ch:design} and~\ref{ch:implementation} is larger than what I could reasonably have produced on that schedule without assistance, given both the scope and the level of ambition of the work. AI coding assistants made that scope tractable. They did not replace design judgment; they reduced the cost of the mechanical work that sits between a well-specified design and a working feature: scaffolding new modules, implementing well-defined create/read/update/delete (CRUD) and validation code, applying consistent patterns across files, and producing the many small edits that a project of this size accumulates.
 
-The set of tools available to a solo developer changed substantially during the project's timeline. When I began, agentic coding tools were still early and most of my AI use was conversational, primarily through Cursor~\cite{CursorEditor} and Zed~\cite{ZedEditor}. By the end of the project, multiple mature terminal- and editor-integrated agents were available. I changed tools as the landscape evolved, eventually moving into a mixed workflow between Visual Studio Code, Antigravity~\cite{GoogleAntigravity}, Claude Code~\cite{AnthropicClaudeCode}, and OpenCode~\cite{OpenCode}.
+The set of tools available to me as a solo developer changed substantially during the project's timeline. When I began, agentic coding tools were still early and most of my AI use was conversational, primarily through Cursor~\cite{CursorEditor} and Zed~\cite{ZedEditor}. By the end of the project, multiple mature terminal- and editor-integrated agents were available. I changed tools as the landscape evolved, eventually moving into a mixed workflow between Visual Studio Code, Antigravity~\cite{GoogleAntigravity}, Claude Code~\cite{AnthropicClaudeCode}, and OpenCode~\cite{OpenCode}.
 
 \section{Tools and Hardware}
 \label{sec:ai-tools}
@@ -46,7 +46,7 @@ Beyond cloud-hosted models, I experimented with local execution using \texttt{ll
 \section{Division of Responsibility}
 \label{sec:ai-division}
 
-My working rule throughout the project was that I did the engineering and the agents did the implementation. In practice, this meant that I was responsible for every decision that had downstream consequences for the shape of the system, and the agents were responsible for producing the code that realized those decisions. Concretely, I did the following work directly, without delegating it to an agent:
+My working rule throughout the project was for me to handle the engineering and for the agents to flesh out the implementation. In practice, this meant that I was responsible for every decision that had downstream consequences for the shape of the system, and the agents were responsible for producing code that realized those decisions. Concretely, I did the following work directly, without delegating it to an agent:
 
 \begin{itemize}
 \item \textbf{Architecture.} The three-tier structure described in Chapter~\ref{ch:design}, the separation between experiment specifications and trial records, the choice to route all robot communication through plugin files, and the overall shape of the event-driven execution model were mine. I wrote these decisions as prose before any code was written.
@@ -55,15 +55,15 @@ My working rule throughout the project was that I did the engineering and the ag
 
 \item \textbf{Research design.} The pilot validation study in Chapter~\ref{ch:evaluation} was designed and analyzed entirely by me. The Observer Data Sheet, Design Fidelity Score rubric, and Execution Reliability Score rubric were written by hand. No AI tool was used to score sessions, compute results, or draft claims about what the data showed.
 
-\item \textbf{The prose of this thesis.} Every chapter was written by me. The structure of the argument and the specific claims I make are my own. While AI assisted with the nuances of \LaTeX{} formatting (particularly the generation of TikZ diagrams and complex chart syntax), the linguistic content is mine.
+\item \textbf{The prose of this thesis.} Every chapter was written by me. The structure of the argument and the specific claims I make are my own. While AI assisted with the nuances of \LaTeX{} formatting (particularly the generation of TikZ diagrams and complex chart syntax), the content is mine.
 \end{itemize}
 
 \section{Evolution of the Workflow}
 \label{sec:ai-pattern}
 
-The way I used these tools changed as they improved. Early in the project, I treated the agent's output as a draft that required line-by-line review. The typical loop followed five steps: writing a specification, generating a diff, reading the diff, running the code, and then accepting or rejecting.
+My use of these tools changed over the course of the project, and evolved as the models improved. Early on, I treated the agent's output as a draft that required line-by-line review. The typical loop followed five steps: writing a specification, generating a diff, reading the diff, running the code, and then accepting or rejecting the change.
 
-As the models improved and the agents became more reliable, the focus of my effort shifted. By the final stages of development, I spent significantly less time on manual line-by-line diff reviews and more time on empirical testing. I moved from being a ``code reviewer'' to a ``test-driven supervisor.'' If the agent produced a feature that passed my manual acceptance tests and integrated correctly with the existing system, I was more likely to accept the implementation without a complete audit of every semicolon. This shift allowed me to increase the velocity of development significantly in the weeks leading up to the evaluation.
+As the models improved and the agents became more reliable, the focus of my effort shifted. By the final stages of development, I spent significantly less time on manual line-by-line reviews and more time on empirical testing. I moved from being a ``code reviewer'' to a ``test-driven supervisor.'' If the agent produced a feature that passed my manual acceptance tests and integrated correctly with the existing system, I was more likely to accept the implementation without auditing every line in the program. This shift allowed me to increase the velocity of development significantly in the weeks leading up to the evaluation.
 
 \section{What Worked and What Did Not}
 \label{sec:ai-limits}

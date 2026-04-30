@@ -84,12 +84,12 @@ The Next.js application server and the Bun WebSocket server run outside Docker o
 The NAO6 integration stack is defined in a separate repository and provides three ROS~2 services that collectively bridge HRIStudio to the physical robot.
 
 \begin{enumerate}
-\item The \textbf{nao\_driver} service runs the NaoQi driver ROS~2 node, which connects to the NAO's proprietary framework over the local network and publishes sensor data (joint states, camera feeds) as standard ROS~2 topics.
-\item The \textbf{ros\_bridge} service runs the rosbridge WebSocket server, which exposes all ROS~2 topics over a WebSocket interface on a configurable port (default~9090). This is the endpoint that the HRIStudio server connects to.
+\item The \textbf{nao\_driver} service runs the NAOqi driver ROS~2 node, which connects to the NAO's proprietary framework over the local network and publishes sensor data (joint states, camera feeds) as standard ROS~2 topics.
+\item The \textbf{ros\_bridge} service runs the \texttt{rosbridge} WebSocket server, which exposes all ROS~2 topics over a WebSocket interface on a configurable port (default~9090). This is the endpoint that the HRIStudio server connects to.
 \item The \textbf{ros\_api} service provides runtime introspection of available ROS~2 topics, services, and parameters.
 \end{enumerate}
 
-All three services are built from a single Dockerfile based on the ROS~2 Humble base image (Ubuntu~22.04). The image installs the NaoQi driver and rosbridge server packages along with their dependencies (NaoQi libraries, bridge message types, OpenCV bridge, and TF2) and builds them with colcon. All services use host networking so that ROS~2 discovery and the NaoQi connection operate without port forwarding.
+All three services are built from a single Dockerfile based on the ROS~2 Humble base image (Ubuntu~22.04). The image installs the NAOqi driver and \texttt{rosbridge} server packages along with their dependencies (NAOqi libraries, bridge message types, OpenCV bridge, and TF2) and builds them with colcon. All services use host networking so that ROS~2 discovery and the NAOqi connection operate without port forwarding.
 
 Before starting the driver, an initialization script connects to the NAO via SSH and prepares it for external control:
 
@@ -103,7 +103,7 @@ Environment variables for the robot IP address, credentials, and bridge port are
 
 \subsection{Communication Between Stacks}
 
-Figure~\ref{fig:deployment-arch} shows the relationship between the two Docker stacks and the components that run on the host. The HRIStudio server communicates with the robot integration stack over a single WebSocket connection to the \texttt{rosbridge\_websocket} endpoint. For actions that bypass ROS entirely (posture changes, animation playback), the server connects directly to the NAO via SSH and invokes NaoQi commands through the \texttt{qicli} command-line tool. Both communication paths are configured per-robot in the plugin file.
+Figure~\ref{fig:deployment-arch} shows the relationship between the two Docker stacks and the components that run on the host. The HRIStudio server communicates with the robot integration stack over a single WebSocket connection to the \texttt{rosbridge\_websocket} endpoint. For actions that bypass ROS entirely (posture changes, animation playback), the server connects directly to the NAO via SSH and invokes NAOqi commands through the \texttt{qicli} command-line tool. Both communication paths are configured per-robot in the plugin file.
 
 \begin{figure}[htbp]
 \centering
@@ -159,7 +159,7 @@ Figure~\ref{fig:deployment-arch} shows the relationship between the two Docker s
 
     %% ---- NAO Robot ----
     \node[box, fill=gray!40, minimum width=2.8cm] (nao) at (0, -0.8)
-        {NAO6 Robot\\[-1pt]{\scriptsize NaoQi}};
+        {NAO6 Robot\\[-1pt]{\scriptsize NAOqi}};
 
     %% ---- Arrows: browser to host ----
     \draw[arrow] (browser.south west) -- node[lbl, left] {HTTP} (nextjs.north);
@@ -231,13 +231,13 @@ Each action definition specifies:
 \item A ROS~2 dispatch block containing the target topic, message type, and a payload mapping.
 \end{itemize}
 
-The payload mapping supports two modes. In \emph{static} mode, the plugin defines a fixed message template with placeholder tokens (e.g., \texttt{\{\{text\}\}}) that the execution engine fills from the researcher's parameters. In \emph{SSH} mode, the action bypasses ROS entirely and executes a shell command on the robot via SSH; this is used for NaoQi-native operations such as posture changes and animation playback that are not exposed as ROS~2 topics.
+The payload mapping supports two modes. In \emph{static} mode, the plugin defines a fixed message template with placeholder tokens (e.g., \texttt{\{\{text\}\}}) that the execution engine fills from the researcher's parameters. In \emph{SSH} mode, the action bypasses ROS entirely and executes a shell command on the robot via SSH; this is used for NAOqi-native operations such as posture changes and animation playback that are not exposed as ROS~2 topics.
 
-The NAO6 plugin defines 20 actions across three categories: speech (say text, say with emotion), movement (walk forward/backward, turn, stop, wake up, rest, stand, sit, crouch), and animation (bow, wave, nod, head shake, shrug, enthusiastic gesture, and others). Movement actions publish ROS~2 Twist messages to the velocity command topic. Animation actions publish animation path strings to the animation topic. Posture and lifecycle commands use SSH mode to call NaoQi services directly via the \texttt{qicli} command-line tool.
+The NAO6 plugin defines 20 actions across three categories: speech (say text, say with emotion), movement (walk forward/backward, turn, stop, wake up, rest, stand, sit, crouch), and animation (bow, wave, nod, head shake, shrug, enthusiastic gesture, and others). Movement actions publish ROS~2 Twist messages to the velocity command topic. Animation actions publish animation path strings to the animation topic. Posture and lifecycle commands use SSH mode to call NAOqi services directly via the \texttt{qicli} command-line tool.
 
 \subsection{Adding a New Robot}
 
-Adding support for a new robot platform requires writing a single JSON plugin file and placing it in the repository. No changes to the HRIStudio server code are required. The plugin author defines the robot's capabilities, maps each action to a ROS~2 topic or SSH command, and specifies the parameter schema for each action. After the repository is synced, the new robot's actions appear in the experiment designer and can be used in any study.
+Adding support for a new robot platform requires writing a single JSON plugin file and placing it in the plugin repository. No changes to the HRIStudio server code are required. The plugin author defines the robot's capabilities, maps each action to a ROS~2 topic or SSH command, and specifies the parameter schema for each action. After the repository is synced, the new robot's actions appear in the experiment designer and can be used in any study.
 
 \section{Database Schema}
 

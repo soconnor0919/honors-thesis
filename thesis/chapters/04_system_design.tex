@@ -13,7 +13,7 @@ Figure~\ref{fig:experiment-hierarchy} shows this hierarchical structure. Reading
 
 Figure~\ref{fig:trial-instantiation} illustrates how a protocol definition relates to its instantiation. The left column holds the protocol, defined before the study begins; the right column shows how the abstraction defined as a protocol is instantiated as independent trials. A dashed line marks the protocol/trial boundary: everything to its left was authored by the researcher before any participant arrived; everything to its right was generated during a live session. The \textit{instantiates} arrows from the experiment node fan out to each trial record, making the relationship explicit. This separation is central to reproducibility: the same experiment specification generates a distinct, timestamped record per participant, so researchers can compare across participants without conflating what was designed with what was executed.
 
-To illustrate the hierarchy with a concrete example, consider an interactive storytelling study with the research question: \emph{Does how the robot tells a story affect how a human will remember the story?} The two experiments use different robots: the NAO6, a humanoid robot with expressive gestures and a human-like form, and the TurtleBot, a wheeled mobile robot that is visibly machine-like with no social movement cues. The narrative task remains the same across both experiments; only how the robot delivers it changes.
+To illustrate the hierarchy with a concrete example, consider an interactive storytelling study with the research question: \emph{Does how the robot tells a story affect how a human will remember the story?} The experiment might use different robots, for instance Pepper, NAO6, and TurtleBot. Figure~\ref{fig:robot-morphologies} shows the morphology of these three different robots: Pepper and NAO6 are humanoid social robots with expressive gestures and human-like forms, while TurtleBot is a wheeled mobile robot with a visibly machine-like form and no social movement cues. In the example below, the narrative task remains the same across two robot-specific experiments; only how the robot delivers it changes.
 
 \begin{figure}[htbp]
 \centering
@@ -37,7 +37,7 @@ To illustrate the hierarchy with a concrete example, consider an interactive sto
     \caption{TurtleBot (Mechanical)}
     \label{fig:robot-turtlebot}
 \end{subfigure}
-\caption{Diverse robot morphologies supported by the HRIStudio architecture, ranging from expressive humanoid forms to purely mechanical platforms.}
+\caption{Three robot morphologies supported by the HRIStudio architecture.}
 \label{fig:robot-morphologies}
 \end{figure}
 
@@ -293,7 +293,7 @@ This separation of concerns provides two concrete benefits. First, each layer ca
 \centering
 \begin{tikzpicture}[
     layer/.style={rectangle, draw=black, thick, fill, minimum width=6.5cm, minimum height=1cm, align=center, text width=6.2cm},
-    arrow/.style={->, thick, line width=1.5pt}]
+    arrow/.style={-, thick, line width=1.5pt}]
     
     % Layer 1: UI
     \node[layer, fill=gray!15] (ui) at (0, 3.5) {
@@ -314,8 +314,8 @@ This separation of concerns provides two concrete benefits. First, each layer ca
     };
 
     % Arrows (bidirectional)
-    \draw[<->, thick, line width=1.5pt] (ui.south) -- (logic.north);
-    \draw[<->, thick, line width=1.5pt] (logic.south) -- (data.north);
+    \draw[-, thick, line width=1.5pt] (ui.south) -- (logic.north);
+    \draw[-, thick, line width=1.5pt] (logic.south) -- (data.north);
     
 \end{tikzpicture}
 \caption{Three-layer architecture separates user interface, application logic, and data/robot control.}
@@ -326,7 +326,7 @@ This separation of concerns provides two concrete benefits. First, each layer ca
 
 During the design phase, researchers create experiment specifications that are stored in the system database. During a trial, the system manages bidirectional communication between the wizard's interface and the robot control layer. All actions, sensor data, and events are streamed to a data logging service that stores complete records. After the trial, researchers can inspect these records through the Analysis interface.
 
-The flow of data during a trial proceeds through six distinct phases, as shown in Figure~\ref{fig:trial-dataflow}:
+The flow of data during a trial proceeds through six distinct phases as discussed below; these phases are summarized in Figure~\ref{fig:trial-dataflow}:
 
 \begin{enumerate}
 \item A researcher creates an experiment protocol using the Design interface.
@@ -361,7 +361,7 @@ This design creates automatically a comprehensive documentation of every trial, 
     \draw[arrow] (s5.south) -- (s6.north);
     
 \end{tikzpicture}
-\caption{Trial data flow: from protocol design through execution and recording, to analysis and playback.}
+\caption{Six-phase trial data flow.}
 \label{fig:trial-dataflow}
 \end{figure}
 
